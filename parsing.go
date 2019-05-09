@@ -8,8 +8,57 @@ import (
 	"time"
 )
 
+// returns a random boolean
 func rand1() bool {
 	return rand.Float32() < 0.5
+}
+
+//func (u *UniqueRand) Int() int {
+//	for {
+//		i := rand.Int()
+//		if !u.generated[i] {
+//			u.generated[i] = true
+//			return i
+//		}
+//	}
+//}
+
+func makeRangeNum(min, max int) []int {
+	set := make([]int, max-min+1)
+	for i := range set {
+		set[i] = min + i
+	}
+	return set
+}
+
+func generateRandomBoard(size int, solve bool, iterations int) {
+	// generate a shuffled set of numbers
+	maxNb := size * size
+	numbers := makeRangeNum(1, maxNb)
+	rand.Shuffle(len(numbers), func(i, j int) {
+		numbers[i], numbers[j] = numbers[j], numbers[i]
+	})
+
+	// generate board
+	sizey := size
+	sizex := size
+	puzzle := make([][]int, sizey)
+	for i := range puzzle {
+		puzzle[i] = make([]int, sizex)
+
+	}
+
+	// fill board
+	index := 0
+	for i := 0; i < sizex; i++ {
+		for j := 0; j < sizey; j++ {
+			puzzle[i][j] = numbers[index]
+			index++
+		}
+	}
+
+	fmt.Println(puzzle)
+
 }
 
 func main() {
@@ -53,7 +102,10 @@ func main() {
 		solve = false
 	}
 
-	//size := *sizePtr
+	//	_ = solve
 
-	//	puzzle := make_puzzle(size, )
+	size := *sizePtr
+	iterations := *iterationsPtr
+
+	generateRandomBoard(size, solve, iterations)
 }
