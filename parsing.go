@@ -13,16 +13,6 @@ func rand1() bool {
 	return rand.Float32() < 0.5
 }
 
-//func (u *UniqueRand) Int() int {
-//	for {
-//		i := rand.Int()
-//		if !u.generated[i] {
-//			u.generated[i] = true
-//			return i
-//		}
-//	}
-//}
-
 func makeRangeNum(min, max int) []int {
 	set := make([]int, max-min+1)
 	for i := range set {
@@ -40,26 +30,26 @@ func generateRandomBoard(size int, solve bool, iterations int) {
 	})
 
 	// generate board
-	sizey := size
-	sizex := size
-	puzzle := make([][]int, sizey)
-	for i := range puzzle {
-		puzzle[i] = make([]int, sizex)
-
-	}
+	puzzle := make([]int, maxNb)
 
 	// fill board
 	index := 0
-	for i := 0; i < sizex; i++ {
-		for j := 0; j < sizey; j++ {
-			puzzle[i][j] = numbers[index]
-			index++
-		}
+	for i := 0; i < maxNb; i++ {
+		puzzle[i] = numbers[index]
+		index++
 	}
-
 	fmt.Println(puzzle)
 
 }
+
+//func readBoardFromFile() {
+//	file, err := os.Open("/Users/aschukin/Projects/N-Puzzle/N-Puzzle-GO/file.txt")
+//	if err != nil {
+//		fmt.Println(err)
+//		os.Exit(1)
+//	}
+
+//}
 
 func main() {
 	//	argsWithProg := os.Args
@@ -79,7 +69,7 @@ func main() {
 	if *sizePtr < 3 {
 		flag.PrintDefaults()
 		os.Exit(1)
-	}
+	} // need to check for no fd also
 
 	if *solveablePtr && *unsolveablePtr {
 		fmt.Println("Can't be both solvable AND unsolvable, dummy!")
@@ -103,9 +93,11 @@ func main() {
 	}
 
 	//	_ = solve
-
 	size := *sizePtr
 	iterations := *iterationsPtr
 
-	generateRandomBoard(size, solve, iterations)
+	if sizePtr != nil {
+		generateRandomBoard(size, solve, iterations)
+	}
+
 }
