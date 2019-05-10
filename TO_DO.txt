@@ -1,0 +1,8 @@
+#########
+# TO DO #
+#########
+
+PARSING
+{} filter out negative numbers
+{} filter out floats
+{} flag to reject or accept bad board (w/ negatives, floats, zero) as input

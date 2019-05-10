@@ -3,10 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"os"
+	"regexp"
+	"strconv"
 	"time"
 )
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
 
 // returns a random boolean
 func rand1() bool {
@@ -29,27 +38,51 @@ func generateRandomBoard(size int, solve bool, iterations int) {
 		numbers[i], numbers[j] = numbers[j], numbers[i]
 	})
 
-	// generate board
+	// generate + fill board
 	puzzle := make([]int, maxNb)
-
-	// fill board
 	index := 0
 	for i := 0; i < maxNb; i++ {
 		puzzle[i] = numbers[index]
 		index++
 	}
-	fmt.Println(puzzle)
-
 }
 
-//func readBoardFromFile() {
-//	file, err := os.Open("/Users/aschukin/Projects/N-Puzzle/N-Puzzle-GO/file.txt")
-//	if err != nil {
-//		fmt.Println(err)
-//		os.Exit(1)
-//	}
+// Add flag to accept or reject duplicates as input puzzle?
+func filterDuplicates(input []int) []int {
+	unique := make([]int, 0, len(input))
+	check := make(map[int]bool)
 
-//}
+	for _, val := range input {
+		if _, ok := check[val]; !ok {
+			check[val] = true
+			unique = append(unique, val)
+		}
+	}
+	return unique
+}
+
+func readBoardFromFile() []int {
+	file, err := ioutil.ReadFile("/Users/aschukin/Projects/N-Puzzle/N-Puzzle-GO/puzzle1.txt")
+	check(err)
+
+	// filter out non-numeric
+	re := regexp.MustCompile("[-+]?[0-9]+") // finds all numbers, including negative
+	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
+	// re := regexp.MustCompile("[-+]?[0-9]*\\.?[0-9]+") // finds all numbers, including negative and floats
+	numbers := re.FindAllString(string(file), -1)
+
+	// convert []string array to []int slice
+	var puzzle []int
+	for _, number := range numbers {
+		integer, err := strconv.Atoi(number)
+		check(err)
+		puzzle = append(puzzle, integer)
+	}
+
+	puzzle = filterDuplicates(puzzle)
+	fmt.Print(puzzle)
+	return (puzzle)
+}
 
 func main() {
 	//	argsWithProg := os.Args
@@ -95,6 +128,8 @@ func main() {
 	//	_ = solve
 	size := *sizePtr
 	iterations := *iterationsPtr
+
+	readBoardFromFile()
 
 	if sizePtr != nil {
 		generateRandomBoard(size, solve, iterations)
