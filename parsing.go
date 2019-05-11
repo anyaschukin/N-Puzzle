@@ -110,7 +110,10 @@ func checkFlags() (int, bool, int) {
 	args := flag.Args()
 
 	arg := strings.Join(args, "")
-	file := strings.HasSuffix(arg, ".txt")
+	file := strings.Contains(arg, ".txt")
+	fmt.Printf("args = %d \n", len(args))
+	fmt.Printf("file = %v\n", file)
+
 	if len(args) == 1 && file {
 		return 0, false, 0
 	}
