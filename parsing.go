@@ -8,6 +8,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -31,6 +32,8 @@ func makeRangeNum(min, max int) []int {
 }
 
 func generateRandomBoard(size int, solve bool, iterations int) {
+	fmt.Println("\nGenerating random board...\n")
+
 	// generate a shuffled set of numbers
 	maxNb := size * size
 	numbers := makeRangeNum(1, maxNb)
@@ -45,14 +48,19 @@ func generateRandomBoard(size int, solve bool, iterations int) {
 		puzzle[i] = numbers[index]
 		index++
 	}
+	fmt.Println(puzzle)
 }
 
-// Add flag to accept or reject duplicates as input puzzle?
 func filterDuplicates(input []int) []int {
 	unique := make([]int, 0, len(input))
 	check := make(map[int]bool)
 
 	for _, val := range input {
+		// filter numbers < 1
+		if val < 1 {
+			fmt.Println("Error: Board values must be above zero.")
+		}
+		// filters duplicates
 		if _, ok := check[val]; !ok {
 			check[val] = true
 			unique = append(unique, val)
@@ -62,13 +70,21 @@ func filterDuplicates(input []int) []int {
 }
 
 func readBoardFromFile() []int {
-	file, err := ioutil.ReadFile("/Users/aschukin/Projects/N-Puzzle/N-Puzzle-GO/puzzle1.txt")
+
+	args := os.Args[1:]
+	arg := strings.Join(args, "")
+	file, err := ioutil.ReadFile(arg)
 	check(err)
 
-	// filter out non-numeric
+	if strings.ContainsAny(string(file), ".") || strings.ContainsAny(string(file), "-") {
+		fmt.Println("Error: Board values cannot be negative or floats.")
+		os.Exit(1)
+	}
+
 	re := regexp.MustCompile("[-+]?[0-9]+") // finds all numbers, including negative
-	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
 	// re := regexp.MustCompile("[-+]?[0-9]*\\.?[0-9]+") // finds all numbers, including negative and floats
+	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
+
 	numbers := re.FindAllString(string(file), -1)
 
 	// convert []string array to []int slice
@@ -81,28 +97,38 @@ func readBoardFromFile() []int {
 
 	puzzle = filterDuplicates(puzzle)
 	fmt.Print(puzzle)
-	return (puzzle)
+	return puzzle
 }
 
-func main() {
-	//	argsWithProg := os.Args
-	//	argsWithoutProg := os.Args[1:]
-
-	//	arg = os.Args[3]
-
+func checkFlags() (int, bool, int) {
 	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
 	solveablePtr := flag.Bool("s", false, "Forces generation of a solvable puzzle. Overrides -u.")
 	unsolveablePtr := flag.Bool("u", false, "Forces generation of an unsolvable puzzle")
 	iterationsPtr := flag.Int("iterations", 10000, "Number of passes")
 
 	flag.Parse()
+	args := flag.Args()
 
-	//	fmt.Println("size:", *sizePtr)
+	arg := strings.Join(args, "")
+	file := strings.HasSuffix(arg, ".txt")
+	if len(args) == 1 && file {
+		return 0, false, 0
+	}
+
+	if len(args) > 1 && file {
+		fmt.Println("Error: must input file OR flags as argument.")
+		os.Exit(1)
+	}
 
 	if *sizePtr < 3 {
-		flag.PrintDefaults()
+		flag.PrintDefaults() // replace with Print Usage
 		os.Exit(1)
-	} // need to check for no fd also
+	}
+
+	if sizePtr == nil {
+		fmt.Println("Error: please give a board size.")
+		os.Exit(1)
+	}
 
 	if *solveablePtr && *unsolveablePtr {
 		fmt.Println("Can't be both solvable AND unsolvable, dummy!")
@@ -115,7 +141,6 @@ func main() {
 	}
 
 	var solve bool
-
 	if !(*solveablePtr) && !(*unsolveablePtr) {
 		rand.Seed(time.Now().UnixNano())
 		solve = rand1()
@@ -125,14 +150,22 @@ func main() {
 		solve = false
 	}
 
-	//	_ = solve
 	size := *sizePtr
 	iterations := *iterationsPtr
 
-	readBoardFromFile()
+	return size, solve, iterations
+}
 
-	if sizePtr != nil {
+func main() {
+
+	size, solve, iterations := checkFlags()
+	if size == 0 && solve == false && iterations == 0 {
+		readBoardFromFile()
+	} else {
 		generateRandomBoard(size, solve, iterations)
 	}
+	fmt.Println("\n\n\n You've reached the end of main()\n")
+	os.Exit(1)
 
+	//fmt.Println("no file or random board")
 }

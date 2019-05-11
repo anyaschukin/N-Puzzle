@@ -3,6 +3,9 @@
 #########
 
 PARSING
-{} filter out negative numbers
-{} filter out floats
-{} flag to reject or accept bad board (w/ negatives, floats, zero) as input
+{x} EITHER file OR flags
+{} print usage
+{x} filter out negative numbers
+{x} filter out floats
+
+ 
