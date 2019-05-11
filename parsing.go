@@ -56,11 +56,6 @@ func filterDuplicates(input []int) []int {
 	check := make(map[int]bool)
 
 	for _, val := range input {
-		// filter numbers < 1
-		if val < 1 {
-			fmt.Println("Error: Board values must be above zero.")
-		}
-		// filters duplicates
 		if _, ok := check[val]; !ok {
 			check[val] = true
 			unique = append(unique, val)
@@ -89,7 +84,11 @@ func readBoardFromFile() []int {
 
 	// convert []string array to []int slice
 	var puzzle []int
+	i := 0 // flag for puzzle number
 	for _, number := range numbers {
+		if i++; i == 1 {
+			continue
+		}
 		integer, err := strconv.Atoi(number)
 		check(err)
 		puzzle = append(puzzle, integer)
