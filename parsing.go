@@ -36,7 +36,7 @@ func generateRandomBoard(size int, solve bool, iterations int) {
 
 	// generate a shuffled set of numbers
 	maxNb := size * size
-	numbers := makeRangeNum(1, maxNb)
+	numbers := makeRangeNum(0, maxNb)
 	rand.Shuffle(len(numbers), func(i, j int) {
 		numbers[i], numbers[j] = numbers[j], numbers[i]
 	})

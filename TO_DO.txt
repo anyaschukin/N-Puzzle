@@ -12,6 +12,6 @@ PARSING
 {} print usage
 {x} filter out negative numbers
 {x} filter out floats
-{} leave empty space (0) in random board generation
+{x} leave empty space (0) in random board generation
 
  
