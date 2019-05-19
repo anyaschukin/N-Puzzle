@@ -3,9 +3,9 @@
 #########
 
 ARCHITECTURE
-{} organize src files -> GO-style
-{} be able to 'go build ...'
-{} store useful functions in new Golang library (filterUnique)
+{x} organize src files -> GO-style
+{x} be able to 'go build ...'
+{x} store useful functions in new Golang library (filterUnique)
 
 PARSING
 {x} EITHER file OR flags
