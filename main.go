@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	p "n-puzzle/parsing"
+	s "n-puzzle/solver"
 	"os"
 )
 
@@ -14,7 +15,8 @@ func main() {
 	} else {
 		p.GenerateRandomBoard(size, solve, iterations)
 	}
-	fmt.Println("\n\n\n You've reached the end of main()\n")
+	s.MakePuzzle(size, solve, iterations)
+	fmt.Println("\n\n\n You've reached the end of main()")
 	os.Exit(1)
 
 	//fmt.Println("no file or random board")

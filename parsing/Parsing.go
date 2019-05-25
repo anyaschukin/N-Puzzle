@@ -18,11 +18,10 @@ func GenerateRandomBoard(size int, solve bool, iterations int) {
 
 	// generate a shuffled set of numbers
 	maxNb := size * size
-	numbers := g.MakeRangeNum(0, maxNb)
+	numbers := g.MakeRangeNum(0, maxNb-1)
 	rand.Shuffle(len(numbers), func(i, j int) {
 		numbers[i], numbers[j] = numbers[j], numbers[i]
 	})
-
 	// generate + fill board
 	puzzle := make([]int, maxNb)
 	index := 0
