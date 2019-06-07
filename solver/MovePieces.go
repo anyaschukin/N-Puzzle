@@ -18,18 +18,19 @@ func checkMoves(width int, i int) (int, int, int, int) {
 	if i <= width {
 		down = 1
 	}
-	// if zero is in bottom row
 	length := width * width
+	// if zero is not in top row
 	if (i >= width || i >= length-width) && i <= length {
 		up = 1
 	}
-	rcol := (length - 1) % width
 	// if zero is in right column
-	if i%width == rcol || i%width == 1 {
+	maxMod := (length - 1) % width
+	// if zero is in left column
+	minMod := 0
+	if i%width != minMod {
 		left = 1
 	}
-	// if zero is in left column
-	if i%width > 0 || i%width < rcol {
+	if i%width != maxMod {
 		right = 1
 	}
 	return up, down, left, right
