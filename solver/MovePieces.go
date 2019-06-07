@@ -1,6 +1,7 @@
 package solver
 
 import (
+	"fmt"
 	g "n-puzzle/golib"
 )
 
@@ -19,25 +20,26 @@ func checkMoves(width int, i int) (int, int, int, int) {
 	}
 	// if zero is in bottom row
 	length := width * width
-	if i >= length-width && i <= length {
+	if (i >= width || i >= length-width) && i <= length {
 		up = 1
 	}
-	// if zero is in left column
-	if i%width == 1 {
-		right = 1
-	}
+	rcol := (length - 1) % width
 	// if zero is in right column
-	if i%width == 0 {
+	if i%width == rcol || i%width == 1 {
 		left = 1
+	}
+	// if zero is in left column
+	if i%width > 0 || i%width < rcol {
+		right = 1
 	}
 	return up, down, left, right
 }
 
-func MovePieces(puzzle []int, size int) []int {
+func MovePieces(puzzle []int, size int) {
 
 	empty := g.FindIndexSlice(puzzle, 0)
 	up, down, left, right := checkMoves(size, empty)
-
+	fmt.Printf("up %d, down %d, left %d, right %d\n", up, down, left, right)
 	//return new
 }
 

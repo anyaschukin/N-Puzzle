@@ -13,7 +13,8 @@ func main() {
 	if size == 0 && solve == false && iterations == 0 {
 		p.ReadBoardFromFile()
 	} else {
-		p.GenerateRandomBoard(size, solve, iterations)
+		board := p.GenerateRandomBoard(size, solve, iterations)
+		s.MovePieces(board, size)
 	}
 	s.MakePuzzle(size, solve, iterations)
 	fmt.Println("\n\n\n You've reached the end of main()")

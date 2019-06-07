@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func GenerateRandomBoard(size int, solve bool, iterations int) {
+func GenerateRandomBoard(size int, solve bool, iterations int) []int {
 	fmt.Println("\nGenerating random board...\n")
 
 	// generate a shuffled set of numbers
@@ -31,6 +31,7 @@ func GenerateRandomBoard(size int, solve bool, iterations int) {
 	}
 	fmt.Println(puzzle)
 	g.PrintBoard(puzzle, size)
+	return puzzle
 }
 
 func ReadBoardFromFile() []int {
