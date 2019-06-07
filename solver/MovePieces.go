@@ -14,13 +14,13 @@ import (
 // Checks which directions the zero tile can move in
 func checkMoves(width int, i int) (int, int, int, int) {
 	up, down, left, right := 0, 0, 0, 0
+	length := width * width
 	// if zero is in top row
-	if i <= width {
+	if i < length-width {
 		down = 1
 	}
-	length := width * width
 	// if zero is not in top row
-	if (i >= width || i >= length-width) && i <= length {
+	if i >= width && i < length {
 		up = 1
 	}
 	// if zero is in right column
@@ -41,9 +41,13 @@ func MovePieces(puzzle []int, size int) {
 	empty := g.FindIndexSlice(puzzle, 0)
 	up, down, left, right := checkMoves(size, empty)
 	fmt.Printf("up %d, down %d, left %d, right %d\n", up, down, left, right)
-	//return new
-}
 
-// for i := n moves {
-//	new := make([]int, size*size)
-//}
+	moves := up + down + left + right
+	fmt.Printf("\nthere are %d possible moves\n", moves)
+	//return new
+
+	//for i := range moves {
+	//	new := make([]int, size*size)
+	//
+	//}
+}
