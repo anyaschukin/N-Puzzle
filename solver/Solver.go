@@ -1,8 +1,8 @@
 package solver
 
 import (
-	"fmt"
 	"math/rand"
+	g "n-puzzle/golib"
 	"time"
 )
 
@@ -22,10 +22,10 @@ func findIndexSlice(slice []int, value int) int {
 }
 
 func swapEmpty(puzzle []int, size int) {
-	fmt.Print(puzzle)
+	//fmt.Print(puzzle)
 	idx := findIndexSlice(puzzle, 0)
-	fmt.Print(idx)
-	fmt.Println("\n")
+	//fmt.Print(idx)
+	//fmt.Println("\n")
 	var Poss []int
 	if idx%size > 0 {
 		Poss = append(Poss, idx-1)
@@ -46,26 +46,11 @@ func swapEmpty(puzzle []int, size int) {
 	puzzle[swi] = 0
 }
 
-func makeGoal(size int) []int {
-	totalSize := size * size
-	puzzle := make([]int, totalSize)
-	cur := 1
-	for i := range puzzle {
-		if i == (size*size)-1 {
-			puzzle[i] = 0
-			break
-		}
-		puzzle[i] = cur
-		cur++
-	}
-	return puzzle
-}
-
 // if I comment this
 func MakePuzzle(size int, solve bool, iterations int) {
-	p := makeGoal(size)
-	for i := 1; i <= iterations; i++ {
-		swapEmpty(p, size)
-	}
-	fmt.Print(p)
+	p := MakeGoal(size)
+	//for i := 1; i <= iterations; i++ {
+	//	swapEmpty(p, size)
+	//}
+	g.PrintBoard(p, size)
 }

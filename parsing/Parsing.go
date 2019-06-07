@@ -30,6 +30,7 @@ func GenerateRandomBoard(size int, solve bool, iterations int) {
 		index++
 	}
 	fmt.Println(puzzle)
+	g.PrintBoard(puzzle, size)
 }
 
 func ReadBoardFromFile() []int {
@@ -71,7 +72,7 @@ func CheckFlags() (int, bool, int) {
 	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
 	solveablePtr := flag.Bool("s", false, "Forces generation of a solvable puzzle. Overrides -u.")
 	unsolveablePtr := flag.Bool("u", false, "Forces generation of an unsolvable puzzle")
-	iterationsPtr := flag.Int("iterations", 10000, "Number of passes")
+	iterationsPtr := flag.Int("iterations", 100, "Number of passes")
 
 	flag.Parse()
 	args := flag.Args()
