@@ -46,8 +46,9 @@ func MovePieces(puzzle []int, size int) {
 	fmt.Printf("\nthere are %d possible moves\n", moves)
 	//return new
 
-	//for i := range moves {
-	//	new := make([]int, size*size)
-	//
-	//}
+	//	for i := 0; i <= moves; i++ {
+	//		new := make([]int, size*size)
+	// create new board according to each possible move,
+	// to store in decision tree
+	//	}
 }
