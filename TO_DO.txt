@@ -14,18 +14,21 @@ PARSING
 {x} filter out floats
 {x} filter out duplicates   ... should these be admissible ??
 {x} leave empty space (0) in random board generation
+{ } are both row and col between 0 and (n - 1) ?
 
 SOLVER
 { } test IsSolvable
-{ } generate a board per move
+{ } Neighboring boards: generate a board per move
 { } move pieces around the board
 {x} how do I know if I am at the goal state?
 { } implement trees, priority queue, search algo
+{} MUST: priority queue... check correction for must-dos
  
 ALGO
 { } stack, priority queue?
 { } how to tell if a node has been visited before? Visited set?
-{ } 
+{ } Must: 3 heuristic functions, including Manhattan-distance
+{ } Others: A-Star,  
 
 
 OPTIMIZING
