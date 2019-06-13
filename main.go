@@ -12,12 +12,12 @@ func main() {
 	size, solve, iterations := p.CheckFlags()
 	var Puzzle []int
 	if size == 0 && solve == false && iterations == 0 {
-		Puzzle = p.ReadBoardFromFile()
+		Puzzle, size = p.ReadBoardFromFile(Puzzle, size)
 	} else {
 		Puzzle = p.GenerateRandomBoard(size, solve, iterations)
 		//s.MovePieces(puzzle, size)
 	}
-	s.MakePuzzle(Puzzle, size, solve, iterations)
+	s.Solver(Puzzle, size, solve, iterations)
 	fmt.Println("\n\n\n You've reached the end of main()")
 	os.Exit(1)
 

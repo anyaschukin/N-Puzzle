@@ -23,18 +23,18 @@ func GenerateRandomBoard(size int, solve bool, iterations int) []int {
 		numbers[i], numbers[j] = numbers[j], numbers[i]
 	})
 	// generate + fill board
-	puzzle := make([]int, maxNb)
+	Puzzle := make([]int, maxNb)
 	index := 0
 	for i := 0; i < maxNb; i++ {
-		puzzle[i] = numbers[index]
+		Puzzle[i] = numbers[index]
 		index++
 	}
-	fmt.Println(puzzle)
-	g.PrintBoard(puzzle, size)
-	return puzzle
+	fmt.Println(Puzzle)
+	Puzzle = g.SpiralMatrix(Puzzle, size)
+	return Puzzle
 }
 
-func ReadBoardFromFile() []int {
+func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 
 	args := os.Args[1:]
 	arg := strings.Join(args, "")
@@ -51,22 +51,30 @@ func ReadBoardFromFile() []int {
 	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
 
 	numbers := re.FindAllString(string(file), -1)
+	fmt.Print("puzzle = %s", numbers)
 
 	// convert []string array to []int slice
-	var puzzle []int
-	i := 0 // flag for puzzle number
+	i := -1
 	for _, number := range numbers {
-		if i++; i == 1 {
+		if i++; i == 0 {
+			size, err = strconv.Atoi(number)
+			g.Check(err)
 			continue
 		}
 		integer, err := strconv.Atoi(number)
 		g.Check(err)
-		puzzle = append(puzzle, integer)
+		Puzzle = append(Puzzle, integer)
 	}
 
-	puzzle = g.FilterDuplicates(puzzle)
-	fmt.Print(puzzle)
-	return puzzle
+	var filtered int
+	Puzzle, filtered = g.FilterDuplicates(Puzzle)
+	if ((i - filtered) % size) != 0 {
+		fmt.Print("\n Not enough pieces to fill board!\n")
+		os.Exit(1)
+	}
+	Puzzle = g.SpiralMatrix(Puzzle, size)
+	g.PrintBoard(Puzzle, size)
+	return Puzzle, size
 }
 
 func CheckFlags() (int, bool, int) {
@@ -80,15 +88,13 @@ func CheckFlags() (int, bool, int) {
 
 	arg := strings.Join(args, "")
 	file := strings.Contains(arg, ".txt")
-	fmt.Printf("args = %d \n", len(args))
-	fmt.Printf("file = %v\n", file)
 
 	if len(args) == 1 && file {
 		return 0, false, 0
 	}
 
 	if len(args) > 1 && file {
-		fmt.Println("Error: must input file OR flags as argument.")
+		fmt.Println("Error: must input one file OR flags as argument.")
 		os.Exit(1)
 	}
 
