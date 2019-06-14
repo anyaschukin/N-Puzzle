@@ -22,7 +22,8 @@ SOLVER
 { } move pieces around the board
 {x} how do I know if I am at the goal state?
 { } implement trees, priority queue, search algo
-{} MUST: priority queue... check correction for must-dos
+{} MUST: priority queue, A*, 3 heuristics, closed set (checks if node is currently in the set)
+{} MUST: greed search, uniform cost
  
 ALGO
 { } stack, priority queue?
