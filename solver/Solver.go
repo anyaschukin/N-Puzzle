@@ -14,17 +14,16 @@ func Solver(Puzzle []int, size int, solve bool, iterations int) {
 	solveable := IsSolvable(Solution, Puzzle, size)
 	fmt.Printf("\nsolve it? %v\n", solveable)
 
-	CreateQueue()
+	//CreateQueue()
+
+	CreateNeighbors(Puzzle, size)
 
 	// apply algo:
 	// 	heuristic flags()
 	// 	switch case algo1 algo2 algo3
-	// 		build tree
-	// 		move pieces, generate board per MovePieces
-	// 		traverse tree
-
-	// create tree
-	// MovePieces(Puzzle)
+	// 		build priority queue
+	//		generate neighbors, explore, build history
+	// 		solved?
 
 	goal := g.CheckSliceEquality(Puzzle, Solution)
 	fmt.Printf("goal? %v\n", goal)

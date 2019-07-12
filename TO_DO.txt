@@ -26,7 +26,7 @@ SOLVER
 {} MUST: greed search, uniform cost
  
 ALGO
-{ } stack, priority queue?
+{x} priority queue?
 { } how to tell if a node has been visited before? Visited set?
 { } Must: 3 heuristic functions, including Manhattan-distance
 { } Others: A-Star,  
@@ -34,3 +34,4 @@ ALGO
 
 OPTIMIZING
 { } Define variables as close to their usage as possible (prevent extra variables declared)
+{ } When considering the neighbors of a search node, don't enqueue a neighbor if its board is the same as the board of the predecessor search node.
