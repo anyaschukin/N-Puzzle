@@ -45,17 +45,37 @@ func MovePieces(puzzle []int, size int) {
 	moves := up + down + left + right
 	fmt.Printf("\nthere are %d possible moves\n", moves)
 	neighbors := map[string][]int{}
+	g.PrintBoard(puzzle, size)
+	fmt.Printf("----\n")
 	for moves > 0 {
-		// generate list of strings
-		// map strings to copies of puzzle[]int
-		// move pieces
 		key := fmt.Sprintf("neighbor%d", moves)
 		neighbor := make([]int, len(puzzle))
-		copy(neighbor, puzzle) // need to test if this copies correctly
+		copy(neighbor, puzzle)
 		neighbors[key] = neighbor
+		// move pieces
+		// use switch for up, down, left, right?
+		if up == 1 {
+			fmt.Printf("UP empty = %d, empty-size= %d", empty, empty-size)
+			neighbor[empty], neighbor[empty-size] = neighbor[empty-size], neighbor[empty]
+			up = 0
+		} else if down == 1 {
+			fmt.Printf("DOWN empty = %d, empty-size= %d", empty, empty+size)
+			neighbor[empty], neighbor[empty+size] = neighbor[empty+size], neighbor[empty]
+			down = 0
+		} else if left == 1 {
+			fmt.Printf("LEFT empty = %d, empty-size= %d", empty, empty-size)
+			neighbor[empty], neighbor[empty-1] = neighbor[empty-1], neighbor[empty]
+			left = 0
+		} else if right == 1 {
+			fmt.Printf("RIGHT empty = %d, empty-size= %d", empty, empty-size)
+			neighbor[empty], neighbor[empty+1] = neighbor[empty+1], neighbor[empty]
+			right = 0
+		}
 		moves--
+		fmt.Printf("\n %s :", key)
+		g.PrintBoard(neighbor, size)
+		fmt.Println("----")
 	}
-	fmt.Printf("neighbors = %v\n", neighbors)
 	//return new
 
 	//	for i := 0; i <= moves; i++ {
