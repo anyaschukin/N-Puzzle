@@ -44,6 +44,18 @@ func MovePieces(puzzle []int, size int) {
 
 	moves := up + down + left + right
 	fmt.Printf("\nthere are %d possible moves\n", moves)
+	neighbors := map[string][]int{}
+	for moves > 0 {
+		// generate list of strings
+		// map strings to copies of puzzle[]int
+		// move pieces
+		key := fmt.Sprintf("neighbor%d", moves)
+		neighbor := make([]int, len(puzzle))
+		copy(neighbor, puzzle) // need to test if this copies correctly
+		neighbors[key] = neighbor
+		moves--
+	}
+	fmt.Printf("neighbors = %v\n", neighbors)
 	//return new
 
 	//	for i := 0; i <= moves; i++ {
