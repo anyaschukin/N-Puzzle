@@ -14,6 +14,8 @@ func Solver(Puzzle []int, size int, solve bool, iterations int) {
 	solveable := IsSolvable(Solution, Puzzle, size)
 	fmt.Printf("\nsolve it? %v\n", solveable)
 
+	CreateQueue()
+
 	// apply algo:
 	// 	heuristic flags()
 	// 	switch case algo1 algo2 algo3

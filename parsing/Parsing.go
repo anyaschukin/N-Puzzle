@@ -14,7 +14,7 @@ import (
 )
 
 func GenerateRandomBoard(size int, solve bool, iterations int) []int {
-	fmt.Println("\nGenerating random board...\n")
+	//	fmt.Println("\nGenerating random board...\n")
 
 	// generate a shuffled set of numbers
 	maxNb := size * size
@@ -29,7 +29,7 @@ func GenerateRandomBoard(size int, solve bool, iterations int) []int {
 		Puzzle[i] = numbers[index]
 		index++
 	}
-	fmt.Println(Puzzle)
+	//	fmt.Println(Puzzle)
 	Puzzle = g.SpiralMatrix(Puzzle, size)
 	return Puzzle
 }
