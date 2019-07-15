@@ -1,15 +1,14 @@
 package solver
 
 import (
-	"fmt"
 	g "n-puzzle/golib"
 )
 
 func countInversions(puzzle []int) int {
 	inversions := 0
-	for i := 0; i < len(puzzle); i++ {
+	for i := 0; i < len(puzzle)-1; i++ {
 		for j := i + 1; j < len(puzzle); j++ {
-			if j < i {
+			if puzzle[i] > puzzle[j] && puzzle[i] != 0 && puzzle[j] != 0 {
 				inversions++
 			}
 		}
@@ -17,7 +16,7 @@ func countInversions(puzzle []int) int {
 	return inversions
 }
 
-// need to test this
+// Trestan : I tested this function, should be working
 func IsSolvable(solution []int, puzzle []int, size int) bool {
 	pInversions := countInversions(puzzle)
 	sInversions := countInversions(solution)
@@ -28,12 +27,5 @@ func IsSolvable(solution []int, puzzle []int, size int) bool {
 		pInversions += pIdx / size
 		sInversions += sIdx / size
 	}
-
-	if (pInversions % 2) != (sInversions % 2) {
-		fmt.Println("This board is unsolvable :( \n")
-		return false
-	} else {
-		fmt.Println("This board is solvable :) \n")
-		return true
-	}
+	return ((pInversions % 2) == (sInversions % 2))
 }
