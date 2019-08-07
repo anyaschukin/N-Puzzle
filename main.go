@@ -9,16 +9,17 @@ import (
 
 func main() {
 
-	size, solve, iterations := p.CheckFlags()
+	size, iterations := p.CheckFlags()
 	var Puzzle []int
-	if size == 0 && solve == false && iterations == 0 {
+	//if size == 0 && solve == false && iterations == 0 {
+	if size == 0 && iterations == 0 {
 		Puzzle, size = p.ReadBoardFromFile(Puzzle, size)
 	} else {
-		Puzzle = p.GenerateRandomBoard(size, solve, iterations)
+		Puzzle = p.GenerateRandomBoard(size)
 		//s.MovePieces(puzzle, size)
 	}
-	s.Solver(Puzzle, size, solve, iterations)
-	fmt.Println("\n\n\n You've reached the end of main()")
+	s.Solver(Puzzle, size, iterations)
+	fmt.Println("\n You've reached the end of main()")
 	os.Exit(1)
 
 	//fmt.Println("no file or random board")

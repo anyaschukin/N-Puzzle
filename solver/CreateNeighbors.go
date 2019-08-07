@@ -67,6 +67,4 @@ func CreateNeighbors(puzzle []int, size int) map[string][]int {
 		moves--
 	}
 	return neighbors
-	// return neighbors
-	// how to return a map[string][]int
 }

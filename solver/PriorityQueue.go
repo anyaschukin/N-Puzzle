@@ -49,11 +49,11 @@ func (pq *PriorityQueue) update(item *Item, value []int, priority int) {
 }
 
 func CreateQueue() {
-	Puzzle1 := p.GenerateRandomBoard(3, false, 0)
+	Puzzle1 := p.GenerateRandomBoard(3)
 	fmt.Printf("Puzzle 1 = %v\n", Puzzle1)
-	Puzzle2 := p.GenerateRandomBoard(3, false, 0)
+	Puzzle2 := p.GenerateRandomBoard(3)
 	fmt.Printf("Puzzle 2 = %v\n", Puzzle2)
-	Puzzle3 := p.GenerateRandomBoard(3, false, 0)
+	Puzzle3 := p.GenerateRandomBoard(3)
 	fmt.Printf("Puzzle 3 = %v\n", Puzzle3)
 
 	items := map[int][]int{
@@ -72,7 +72,7 @@ func CreateQueue() {
 	}
 	heap.Init(&pq)
 
-	Puzzle4 := p.GenerateRandomBoard(3, false, 0)
+	Puzzle4 := p.GenerateRandomBoard(3)
 	fmt.Printf("Puzzle 4 = %v\n", Puzzle4)
 	item := &Item{
 		priority: 1,

@@ -10,10 +10,9 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
-func GenerateRandomBoard(size int, solve bool, iterations int) []int {
+func GenerateRandomBoard(size int) []int {
 	//	fmt.Println("\nGenerating random board...\n")
 
 	// generate a shuffled set of numbers
@@ -77,10 +76,10 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	return Puzzle, size
 }
 
-func CheckFlags() (int, bool, int) {
+func CheckFlags() (int, int) {
 	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
-	solveablePtr := flag.Bool("s", false, "Forces generation of a solvable puzzle. Overrides -u.")
-	unsolveablePtr := flag.Bool("u", false, "Forces generation of an unsolvable puzzle")
+	//solveablePtr := flag.Bool("s", false, "Forces generation of a solvable puzzle. Overrides -u.")
+	//unsolveablePtr := flag.Bool("u", false, "Forces generation of an unsolvable puzzle")
 	iterationsPtr := flag.Int("iterations", 100, "Number of passes")
 
 	flag.Parse()
@@ -90,7 +89,7 @@ func CheckFlags() (int, bool, int) {
 	file := strings.Contains(arg, ".txt")
 
 	if len(args) == 1 && file {
-		return 0, false, 0
+		return 0, 0
 	}
 
 	if len(args) > 1 && file {
@@ -108,28 +107,28 @@ func CheckFlags() (int, bool, int) {
 		os.Exit(1)
 	}
 
-	if *solveablePtr && *unsolveablePtr {
-		fmt.Println("Can't be both solvable AND unsolvable, dummy!")
-		os.Exit(1)
-	}
+	//if *solveablePtr && *unsolveablePtr {
+	//	fmt.Println("Can't be both solvable AND unsolvable, dummy!")
+	//	os.Exit(1)
+	//}
 
 	if *iterationsPtr < 1 {
 		fmt.Println("Can't solve a puzzle in less than 1 iteration!")
 		os.Exit(1)
 	}
 
-	var solve bool
-	if !(*solveablePtr) && !(*unsolveablePtr) {
-		rand.Seed(time.Now().UnixNano())
-		solve = g.RandomBool()
-	} else if *solveablePtr {
-		solve = true
-	} else if *unsolveablePtr {
-		solve = false
-	}
+	//var solve bool
+	//if !(*solveablePtr) && !(*unsolveablePtr) {
+	//	rand.Seed(time.Now().UnixNano())
+	//	solve = g.RandomBool()
+	//} else if *solveablePtr {
+	//	solve = true
+	//} else if *unsolveablePtr {
+	//	solve = false
+	//}
 
 	size := *sizePtr
 	iterations := *iterationsPtr
 
-	return size, solve, iterations
+	return size, iterations
 }
