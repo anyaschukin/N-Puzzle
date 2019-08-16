@@ -5,6 +5,7 @@ import (
 	"fmt"
 	g "n-puzzle/golib"
 	"os"
+	"reflect"
 
 	"github.com/AndreasBriese/bbloom"
 )
@@ -33,21 +34,6 @@ func newProblem(Puzzle []int, size int) Problem {
 	return problem
 }
 
-func (problem *Problem) solution(puzzle []int) bool {
-	if len(problem.goal) != len(puzzle) {
-		//Problem.solutionFound = false
-		return false
-	}
-	for i := range problem.goal {
-		if problem.goal[i] != puzzle[i] {
-			//Problem.solutionFound = false
-			return false
-		}
-	}
-	//Problem.solutionFound = true
-	return true
-}
-
 type State struct {
 	index     int
 	priority  int
@@ -69,6 +55,7 @@ func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *S
 // if I comment this
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
+
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
 		os.Exit(1)
@@ -80,13 +67,16 @@ func Solver(Puzzle []int, size int, iterations int) {
 	for counter := 0; counter < 300000; counter++ {
 		state = heap.Pop(&openQueue).(*State)
 
-		if problem.solution(Puzzle) {
+		if reflect.DeepEqual(problem.goal, state.puzzle) {
 			fmt.Println("This puzzle has been solved!\n")
 			os.Exit(1)
 		}
+
 		fmt.Println("\nNODE\n")
+
+		fmt.Printf("goal: %v \n", problem.goal)
 		fmt.Printf("%d, %d, %d: %v \n", state.priority, state.depth, state.heuristic, state.puzzle)
-		// time.Sleep(1 * time.Second)
+		//time.Sleep(1 * time.Second)
 		closedSet.Add([]byte(g.PuzzleToString(state.puzzle, ",")))
 
 		children := CreateNeighbors(state.puzzle, size)
