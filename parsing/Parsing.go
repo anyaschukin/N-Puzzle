@@ -73,7 +73,7 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 		fmt.Print("\n Not enough pieces to fill board!\n")
 		os.Exit(1)
 	}
-	Puzzle = g.SpiralMatrix(Puzzle, size)
+	//Puzzle = g.SpiralMatrix(Puzzle, size) I DON'T NEED THIS!!!! DO NOT USE IT
 	fmt.Println("Here")
 	g.PrintBoard(Puzzle, size)
 	fmt.Println("Here")
