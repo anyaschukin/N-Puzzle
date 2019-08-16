@@ -52,7 +52,7 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
 
 	numbers := re.FindAllString(string(file), -1)
-	fmt.Print("puzzle = %s", numbers)
+	//fmt.Print("puzzle = %s", numbers)
 
 	// convert []string array to []int slice
 	i := -1
@@ -74,7 +74,9 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 		os.Exit(1)
 	}
 	Puzzle = g.SpiralMatrix(Puzzle, size)
+	fmt.Println("Here")
 	g.PrintBoard(Puzzle, size)
+	fmt.Println("Here")
 	return Puzzle, size
 }
 
