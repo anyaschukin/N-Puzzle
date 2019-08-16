@@ -3,8 +3,10 @@ package solver
 import (
 	"container/heap"
 	"fmt"
-	p "n-puzzle/parsing"
+	g "n-puzzle/golib"
 	"os"
+
+	"github.com/AndreasBriese/bbloom"
 )
 
 type Problem struct {
@@ -31,20 +33,20 @@ func newProblem(Puzzle []int, size int) Problem {
 	return problem
 }
 
-//func (problem *Problem) solution(puzzle []int) {
-//	if len(a) != len(b) {
-//		Problem.solutionFound = false
-//		return false
-//	}
-//	for i := range a {
-//		if a[i] != b[i] {
-//			Problem.solutionFound = false
-//			return false
-//		}
-//	}
-//	Problem.solutionFound = true
-//	return true
-//}
+func (problem *Problem) solution(puzzle []int) bool {
+	if len(problem.goal) != len(puzzle) {
+		//Problem.solutionFound = false
+		return false
+	}
+	for i := range problem.goal {
+		if problem.goal[i] != puzzle[i] {
+			//Problem.solutionFound = false
+			return false
+		}
+	}
+	//Problem.solutionFound = true
+	return true
+}
 
 type State struct {
 	index     int
@@ -54,12 +56,12 @@ type State struct {
 	puzzle    []int
 }
 
-func newState(Puzzle []int, size int, depth int) *State {
+func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *State {
 	state := &State{}
 	state.index = 0
-	state.priority = 1
+	state.priority = priority
 	state.depth = depth
-	state.heuristic = 0
+	state.heuristic = heuristic
 	state.puzzle = Puzzle
 	return state
 }
@@ -71,46 +73,74 @@ func Solver(Puzzle []int, size int, iterations int) {
 		fmt.Println("This puzzle in unsolvable.")
 		os.Exit(1)
 	}
-
-	//closedSet := bbloom.New(float64(1<<16), float64(0.01))
-	state := newState(Puzzle, size, 0)
+	closedSet := bbloom.New(float64(1<<16), float64(0.01))
+	state := newState(Puzzle, size, 1, 0, 0)
 	openQueue := CreateQueue(*state)
-	//state = heap.Pop(&openQueue).(*State)
 
-	Puzzle4 := p.GenerateRandomBoard(3)
-	state = newState(Puzzle4, size, 0)
-	heap.Push(&openQueue, state)
-	openQueue.Update(state, state.puzzle, 4)
+	for counter := 0; counter < 300000; counter++ {
+		state = heap.Pop(&openQueue).(*State)
 
-	Puzzle3 := p.GenerateRandomBoard(3)
-	state = newState(Puzzle3, size, 0)
-	heap.Push(&openQueue, state)
-	openQueue.Update(state, state.puzzle, 3)
+		if problem.solution(Puzzle) {
+			fmt.Println("This puzzle has been solved!\n")
+			os.Exit(1)
+		}
+		fmt.Println("\nNODE\n")
+		fmt.Printf("%d, %d, %d: %v \n", state.priority, state.depth, state.heuristic, state.puzzle)
+		// time.Sleep(1 * time.Second)
+		closedSet.Add([]byte(g.PuzzleToString(state.puzzle, ",")))
 
-	for openQueue.Len() > 0 {
-		state := heap.Pop(&openQueue).(*State)
-		fmt.Printf("%.2d:%v \n", state.priority, state.puzzle)
+		children := CreateNeighbors(state.puzzle, size)
+		for _, child := range children {
+			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
+				problem.sizeComplexity++
+				continue
+			} else {
+				problem.timeComplexity++
+				heuristic := g.Manhattan(child, problem.goal, size)
+				priority := (state.depth + 1) + heuristic
+				s := newState(child, size, priority, state.depth+1, heuristic)
+				fmt.Printf("%d, %d, %d: %v \n", s.priority, s.depth, s.heuristic, s.puzzle)
+
+				//closedSet.Add([]byte(g.PuzzleToString(child, ",")))
+				heap.Push(&openQueue, s)
+				fmt.Printf("priority = %d\n", priority)
+			}
+			//			tentative_gScore := g.Manhattan(state.puzzle, child, size)
+			//			gScore := g.Manhattan(child, problem.goal, size)
+
+			// if s in target... rebuild path to start and finish!
+			//heap.Push((&openQueue).(*State))
+			//heap.Push((&openQueue).(*State))
+
+		}
 	}
 
-	//for counter := 0; counter < 300000; counter++ {
-	//	state = heap.Pop(&openQueue).(*State)
-	//	closedSet.Add([]byte(g.PuzzleToString(state.puzzle, ",")))
-	//	if problem.solution(Puzzle) {
-	//
-	//	}
-	//	for child := range CreateNeighbors(state.Puzzle, size) {
-	//		s = newState(child, size, state.depth+1)
-	//		// if s in target... rebuild path to start and finish!
-	//		if closedset.Has([]byte(g.PuzzleToString(s.puzzle, ","))) {
-	//			problem.sizeComplexity++
-	//		} else {
-	//			problem.timeComplexity++
-	//			heap.Push((&openQueue).(*State))
-	//		}
-	//
-	//	}
-	//}
 }
+
+// Puzzle4 := p.GenerateRandomBoard(3)
+// state = newState(Puzzle4, size, 0)
+// heap.Push(&openQueue, state)
+// openQueue.Update(state, state.puzzle, 4)
+
+// Puzzle3 := p.GenerateRandomBoard(3)
+// state = newState(Puzzle3, size, 0)
+// heap.Push(&openQueue, state)
+// openQueue.Update(state, state.puzzle, 3)
+
+// Puzzle2 := p.GenerateRandomBoard(3)
+// state = newState(Puzzle2, size, 0)
+// heap.Push(&openQueue, state)
+// openQueue.Update(state, state.puzzle, 2)
+
+// Puzzle5 := p.GenerateRandomBoard(3)
+// state = newState(Puzzle5, size, 0)
+// heap.Push(&openQueue, state)
+// openQueue.Update(state, state.puzzle, 5)
+
+// for openQueue.Len() > 0 {
+// 	state := heap.Pop(&openQueue).(*State)
+// 	fmt.Printf("%.2d:%v \n", state.priority, state.puzzle)
+// }
 
 //Solution := MakeGoal(size)
 //g.PrintBoard(Solution, size)
