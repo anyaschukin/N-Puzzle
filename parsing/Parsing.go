@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func GenerateRandomBoard(size int) []int {
@@ -18,6 +19,7 @@ func GenerateRandomBoard(size int) []int {
 	// generate a shuffled set of numbers
 	maxNb := size * size
 	numbers := g.MakeRangeNum(0, maxNb-1)
+	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(numbers), func(i, j int) {
 		numbers[i], numbers[j] = numbers[j], numbers[i]
 	})

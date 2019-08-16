@@ -2,17 +2,17 @@ package solver
 
 import (
 	"container/heap"
-	"fmt"
-	p "n-puzzle/parsing"
 )
 
-type Item struct {
-	index    int
-	priority int
-	value    []int
-}
+//type State struct {
+//	index     int
+//	priority  int
+//	cost      int
+//	heuristic int
+//	puzzle    []int
+//}
 
-type PriorityQueue []*Item
+type PriorityQueue []*State
 
 func (pq PriorityQueue) Len() int { return len(pq) }
 
@@ -28,61 +28,52 @@ func (pq PriorityQueue) Swap(i, j int) {
 
 func (pq *PriorityQueue) Push(x interface{}) {
 	n := len(*pq)
-	item := x.(*Item)
-	item.index = n
-	*pq = append(*pq, item)
+	state := x.(*State)
+	state.index = n
+	*pq = append(*pq, state)
 }
 
 func (pq *PriorityQueue) Pop() interface{} {
 	old := *pq
 	n := len(old)
-	item := old[n-1]
-	item.index = -1 // for safety
+	state := old[n-1]
+	state.index = -1 // for safety
 	*pq = old[0 : n-1]
-	return item
+	return state
 }
 
-func (pq *PriorityQueue) update(item *Item, value []int, priority int) {
-	item.value = value
-	item.priority = priority
-	heap.Fix(pq, item.index)
+func (pq *PriorityQueue) Update(state *State, puzzle []int, priority int) {
+	state.puzzle = puzzle
+	state.priority = priority
+	heap.Fix(pq, state.index)
 }
 
-func CreateQueue() {
-	Puzzle1 := p.GenerateRandomBoard(3)
-	fmt.Printf("Puzzle 1 = %v\n", Puzzle1)
-	Puzzle2 := p.GenerateRandomBoard(3)
-	fmt.Printf("Puzzle 2 = %v\n", Puzzle2)
-	Puzzle3 := p.GenerateRandomBoard(3)
-	fmt.Printf("Puzzle 3 = %v\n", Puzzle3)
-
-	items := map[int][]int{
-		1: Puzzle1, 2: Puzzle2, 3: Puzzle3,
-	}
-
-	pq := make(PriorityQueue, len(items))
-	i := 0
-	for priority, value := range items {
-		pq[i] = &Item{
-			index:    i,
-			priority: priority,
-			value:    value,
-		}
-		i++
-	}
-	heap.Init(&pq)
-
-	Puzzle4 := p.GenerateRandomBoard(3)
-	fmt.Printf("Puzzle 4 = %v\n", Puzzle4)
-	item := &Item{
-		priority: 1,
-		value:    Puzzle4,
-	}
-	heap.Push(&pq, item)
-	pq.update(item, item.value, 5)
-
-	for pq.Len() > 0 {
-		item := heap.Pop(&pq).(*Item)
-		fmt.Printf("%.2d:%v \n", item.priority, item.value)
-	}
+func CreateQueue(state State) PriorityQueue {
+	Pq := make(PriorityQueue, 1)
+	Pq[0] = &state
+	heap.Init(&Pq)
+	return Pq
 }
+
+//	for priority, puzzle := range States {
+//		pq[i] = &State{
+//			index:    i,
+//			priority: priority,
+//			puzzle:    puzzle,
+//		}
+//		i++
+//	}
+
+//		Puzzle4 := p.GenerateRandomBoard(3)
+//		fmt.Printf("Puzzle 4 = %v\n", Puzzle4)
+// state := &State{
+// 	priority: 1,
+// 	puzzle:    Puzzle4,
+// }
+// heap.Push(&pq, state)
+// pq.update(state, state.puzzle, 5)
+//
+//		for pq.Len() > 0 {
+//			State := heap.Pop(&pq).(*State)
+//			fmt.Printf("%.2d:%v \n", State.priority, State.puzzle)
+//		}
