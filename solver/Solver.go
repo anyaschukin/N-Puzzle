@@ -52,9 +52,10 @@ func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *S
 	return state
 }
 
-// if I comment this
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
+
+	g.PrintBoard(Puzzle, size)
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
@@ -64,19 +65,16 @@ func Solver(Puzzle []int, size int, iterations int) {
 	state := newState(Puzzle, size, 1, 0, 0)
 	openQueue := CreateQueue(*state)
 
-	for counter := 0; counter < 300000; counter++ {
+	for counter := 0; counter < 6000000; counter++ {
 		state = heap.Pop(&openQueue).(*State)
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
 			fmt.Println("This puzzle has been solved!\n")
+			g.PrintBoard(state.puzzle, size)
+			// REBUILD PATH TO START
 			os.Exit(1)
 		}
 
-		fmt.Println("\nNODE\n")
-
-		fmt.Printf("goal: %v \n", problem.goal)
-		fmt.Printf("%d, %d, %d: %v \n", state.priority, state.depth, state.heuristic, state.puzzle)
-		//time.Sleep(1 * time.Second)
 		closedSet.Add([]byte(g.PuzzleToString(state.puzzle, ",")))
 
 		children := CreateNeighbors(state.puzzle, size)
@@ -89,22 +87,12 @@ func Solver(Puzzle []int, size int, iterations int) {
 				heuristic := g.Manhattan(child, problem.goal, size)
 				priority := (state.depth + 1) + heuristic
 				s := newState(child, size, priority, state.depth+1, heuristic)
-				fmt.Printf("%d, %d, %d: %v \n", s.priority, s.depth, s.heuristic, s.puzzle)
-
-				//closedSet.Add([]byte(g.PuzzleToString(child, ",")))
 				heap.Push(&openQueue, s)
-				fmt.Printf("priority = %d\n", priority)
 			}
-			//			tentative_gScore := g.Manhattan(state.puzzle, child, size)
-			//			gScore := g.Manhattan(child, problem.goal, size)
-
-			// if s in target... rebuild path to start and finish!
 			//heap.Push((&openQueue).(*State))
-			//heap.Push((&openQueue).(*State))
-
 		}
+		// FAILURE condition?
 	}
-
 }
 
 // Puzzle4 := p.GenerateRandomBoard(3)
@@ -131,28 +119,3 @@ func Solver(Puzzle []int, size int, iterations int) {
 // 	state := heap.Pop(&openQueue).(*State)
 // 	fmt.Printf("%.2d:%v \n", state.priority, state.puzzle)
 // }
-
-//Solution := MakeGoal(size)
-//g.PrintBoard(Solution, size)
-//
-//solveable := IsSolvable(Solution, Puzzle, size)
-//fmt.Printf("\nsolve it? %v\n", solveable)
-
-//CreateQueue()
-
-//neighbors := CreateNeighbors(Puzzle, size)
-//fmt.Println(neighbors)
-
-// apply algo:
-// 	heuristic flags()
-// 	switch case algo1 algo2 algo3
-// 		build priority queue
-//		generate neighbors, explore, build history
-// 		solved?
-
-//goal := g.CheckSliceEquality(Puzzle, Solution)
-//fmt.Printf("goal? %v\n", goal)
-
-//for i := 1; i <= iterations; i++ {
-//	swapEmpty(p, size)
-//}

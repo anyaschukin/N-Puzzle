@@ -4,14 +4,6 @@ import (
 	"container/heap"
 )
 
-//type State struct {
-//	index     int
-//	priority  int
-//	cost      int
-//	heuristic int
-//	puzzle    []int
-//}
-
 type PriorityQueue []*State
 
 func (pq PriorityQueue) Len() int { return len(pq) }

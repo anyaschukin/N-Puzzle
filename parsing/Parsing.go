@@ -14,7 +14,6 @@ import (
 )
 
 func GenerateRandomBoard(size int) []int {
-	//	fmt.Println("\nGenerating random board...\n")
 
 	// generate a shuffled set of numbers
 	maxNb := size * size
@@ -30,8 +29,6 @@ func GenerateRandomBoard(size int) []int {
 		Puzzle[i] = numbers[index]
 		index++
 	}
-	//	fmt.Println(Puzzle)
-	Puzzle = g.SpiralMatrix(Puzzle, size)
 	return Puzzle
 }
 
@@ -52,7 +49,6 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	// re := regexp.MustCompile("[^1-9]") // finds all non-numbers
 
 	numbers := re.FindAllString(string(file), -1)
-	//fmt.Print("puzzle = %s", numbers)
 
 	// convert []string array to []int slice
 	i := -1
@@ -73,17 +69,11 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 		fmt.Print("\n Not enough pieces to fill board!\n")
 		os.Exit(1)
 	}
-	//Puzzle = g.SpiralMatrix(Puzzle, size) I DON'T NEED THIS!!!! DO NOT USE IT
-	fmt.Println("Here")
-	g.PrintBoard(Puzzle, size)
-	fmt.Println("Here")
 	return Puzzle, size
 }
 
 func CheckFlags() (int, int) {
 	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
-	//solveablePtr := flag.Bool("s", false, "Forces generation of a solvable puzzle. Overrides -u.")
-	//unsolveablePtr := flag.Bool("u", false, "Forces generation of an unsolvable puzzle")
 	iterationsPtr := flag.Int("iterations", 100, "Number of passes")
 
 	flag.Parse()
@@ -111,25 +101,10 @@ func CheckFlags() (int, int) {
 		os.Exit(1)
 	}
 
-	//if *solveablePtr && *unsolveablePtr {
-	//	fmt.Println("Can't be both solvable AND unsolvable, dummy!")
-	//	os.Exit(1)
-	//}
-
 	if *iterationsPtr < 1 {
 		fmt.Println("Can't solve a puzzle in less than 1 iteration!")
 		os.Exit(1)
 	}
-
-	//var solve bool
-	//if !(*solveablePtr) && !(*unsolveablePtr) {
-	//	rand.Seed(time.Now().UnixNano())
-	//	solve = g.RandomBool()
-	//} else if *solveablePtr {
-	//	solve = true
-	//} else if *unsolveablePtr {
-	//	solve = false
-	//}
 
 	size := *sizePtr
 	iterations := *iterationsPtr

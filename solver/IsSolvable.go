@@ -27,5 +27,6 @@ func IsSolvable(solution []int, puzzle []int, size int) bool {
 		pInversions += pIdx / size
 		sInversions += sIdx / size
 	}
+
 	return ((pInversions % 2) == (sInversions % 2))
 }
