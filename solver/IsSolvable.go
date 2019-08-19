@@ -16,8 +16,8 @@ func countInversions(puzzle []int) int {
 	return inversions
 }
 
-// Trestan : I tested this function, should be working
-func IsSolvable(solution []int, puzzle []int, size int) bool {
+// if puzzle size is odd
+func oddSize(solution []int, puzzle []int, size int) bool {
 	pInversions := countInversions(puzzle)
 	sInversions := countInversions(solution)
 	pIdx := g.FindIndexSlice(puzzle, 0)
@@ -30,3 +30,33 @@ func IsSolvable(solution []int, puzzle []int, size int) bool {
 
 	return ((pInversions % 2) == (sInversions % 2))
 }
+
+func evenSize(solution []int, puzzle []int, size int) bool {
+	zeroIdx := FindIndexSlice(solution, 0)
+	row := zeroIdx % size
+	if (row % 2 != 0) &&  
+}
+
+func IsSolvable(solution []int, puzzle []int, size int) bool {
+
+}
+
+// FROM https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+// The formula says:
+// If the grid width is odd, then the number of inversions in a solvable situation is even.
+// If the grid width is even, and the blank is on an even row counting from the bottom (second-last, fourth-last etc), then the number of inversions in a solvable situation is odd.
+// If the grid width is even, and the blank is on an odd row counting from the bottom (last, third-last, fifth-last etc) then the number of inversions in a solvable situation is even.
+// That gives us this formula for determining solvability:
+// 
+// ( (grid width odd) && (#inversions even) )  ||  ( (grid width even) && ((blank on odd row from bottom) == (#inversions even)) )
+
+
+
+// from Damien
+// If N is even, position of 0 from bottom is needed
+    else {
+		const row = find(this.puzzle, { value: 0 });
+		const snailRow = find(this.snail, { value: 0 });
+		const numberOfRows = Math.abs(snailRow.y - row.y) + Math.abs(snailRow.x - row.x);
+		this.solvable = (numberOfRows % 2 !== numberOfPermutations % 2);
+	  }

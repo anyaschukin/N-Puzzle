@@ -6,6 +6,7 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"reflect"
+	"time"
 
 	"github.com/AndreasBriese/bbloom"
 )
@@ -55,7 +56,7 @@ func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *S
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
 
-	g.PrintBoard(Puzzle, size)
+	//g.PrintBoard(Puzzle, size)
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
@@ -66,6 +67,12 @@ func Solver(Puzzle []int, size int, iterations int) {
 	openQueue := CreateQueue(*state)
 
 	for counter := 0; counter < 6000000; counter++ {
+												
+		if len(openQueue) == 0 {
+			fmt.Println("This priorityQueue is empty.")
+			g.PrintBoard(state.puzzle, size)
+			os.Exit(1)
+		}
 		state = heap.Pop(&openQueue).(*State)
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
@@ -75,20 +82,29 @@ func Solver(Puzzle []int, size int, iterations int) {
 			os.Exit(1)
 		}
 
-		closedSet.Add([]byte(g.PuzzleToString(state.puzzle, ",")))
+		time.Sleep(1000 * time.Millisecond)
+		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
 
 		children := CreateNeighbors(state.puzzle, size)
+		//fmt.Print(children)
+
+		fmt.Println("\n CHILDREN \n")
 		for _, child := range children {
+			g.PrintBoard(child, size)
+			
 			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
 				problem.sizeComplexity++
 				continue
-			} else {
-				problem.timeComplexity++
-				heuristic := g.Manhattan(child, problem.goal, size)
-				priority := (state.depth + 1) + heuristic
-				s := newState(child, size, priority, state.depth+1, heuristic)
-				heap.Push(&openQueue, s)
 			}
+			problem.timeComplexity++
+			heuristic := g.Manhattan(child, problem.goal, size)
+			priority := (state.depth + 1) + heuristic
+			s := newState(child, size, priority, state.depth+1, heuristic)
+			heap.Push(&openQueue, s)
+
+			fmt.Printf("priority = %d \n", priority)
+			//g.PrintBoard(state.puzzle, size)
+
 			//heap.Push((&openQueue).(*State))
 		}
 		// FAILURE condition?
