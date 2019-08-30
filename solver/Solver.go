@@ -6,7 +6,6 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"reflect"
-	"time"
 
 	"github.com/AndreasBriese/bbloom"
 )
@@ -56,7 +55,7 @@ func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *S
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
 
-	g.PrintBoard(Puzzle, size)
+	// g.PrintBoard(Puzzle, size)
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
@@ -76,10 +75,10 @@ func Solver(Puzzle []int, size int, iterations int) {
 		state = heap.Pop(&openQueue).(*State)
 		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
 
-		fmt.Println(" ----------- ")
-		fmt.Println("\n NEW STATE")
-		g.PrintBoard(state.puzzle, size)
-		fmt.Println(" ----------- ")
+		// fmt.Println(" ----------- ")
+		// fmt.Println("\n NEW STATE")
+		// g.PrintBoard(state.puzzle, size)
+		// fmt.Println(" ----------- ")
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
 			fmt.Println("This puzzle has been solved!\n")
@@ -88,12 +87,12 @@ func Solver(Puzzle []int, size int, iterations int) {
 			os.Exit(1)
 		}
 
-		time.Sleep(1000 * time.Millisecond)
+		// time.Sleep(1000 * time.Millisecond)
 
 		children := CreateNeighbors(state.puzzle, size)
 		//fmt.Print(children)
 
-		fmt.Println("\n CHILDREN \n")
+		// fmt.Println("\n CHILDREN \n")
 		for _, child := range children {
 			// g.PrintBoard(child, size)
 
@@ -102,16 +101,17 @@ func Solver(Puzzle []int, size int, iterations int) {
 				continue
 			}
 			problem.timeComplexity++
-			heuristic := g.Manhattan(child, problem.goal, size)
-			priority := (state.depth + 1) + heuristic
-			s := newState(child, size, priority, state.depth+1, heuristic)
-			if s.priority < state.priority {
-				heap.Push(&openQueue, s)
-			}
-			fmt.Printf("\n priority = %d", priority)
-			g.PrintBoard(child, size)
+			// s := newState(child, size, priority, state.depth+1, heuristic)
 
-			//heap.Push((&openQueue).(*State))
+			heuristic := g.Manhattan(child, problem.goal, size)
+			// priority := (state.depth + 1) + heuristic
+			priority := heuristic
+			s := newState(child, size, priority, state.depth+1, heuristic)
+
+			// fmt.Printf("\n priority = %d", priority)
+			// g.PrintBoard(child, size)
+
+			heap.Push(&openQueue, s)
 		}
 		// FAILURE condition?
 	}
