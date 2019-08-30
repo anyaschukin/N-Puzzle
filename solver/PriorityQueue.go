@@ -1,6 +1,7 @@
 package solver
 
 import (
+	//"fmt"
 	"container/heap"
 )
 
@@ -13,6 +14,7 @@ func (pq PriorityQueue) Less(i, j int) bool {
 }
 
 func (pq PriorityQueue) Swap(i, j int) {
+	//fmt.Printf("pq[i], pq[j] = %d, %d\n", pq[i].index, pq[j].index)
 	pq[i], pq[j] = pq[j], pq[i]
 	pq[i].index = i
 	pq[j].index = j

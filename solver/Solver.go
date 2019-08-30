@@ -56,24 +56,30 @@ func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *S
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
 
-	//g.PrintBoard(Puzzle, size)
+	g.PrintBoard(Puzzle, size)
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
 		os.Exit(1)
 	}
 	closedSet := bbloom.New(float64(1<<16), float64(0.01))
-	state := newState(Puzzle, size, 1, 0, 0)
+	state := newState(Puzzle, size, 10000, 0, 0)
 	openQueue := CreateQueue(*state)
 
 	for counter := 0; counter < 6000000; counter++ {
-												
+
 		if len(openQueue) == 0 {
 			fmt.Println("This priorityQueue is empty.")
 			g.PrintBoard(state.puzzle, size)
 			os.Exit(1)
 		}
 		state = heap.Pop(&openQueue).(*State)
+		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
+
+		fmt.Println(" ----------- ")
+		fmt.Println("\n NEW STATE")
+		g.PrintBoard(state.puzzle, size)
+		fmt.Println(" ----------- ")
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
 			fmt.Println("This puzzle has been solved!\n")
@@ -83,15 +89,14 @@ func Solver(Puzzle []int, size int, iterations int) {
 		}
 
 		time.Sleep(1000 * time.Millisecond)
-		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
 
 		children := CreateNeighbors(state.puzzle, size)
 		//fmt.Print(children)
 
 		fmt.Println("\n CHILDREN \n")
 		for _, child := range children {
-			g.PrintBoard(child, size)
-			
+			// g.PrintBoard(child, size)
+
 			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
 				problem.sizeComplexity++
 				continue
@@ -100,10 +105,11 @@ func Solver(Puzzle []int, size int, iterations int) {
 			heuristic := g.Manhattan(child, problem.goal, size)
 			priority := (state.depth + 1) + heuristic
 			s := newState(child, size, priority, state.depth+1, heuristic)
-			heap.Push(&openQueue, s)
-
-			fmt.Printf("priority = %d \n", priority)
-			//g.PrintBoard(state.puzzle, size)
+			if s.priority < state.priority {
+				heap.Push(&openQueue, s)
+			}
+			fmt.Printf("\n priority = %d", priority)
+			g.PrintBoard(child, size)
 
 			//heap.Push((&openQueue).(*State))
 		}

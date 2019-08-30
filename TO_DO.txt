@@ -17,19 +17,22 @@ PARSING
 { } are both row and col between 0 and (n - 1) ?
 
 SOLVER
-{ } test IsSolvable
+{x} test IsSolvable
 {x} Neighboring boards: generate a board per move
-{ } move pieces around the board
+{x} move pieces around the board
 {x} how do I know if I am at the goal state?
-{ } bloom filter
-{ } implement trees, priority queue, search algo
-{} MUST: priority queue, A*, 3 heuristics, closed set (checks if node is currently in the set)
-{} MUST: greed search, uniform cost
+{x} bloom filter
+{x} priority queue, search algo
+{} ability to choose heuristic from command line
+{} solves puzzle size 3, doesn't solve size 4
+{x} MUST: priority queue, A*, 3 heuristics, closed set (checks if node is currently in the set)
+{x} MUST: greed search, uniform cost
+{x} admissible = optimistic heuristic
  
 ALGO
 {x} priority queue?
 { } how to tell if a node has been visited before? Visited set?
-{ } Must: 3 heuristic functions, including Manhattan-distance
+{x} Must: 3 heuristic functions, including Manhattan-distance
 { } Others: A-Star, IDA-Star
 
 
