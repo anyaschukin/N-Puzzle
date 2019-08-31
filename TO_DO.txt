@@ -37,7 +37,6 @@ SOLVER
  
 ALGO
 {x} priority queue?
-{ } how to tell if a node has been visited before? Visited set?
 {x} Must: 3 heuristic functions, including Manhattan-distance
 { } Others: A-Star, IDA-Star
 
