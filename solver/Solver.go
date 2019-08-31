@@ -6,7 +6,6 @@ import (
 	"fmt"
 	g "n-puzzle/golib"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/AndreasBriese/bbloom"
@@ -95,12 +94,12 @@ func Solver(Puzzle []int, size int) {
 			fmt.Println("This puzzle has been solved!\n")
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
-			for p := state; p != nil; p = state.before {
-				g.PrintBoard(p.puzzle, size)
-				if reflect.DeepEqual(problem.goal, p.puzzle) {
-					break
-				}
-			}
+			// for p := state; p != nil; p = state.before {
+			// 	g.PrintBoard(p.puzzle, size)
+			// 	if reflect.DeepEqual(problem.goal, p.puzzle) {
+			// 		break
+			// 	}
+			// }
 
 			// TESTING RUNTIME
 			elapsed := time.Since(start)
@@ -108,16 +107,6 @@ func Solver(Puzzle []int, size int) {
 			unsolved = false
 			// os.Exit(1)
 		}
-
-		// if reflect.DeepEqual(problem.goal, state.puzzle) {
-		// fmt.Println("This puzzle has been solved!\n")
-		// g.PrintBoard(state.puzzle, size)
-		// REBUILD PATH TO START
-		// unsolved = false
-		// elapsed := time.Since(start)
-		// log.Printf("Binomial took %s", elapsed)
-		// os.Exit(1)
-		// }
 
 		children := CreateNeighbors(state.puzzle, size)
 
@@ -138,15 +127,6 @@ func Solver(Puzzle []int, size int) {
 				fmt.Printf("Binomial took %s", elapsed)
 				unsolved = false
 			}
-
-			// if reflect.DeepEqual(problem.goal, child) {
-			// fmt.Println("This puzzle has been solved!\n")
-			// g.PrintBoard(child, size)
-			// REBUILD PATH TO START
-			// elapsed := time.Since(start)
-			// log.Printf("Binomial took %s", elapsed)
-			// os.Exit(1)
-			// }
 
 			if closedSet.Has([]byte(tmpChild)) {
 				problem.sizeComplexity++
@@ -172,3 +152,13 @@ func Solver(Puzzle []int, size int) {
 		}
 	}
 }
+
+// if reflect.DeepEqual(problem.goal, state.puzzle) {
+// fmt.Println("This puzzle has been solved!\n")
+// g.PrintBoard(state.puzzle, size)
+// REBUILD PATH TO START
+// unsolved = false
+// elapsed := time.Since(start)
+// log.Printf("Binomial took %s", elapsed)
+// os.Exit(1)
+// }
