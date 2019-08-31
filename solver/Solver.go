@@ -61,6 +61,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 		fmt.Println("This puzzle in unsolvable.")
 		os.Exit(1)
 	}
+
+	openSet := make(map[*State]bool)
 	closedSet := bbloom.New(float64(1<<16), float64(0.01))
 	state := newState(Puzzle, size, 10000, 0, 0)
 	openQueue := CreateQueue(*state)
@@ -72,12 +74,16 @@ func Solver(Puzzle []int, size int, iterations int) {
 			g.PrintBoard(state.puzzle, size)
 			os.Exit(1)
 		}
+
 		state = heap.Pop(&openQueue).(*State)
+		openSet[state] = false
+
 		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
 
 		// fmt.Println(" ----------- ")
 		// fmt.Println("\n NEW STATE")
 		// g.PrintBoard(state.puzzle, size)
+		// fmt.Printf("\n priority = %d, depth = %d, heuristic = %d", state.priority, state.depth, state.heuristic)
 		// fmt.Println(" ----------- ")
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
@@ -104,14 +110,17 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// s := newState(child, size, priority, state.depth+1, heuristic)
 
 			heuristic := g.Manhattan(child, problem.goal, size)
-			// priority := (state.depth + 1) + heuristic
-			priority := heuristic
+			priority := (state.depth + 1) + heuristic
+			// priority := heuristic
 			s := newState(child, size, priority, state.depth+1, heuristic)
-
-			// fmt.Printf("\n priority = %d", priority)
+			if openSet[s] != true {
+				openSet[s] = true
+				heap.Push(&openQueue, s)
+			}
+			
 			// g.PrintBoard(child, size)
+			// fmt.Printf("\n priority = %d, depth = %d, heuristic = %d", priority, s.depth, s.heuristic)
 
-			heap.Push(&openQueue, s)
 		}
 		// FAILURE condition?
 	}

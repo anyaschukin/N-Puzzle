@@ -71,3 +71,34 @@ func IsSolvable(solution []int, puzzle []int, size int) bool {
 // const numberOfRows = Math.abs(snailRow.y - row.y) + Math.abs(snailRow.x - row.x);
 // this.solvable = (numberOfRows % 2 !== numberOfPermutations % 2);
 // }
+
+
+// while open_list:
+//         current = heapq.heappop(heap)
+//         closed_list.add(current[1])
+//         if np.array_equal(current[1].state, goal):
+//             print("Reach the goal")
+//             print("Time complexity: ", stats['time_complexity'])
+//             stats['size_complexity'] = len(open_list) + len(closed_list)
+//             print("Size complexity: ", stats['size_complexity'])
+//             _retracePath(current[1])
+//             return
+//         open_list.remove(current[1])
+
+//         for state in _neighbors(size, current[1]):
+//             if state not in closed_list:
+//                 heuristic = manhattan(current[1].state, goal, size)
+//                 fn = state.cost + heuristic
+//                 if state not in open_list:
+//                     open_list.add(state)
+//                     heapq.heappush(heap, (fn, state))
+
+//                     stats['time_complexity'] += 1
+// 	return
+	
+	// if closedSet.Has([]byte(g.PuzzleToString(child, ","))) == false {
+	// 	heuristic := g.Manhattan(child, problem.goal, size)
+	// 	priority := (state.depth + 1) + heuristic
+	// 	s := newState(child, size, priority, state.depth+1, heuristic)
+	// 	if s not in 
+	// }
