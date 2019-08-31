@@ -6,7 +6,7 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"reflect"
-
+	// "time"
 	"github.com/AndreasBriese/bbloom"
 )
 
@@ -66,7 +66,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 	openQueue := CreateQueue(*state)
 
 	for counter := 0; counter < 6000000; counter++ {
-
+		
 		if len(openQueue) == 0 {
 			fmt.Println("This priorityQueue is empty.")
 			g.PrintBoard(state.puzzle, size)
@@ -77,6 +77,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 		// fmt.Println(" ----------- ")
 		// fmt.Println("\n NEW STATE")
+		// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", state.priority, state.heuristic, state.depth)
 		// g.PrintBoard(state.puzzle, size)
 		// fmt.Println(" ----------- ")
 
@@ -90,7 +91,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// time.Sleep(1000 * time.Millisecond)
 
 		children := CreateNeighbors(state.puzzle, size)
-		//fmt.Print(children)
+		// fmt.Println("--- children ---")
+		// fmt.Print(children)
 
 		// fmt.Println("\n CHILDREN \n")
 		for _, child := range children {
@@ -104,11 +106,14 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// s := newState(child, size, priority, state.depth+1, heuristic)
 
 			heuristic := g.Manhattan(child, problem.goal, size)
-			// priority := (state.depth + 1) + heuristic
-			priority := heuristic
+			priority := state.depth + 1 + heuristic
+			// priority = -priority
+			// priority :=  heuristic
 			s := newState(child, size, priority, state.depth+1, heuristic)
-
-			// fmt.Printf("\n priority = %d", priority)
+			// if s.priority > state.priority {
+			// 	continue
+			// }
+			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", priority, heuristic, state.depth + 1)
 			// g.PrintBoard(child, size)
 
 			heap.Push(&openQueue, s)
@@ -116,28 +121,3 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// FAILURE condition?
 	}
 }
-
-// Puzzle4 := p.GenerateRandomBoard(3)
-// state = newState(Puzzle4, size, 0)
-// heap.Push(&openQueue, state)
-// openQueue.Update(state, state.puzzle, 4)
-
-// Puzzle3 := p.GenerateRandomBoard(3)
-// state = newState(Puzzle3, size, 0)
-// heap.Push(&openQueue, state)
-// openQueue.Update(state, state.puzzle, 3)
-
-// Puzzle2 := p.GenerateRandomBoard(3)
-// state = newState(Puzzle2, size, 0)
-// heap.Push(&openQueue, state)
-// openQueue.Update(state, state.puzzle, 2)
-
-// Puzzle5 := p.GenerateRandomBoard(3)
-// state = newState(Puzzle5, size, 0)
-// heap.Push(&openQueue, state)
-// openQueue.Update(state, state.puzzle, 5)
-
-// for openQueue.Len() > 0 {
-// 	state := heap.Pop(&openQueue).(*State)
-// 	fmt.Printf("%.2d:%v \n", state.priority, state.puzzle)
-// }
