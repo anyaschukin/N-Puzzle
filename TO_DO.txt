@@ -22,12 +22,18 @@ SOLVER
 {x} move pieces around the board
 {x} how do I know if I am at the goal state?
 {x} bloom filter
-{x} priority queue, search algo
-{} ability to choose heuristic from command line
-{} solves puzzle size 3, doesn't solve size 4
-{x} MUST: priority queue, A*, 3 heuristics, closed set (checks if node is currently in the set)
-{x} MUST: greed search, uniform cost
-{x} admissible = optimistic heuristic
+{ } ability to choose heuristic from command line
+{x} solves puzzle size 3, doesn't solve size 4
+{x} MUST: priority queue
+{x} MUST: A* 
+{ } MUST: 3 heuristics
+{x} MUST: closed set (checks if node is currently in the set)
+{ } MUST: total number of states in open set (time complexity)
+{ } MUST: max number of states represented in memory at the same time (size complexity)
+{ } MUST: ordered solution sequence
+{x} MUST: solvable or unsolvable
+{ } MUST: admissible = optimistic heuristic
+{ } BONUS: uniform-cost and greedy-search
  
 ALGO
 {x} priority queue?
@@ -37,5 +43,6 @@ ALGO
 
 
 OPTIMIZING
+{ } concurrency?
 { } Define variables as close to their usage as possible (prevent extra variables declared)
-{ } When considering the neighbors of a search node, don't enqueue a neighbor if its board is the same as the board of the predecessor search node.
+{x} When considering the neighbors of a search node, don't enqueue a neighbor if its board is the same as the board of the predecessor search node.
