@@ -111,8 +111,6 @@ func Solver(Puzzle []int, size int) {
 		// os.Exit(1)
 		// }
 
-		// time.Sleep(1000 * time.Millisecond)
-
 		children := CreateNeighbors(state.puzzle, size)
 
 		for _, child := range children {
