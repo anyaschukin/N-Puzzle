@@ -205,6 +205,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// os.Exit(1)
 		// }
 
+<<<<<<< HEAD
 		children := CreateNeighbors(state.puzzle, size)
 <<<<<<< HEAD
 =======
@@ -236,6 +237,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 		// time.Sleep(1000 * time.Millisecond)
 
+=======
+>>>>>>> little test
 		children := CreateNeighbors(state.puzzle, size)
 		// fmt.Printf("\n-- child --")
 >>>>>>> new openSet same problems
