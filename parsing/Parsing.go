@@ -72,9 +72,8 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	return Puzzle, size
 }
 
-func CheckFlags() (int, int) {
+func CheckFlags() int {
 	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
-	iterationsPtr := flag.Int("iterations", 100, "Number of passes")
 
 	flag.Parse()
 	args := flag.Args()
@@ -83,7 +82,7 @@ func CheckFlags() (int, int) {
 	file := strings.Contains(arg, ".txt")
 
 	if len(args) == 1 && file {
-		return 0, 0
+		return 0
 	}
 
 	if len(args) > 1 && file {
@@ -101,13 +100,7 @@ func CheckFlags() (int, int) {
 		os.Exit(1)
 	}
 
-	if *iterationsPtr < 1 {
-		fmt.Println("Can't solve a puzzle in less than 1 iteration!")
-		os.Exit(1)
-	}
-
 	size := *sizePtr
-	iterations := *iterationsPtr
 
-	return size, iterations
+	return size
 }

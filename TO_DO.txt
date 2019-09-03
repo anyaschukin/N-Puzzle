@@ -15,6 +15,7 @@ PARSING
 {x} filter out duplicates   ... should these be admissible ??
 {x} leave empty space (0) in random board generation
 { } are both row and col between 0 and (n - 1) ?
+{ } panics when passed a file from command line that's misspelled
 
 SOLVER
 {x} test IsSolvable
@@ -22,11 +23,11 @@ SOLVER
 {x} move pieces around the board
 {x} how do I know if I am at the goal state?
 {x} bloom filter
-{ } ability to choose heuristic from command line
 {x} solves puzzle size 3, doesn't solve size 4
 {x} MUST: priority queue
 {x} MUST: A* 
 { } MUST: 3 heuristics
+{ } ability to choose heuristic from command line
 {x} MUST: closed set (checks if node is currently in the set)
 { } MUST: total number of states in open set (time complexity)
 { } MUST: max number of states represented in memory at the same time (size complexity)
@@ -40,8 +41,11 @@ ALGO
 {x} Must: 3 heuristic functions, including Manhattan-distance
 { } Others: A-Star, IDA-Star
 
+UNIT TESTS
+{ } make some, test it
 
 OPTIMIZING
+{ } test performance: bytes.Equal vs reflect.DeepEqual  >> bytes is supposed to be WAY faster
 { } concurrency?
 { } Define variables as close to their usage as possible (prevent extra variables declared)
 {x} When considering the neighbors of a search node, don't enqueue a neighbor if its board is the same as the board of the predecessor search node.

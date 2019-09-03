@@ -46,7 +46,7 @@ func evenSize(solution []int, puzzle []int, size int) bool {
 }
 
 func IsSolvable(solution []int, puzzle []int, size int) bool {
-	if size%2 != 0 {
+	if size%2 != 0 || size == 6 || size == 8 {
 		return oddSize(solution, puzzle, size)
 	} else {
 		return evenSize(solution, puzzle, size)
