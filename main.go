@@ -2,16 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 	p "n-puzzle/parsing"
 	s "n-puzzle/solver"
 	"os"
-	"time"
 )
 
 func main() {
 
-	start := time.Now()
+	// start := time.Now()
 
 	size, iterations := p.CheckFlags()
 	var Puzzle []int
@@ -23,8 +21,8 @@ func main() {
 	}
 	s.Solver(Puzzle, size, iterations)
 
-	elapsed := time.Since(start)
-	log.Printf("Binomial took %s", elapsed)
+	// elapsed := time.Since(start)
+	// log.Printf("Binomial took %s", elapsed)
 
 	fmt.Println("\n You've reached the end of main()")
 
