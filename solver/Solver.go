@@ -6,17 +6,18 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"reflect"
-	// "time"
+
 	"github.com/AndreasBriese/bbloom"
+	// "time"
 )
 
 type Problem struct {
-	start    []int
-	goal     []int
-	solvable bool
+	start []int
+	goal  []int
+	// solvable bool
 	//heuristic      string
 	//searchAlgo     string
-	solutionPath   map[int][]int
+	solutionPath   map[int][]int // maybe unnecessary?
 	sizeComplexity int
 	timeComplexity int
 	solutionFound  bool
@@ -26,7 +27,7 @@ func newProblem(Puzzle []int, size int) Problem {
 	problem := Problem{}
 	problem.start = Puzzle
 	problem.goal = MakeGoal(size)
-	problem.solvable = IsSolvable(problem.goal, Puzzle, size)
+	// problem.solvable = IsSolvable(problem.goal, Puzzle, size)
 	//problem.heuristic = "MANHATTAN"
 	//problem.searchAlgo = "A_STAR"
 	problem.sizeComplexity = 0
@@ -42,18 +43,19 @@ type State struct {
 	puzzle    []int
 }
 
-func newState(Puzzle []int, size int, priority int, depth int, heuristic int) *State {
+func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
-	state.depth = depth
-	state.heuristic = heuristic
+	state.depth = depth         // not sure if I need to store this either?
+	state.heuristic = heuristic // I don't think I need to keep this?
 	state.puzzle = Puzzle
 	return state
 }
 
 func Solver(Puzzle []int, size int, iterations int) {
 	problem := newProblem(Puzzle, size)
+	unsolved := true
 
 	// g.PrintBoard(Puzzle, size)
 
@@ -61,63 +63,113 @@ func Solver(Puzzle []int, size int, iterations int) {
 		fmt.Println("This puzzle in unsolvable.")
 		os.Exit(1)
 	}
+
+	state := newState(Puzzle, 100000, 0, 0)
+
+	openSet := make(map[string]int)
+	parent := g.PuzzleToString(state.puzzle, ",")
+	openSet[parent] = state.priority
+
+	// closedSet := make(map[string]int)
 	closedSet := bbloom.New(float64(1<<16), float64(0.01))
-	state := newState(Puzzle, size, 10000, 0, 0)
 	openQueue := CreateQueue(*state)
 
-	for counter := 0; counter < 6000000; counter++ {
-		
+	for unsolved {
+
 		if len(openQueue) == 0 {
 			fmt.Println("This priorityQueue is empty.")
 			g.PrintBoard(state.puzzle, size)
 			os.Exit(1)
 		}
-		state = heap.Pop(&openQueue).(*State)
-		closedSet.AddIfNotHas([]byte(g.PuzzleToString(state.puzzle, ",")))
 
-		// fmt.Println(" ----------- ")
-		// fmt.Println("\n NEW STATE")
-		// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", state.priority, state.heuristic, state.depth)
-		// g.PrintBoard(state.puzzle, size)
-		// fmt.Println(" ----------- ")
+		state = heap.Pop(&openQueue).(*State)
+		parent = g.PuzzleToString(state.puzzle, ",")
+		delete(openSet, parent)
+
+		closedSet.AddIfNotHas([]byte(parent))
+		// if _, exists := closedSet[parent]; !exists {
+		// 	closedSet[parent] = state.priority
+		// }
 
 		if reflect.DeepEqual(problem.goal, state.puzzle) {
 			fmt.Println("This puzzle has been solved!\n")
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
+			unsolved = false
 			os.Exit(1)
 		}
+
+		// fmt.Printf("\n-- parent --")
+		// g.PrintBoard(state.puzzle, size)
+		// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", state.priority, state.heuristic, state.depth)
 
 		// time.Sleep(1000 * time.Millisecond)
 
 		children := CreateNeighbors(state.puzzle, size)
-		// fmt.Println("--- children ---")
-		// fmt.Print(children)
+		// fmt.Printf("\n-- child --")
 
-		// fmt.Println("\n CHILDREN \n")
 		for _, child := range children {
 			// g.PrintBoard(child, size)
+
+			if reflect.DeepEqual(problem.goal, child) {
+				fmt.Println("This puzzle has been solved!\n")
+				g.PrintBoard(child, size)
+				// REBUILD PATH TO START
+				os.Exit(1)
+			}
 
 			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
 				problem.sizeComplexity++
 				continue
 			}
-			problem.timeComplexity++
-			// s := newState(child, size, priority, state.depth+1, heuristic)
 
+			depth := state.depth + 1
 			heuristic := g.Manhattan(child, problem.goal, size)
-			priority := state.depth + 1 + heuristic
 			// priority = -priority
 			// priority :=  heuristic
-			s := newState(child, size, priority, state.depth+1, heuristic)
-			// if s.priority > state.priority {
+			s := newState(child, depth+heuristic, depth, heuristic)
+
+			// if _, exists := closedSet[tmpChild]; exists {
 			// 	continue
 			// }
-			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", priority, heuristic, state.depth + 1)
 			// g.PrintBoard(child, size)
+			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", s.priority, s.heuristic, s.depth)
 
+			tmpChild := g.PuzzleToString(child, ",")
+
+			if _, exists := openSet[tmpChild]; exists {
+				if openSet[tmpChild] < s.priority {
+					continue
+				}
+			}
+
+			openSet[tmpChild] = s.priority
 			heap.Push(&openQueue, s)
+
+			// problem.timeComplexity++
+
+			// s := newState(child, size, priority, state.depth+1, heuristic)
+
 		}
 		// FAILURE condition?
 	}
 }
+
+// if bytes.Equal([]byte(g.PuzzleToString(problem.goal, ",")), []byte(g.PuzzleToString(state.puzzle, ","))) {
+// 	fmt.Println("This puzzle has been solved!\n")
+// 	g.PrintBoard(state.puzzle, size)
+// 	// REBUILD PATH TO START
+// 	os.Exit(1)
+// }
+
+// fmt.Println(" ----------- ")
+// fmt.Println("\n NEW STATE")
+// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", state.priority, state.heuristic, state.depth)
+// g.PrintBoard(state.puzzle, size)
+// fmt.Println(" ----------- ")
+
+// if s.priority > state.priority {
+// 	continue
+// }
+// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", priority, heuristic, state.depth + 1)
+// g.PrintBoard(child, size)
