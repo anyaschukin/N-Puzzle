@@ -166,8 +166,6 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// g.PrintBoard(state.puzzle, size)
 		// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", state.priority, state.heuristic, state.depth)
 
-		// time.Sleep(1000 * time.Millisecond)
-
 		children := CreateNeighbors(state.puzzle, size)
 		// fmt.Printf("\n-- child --")
 >>>>>>> new openSet same problems
