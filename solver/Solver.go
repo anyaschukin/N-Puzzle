@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"container/heap"
 	"fmt"
+	"log"
 	g "n-puzzle/golib"
 	"os"
+<<<<<<< HEAD
 	"reflect"
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
 	"time"
 
 =======
@@ -86,12 +90,19 @@ func Solver(Puzzle []int, size int) {
 	start := time.Now()
 =======
 func Solver(Puzzle []int, size int, iterations int) {
+	start := time.Now()
+
 	problem := newProblem(Puzzle, size)
 	unsolved := true
 >>>>>>> new openSet same problems
 
+<<<<<<< HEAD
 	problem := newProblem(Puzzle, size)
 	goal := g.PuzzleToString(problem.goal, ",")
+=======
+	goal := g.PuzzleToString(problem.goal, ",")
+	// g.PrintBoard(Puzzle, size)
+>>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
@@ -161,6 +172,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
 <<<<<<< HEAD
+<<<<<<< HEAD
 			for p := state; p != nil; p = state.before {
 				g.PrintBoard(p.puzzle, size)
 				if reflect.DeepEqual(problem.goal, p.puzzle) {
@@ -193,8 +205,22 @@ func Solver(Puzzle []int, size int, iterations int) {
 >>>>>>> priorityqueue empty before solution
 =======
 			unsolved = false
+=======
+			elapsed := time.Since(start)
+			log.Printf("Binomial took %s", elapsed)
+>>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
 			os.Exit(1)
 		}
+
+		// if reflect.DeepEqual(problem.goal, state.puzzle) {
+		// fmt.Println("This puzzle has been solved!\n")
+		// g.PrintBoard(state.puzzle, size)
+		// REBUILD PATH TO START
+		// unsolved = false
+		// elapsed := time.Since(start)
+		// log.Printf("Binomial took %s", elapsed)
+		// os.Exit(1)
+		// }
 
 		// fmt.Printf("\n-- parent --")
 		// g.PrintBoard(state.puzzle, size)
@@ -227,6 +253,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// if reflect.DeepEqual(problem.goal, child) {
 			// fmt.Println("This puzzle has been solved!\n")
 			// g.PrintBoard(child, size)
+<<<<<<< HEAD
 			// REBUILD PATH TO START
 			// elapsed := time.Since(start)
 			// log.Printf("Binomial took %s", elapsed)
@@ -237,11 +264,27 @@ func Solver(Puzzle []int, size int, iterations int) {
 			if closedSet.Has([]byte(tmpChild)) {
 =======
 			if reflect.DeepEqual(problem.goal, child) {
+=======
+			tmpChild := g.PuzzleToString(child, ",")
+
+			if bytes.Equal([]byte(parent), []byte(tmpChild)) {
+>>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
 				fmt.Println("This puzzle has been solved!\n")
-				g.PrintBoard(child, size)
+				g.PrintBoard(state.puzzle, size)
 				// REBUILD PATH TO START
+				elapsed := time.Since(start)
+				log.Printf("Binomial took %s", elapsed)
 				os.Exit(1)
 			}
+
+			// if reflect.DeepEqual(problem.goal, child) {
+			// fmt.Println("This puzzle has been solved!\n")
+			// g.PrintBoard(child, size)
+			// REBUILD PATH TO START
+			// elapsed := time.Since(start)
+			// log.Printf("Binomial took %s", elapsed)
+			// os.Exit(1)
+			// }
 
 			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
 >>>>>>> new openSet same problems
@@ -280,8 +323,6 @@ func Solver(Puzzle []int, size int, iterations int) {
 >>>>>>> priorityqueue empty before solution
 =======
 			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", s.priority, s.heuristic, s.depth)
-
-			tmpChild := g.PuzzleToString(child, ",")
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
