@@ -1,11 +1,13 @@
 package solver
 
 import (
+	"bytes"
 	"container/heap"
 	"fmt"
+	"log"
 	g "n-puzzle/golib"
 	"os"
-	"reflect"
+	"time"
 
 	"github.com/AndreasBriese/bbloom"
 	// "time"
@@ -54,9 +56,12 @@ func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 }
 
 func Solver(Puzzle []int, size int, iterations int) {
+	start := time.Now()
+
 	problem := newProblem(Puzzle, size)
 	unsolved := true
 
+	goal := g.PuzzleToString(problem.goal, ",")
 	// g.PrintBoard(Puzzle, size)
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
@@ -91,13 +96,24 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// 	closedSet[parent] = state.priority
 		// }
 
-		if reflect.DeepEqual(problem.goal, state.puzzle) {
+		if bytes.Equal([]byte(parent), []byte(goal)) {
 			fmt.Println("This puzzle has been solved!\n")
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
-			unsolved = false
+			elapsed := time.Since(start)
+			log.Printf("Binomial took %s", elapsed)
 			os.Exit(1)
 		}
+
+		// if reflect.DeepEqual(problem.goal, state.puzzle) {
+		// fmt.Println("This puzzle has been solved!\n")
+		// g.PrintBoard(state.puzzle, size)
+		// REBUILD PATH TO START
+		// unsolved = false
+		// elapsed := time.Since(start)
+		// log.Printf("Binomial took %s", elapsed)
+		// os.Exit(1)
+		// }
 
 		// fmt.Printf("\n-- parent --")
 		// g.PrintBoard(state.puzzle, size)
@@ -110,13 +126,25 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 		for _, child := range children {
 			// g.PrintBoard(child, size)
+			tmpChild := g.PuzzleToString(child, ",")
 
-			if reflect.DeepEqual(problem.goal, child) {
+			if bytes.Equal([]byte(parent), []byte(tmpChild)) {
 				fmt.Println("This puzzle has been solved!\n")
-				g.PrintBoard(child, size)
+				g.PrintBoard(state.puzzle, size)
 				// REBUILD PATH TO START
+				elapsed := time.Since(start)
+				log.Printf("Binomial took %s", elapsed)
 				os.Exit(1)
 			}
+
+			// if reflect.DeepEqual(problem.goal, child) {
+			// fmt.Println("This puzzle has been solved!\n")
+			// g.PrintBoard(child, size)
+			// REBUILD PATH TO START
+			// elapsed := time.Since(start)
+			// log.Printf("Binomial took %s", elapsed)
+			// os.Exit(1)
+			// }
 
 			if closedSet.Has([]byte(g.PuzzleToString(child, ","))) {
 				problem.sizeComplexity++
@@ -135,8 +163,6 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// }
 			// g.PrintBoard(child, size)
 			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", s.priority, s.heuristic, s.depth)
-
-			tmpChild := g.PuzzleToString(child, ",")
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
