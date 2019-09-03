@@ -124,6 +124,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			}
 
 			depth := state.depth + 1
+			depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
 			// priority = -priority
 			// priority :=  heuristic
