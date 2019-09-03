@@ -265,6 +265,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			priority := state.depth + 1 + heuristic
 =======
 			depth := state.depth + 1
+			depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
 >>>>>>> new openSet same problems
 			// priority = -priority
