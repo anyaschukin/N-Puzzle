@@ -29,9 +29,12 @@ type Problem struct {
 	start []int
 	goal  []int
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	// solvable bool
 >>>>>>> new openSet same problems
+=======
+>>>>>>> solves half of time for size 7 + 8
 	//heuristic      string
 	//searchAlgo     string
 	solutionPath   map[int][]int // maybe unnecessary?
@@ -76,9 +79,14 @@ func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
+<<<<<<< HEAD
 	state.depth = depth         // not sure if I need to store this either?
 	state.heuristic = heuristic // I don't think I need to keep this?
 >>>>>>> new openSet same problems
+=======
+	state.depth = depth         // not sure if we need to store this?
+	state.heuristic = heuristic // not sure about this one either?
+>>>>>>> solves half of time for size 7 + 8
 	state.puzzle = Puzzle
 	state.before = before
 	return state
@@ -293,6 +301,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
@@ -309,6 +318,10 @@ func Solver(Puzzle []int, size int, iterations int) {
 =======
 			depth := state.depth + 1
 			depth = -depth
+=======
+			depth := -(state.depth + 1)
+			// depth = -depth
+>>>>>>> solves half of time for size 7 + 8
 			heuristic := g.Manhattan(child, problem.goal, size)
 >>>>>>> new openSet same problems
 			// priority = -priority
