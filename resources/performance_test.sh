@@ -10,17 +10,23 @@ u=0
 while [ $count -lt $(expr $case + 1) ]
 do	
 	echo "\r-- $count/$case --\c"
-	output=$(python generator.py -u 5 >> rm_me.txt; ../n-puzzle rm_me.txt)
-##	echo "$output"
-	check="This puzzle is unsolvable."
-	if [ "$output"="$check" ]
+	output=$(python generator.py -u 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
+	unsolvable="This puzzle is unsolvable."
+	if [ "$output"="$unsolvable" ]
 	then
 		u=$(($u + 1))
 	fi	
 	count=$(($count + 1))
 done
-echo "\nUnsolvable correctly identified: $u/10" ## out of 10
-##echo "$u"	
+count=$(($count - 1))
+if [ "$u" -lt "$count" ]
+then
+	echo "\x1b[31m"
+else
+	echo "\x1b[32m"
+fi
+echo "\nUnsolvable correctly identified: $u/$count\x1b[0m\n"
+
 
 #while [ $count -lt $(expr $case + 1) ]
 #do
