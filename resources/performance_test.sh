@@ -13,11 +13,7 @@ while [ $count -lt $case ]
 do
 	echo ".\c"
 	output=$(python generator.py -u 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
-	unsolvable=$(echo "This puzzle is unsolvable.")
-	echo "unsolvable: $unsolvable"
-	
-	if [[ "$output" = "$unsolvable" ]]
-#	if [[ "$output" == *"unsolvable"*]]
+	if [ "$output"="This puzzle is unsolvable." ]
 	then
 		u=$(($u + 1))
 	fi	
@@ -25,8 +21,8 @@ do
 	$(rm rm_me.txt)
 done
 
-echo "unsolvable: $unsolvable"
-echo "output: $output"
+#echo "unsolvable: $unsolvable"
+#echo "output: $output"
 
 if [ "$u" -lt "$count" ]
 then
