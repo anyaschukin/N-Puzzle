@@ -30,11 +30,14 @@ type Problem struct {
 	goal  []int
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	// solvable bool
 >>>>>>> new openSet same problems
 =======
 >>>>>>> solves half of time for size 7 + 8
+=======
+>>>>>>> little commit before checkout
 	//heuristic      string
 	//searchAlgo     string
 	solutionPath   map[int][]int // maybe unnecessary?
@@ -48,9 +51,12 @@ func newProblem(Puzzle []int, size int) Problem {
 	problem.start = Puzzle
 	problem.goal = MakeGoal(size)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	// problem.solvable = IsSolvable(problem.goal, Puzzle, size)
 >>>>>>> new openSet same problems
+=======
+>>>>>>> little commit before checkout
 	//problem.heuristic = "MANHATTAN"
 	//problem.searchAlgo = "A_STAR"
 	problem.sizeComplexity = 0
@@ -74,6 +80,7 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	state.priority = priority
 	state.depth = depth         // not sure if we need to store this?
 	state.heuristic = heuristic // not sure about this one either?
+<<<<<<< HEAD
 =======
 func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 	state := &State{}
@@ -87,15 +94,17 @@ func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 	state.depth = depth         // not sure if we need to store this?
 	state.heuristic = heuristic // not sure about this one either?
 >>>>>>> solves half of time for size 7 + 8
+=======
+>>>>>>> little commit before checkout
 	state.puzzle = Puzzle
 	state.before = before
 	return state
 }
 
-<<<<<<< HEAD
 func Solver(Puzzle []int, size int) {
 	// TESTING RUNTIME
 	start := time.Now()
+<<<<<<< HEAD
 =======
 func Solver(Puzzle []int, size int, iterations int) {
 	start := time.Now()
@@ -111,6 +120,11 @@ func Solver(Puzzle []int, size int, iterations int) {
 	goal := g.PuzzleToString(problem.goal, ",")
 	// g.PrintBoard(Puzzle, size)
 >>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
+=======
+
+	problem := newProblem(Puzzle, size)
+	goal := g.PuzzleToString(problem.goal, ",")
+>>>>>>> little commit before checkout
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
 		fmt.Println("This puzzle in unsolvable.")
@@ -127,6 +141,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 	parent := g.PuzzleToString(state.puzzle, ",")
 	openSet[parent] = state.priority
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 	// closedSet := make(map[string]int)
@@ -145,6 +160,12 @@ func Solver(Puzzle []int, size int, iterations int) {
 		
 >>>>>>> priorityqueue empty before solution
 =======
+=======
+	openQueue := CreateQueue(*state)
+	closedSet := bbloom.New(float64(1<<16), float64(0.01))
+
+	unsolved := true
+>>>>>>> little commit before checkout
 	for unsolved {
 
 >>>>>>> new openSet same problems
@@ -158,6 +179,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 		parent = g.PuzzleToString(state.puzzle, ",")
 		delete(openSet, parent)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 		closedSet.AddIfNotHas([]byte(parent))
@@ -174,11 +196,15 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// 	closedSet[parent] = state.priority
 		// }
 >>>>>>> new openSet same problems
+=======
+		closedSet.AddIfNotHas([]byte(parent))
+>>>>>>> little commit before checkout
 
 		if bytes.Equal([]byte(parent), []byte(goal)) {
 			fmt.Println("This puzzle has been solved!\n")
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 			for p := state; p != nil; p = state.before {
@@ -187,12 +213,15 @@ func Solver(Puzzle []int, size int, iterations int) {
 					break
 				}
 			}
+=======
+>>>>>>> little commit before checkout
 
 			// TESTING RUNTIME
 			elapsed := time.Since(start)
 			fmt.Printf("Binomial took %s", elapsed)
 			unsolved = false
 			// os.Exit(1)
+<<<<<<< HEAD
 		}
 
 		// if reflect.DeepEqual(problem.goal, state.puzzle) {
@@ -219,6 +248,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 			log.Printf("Binomial took %s", elapsed)
 >>>>>>> testing speed reflect.DeepEqual vs bytes.Equal
 			os.Exit(1)
+=======
+>>>>>>> little commit before checkout
 		}
 
 		// if reflect.DeepEqual(problem.goal, state.puzzle) {
@@ -230,18 +261,24 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// log.Printf("Binomial took %s", elapsed)
 		// os.Exit(1)
 		// }
+<<<<<<< HEAD
 
 		// fmt.Printf("\n-- parent --")
 		// g.PrintBoard(state.puzzle, size)
 		// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", state.priority, state.heuristic, state.depth)
 
 		// time.Sleep(1000 * time.Millisecond)
+=======
+>>>>>>> little commit before checkout
 
 =======
 >>>>>>> little test
 		children := CreateNeighbors(state.puzzle, size)
+<<<<<<< HEAD
 		// fmt.Printf("\n-- child --")
 >>>>>>> new openSet same problems
+=======
+>>>>>>> little commit before checkout
 
 		for _, child := range children {
 			tmpChild := g.PuzzleToString(child, ",")
@@ -264,6 +301,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// if reflect.DeepEqual(problem.goal, child) {
 			// fmt.Println("This puzzle has been solved!\n")
 			// g.PrintBoard(child, size)
+<<<<<<< HEAD
 <<<<<<< HEAD
 			// REBUILD PATH TO START
 			// elapsed := time.Since(start)
@@ -291,6 +329,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// if reflect.DeepEqual(problem.goal, child) {
 			// fmt.Println("This puzzle has been solved!\n")
 			// g.PrintBoard(child, size)
+=======
+>>>>>>> little commit before checkout
 			// REBUILD PATH TO START
 			// elapsed := time.Since(start)
 			// log.Printf("Binomial took %s", elapsed)
@@ -305,12 +345,16 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> little commit before checkout
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
 <<<<<<< HEAD
 			s := newState(child, depth+heuristic, depth, heuristic, state)
 
+<<<<<<< HEAD
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
 					continue
@@ -340,6 +384,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 =======
 			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", s.priority, s.heuristic, s.depth)
 
+=======
+>>>>>>> little commit before checkout
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
 					continue
@@ -352,6 +398,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 			// problem.timeComplexity++
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 			// s := newState(child, size, priority, state.depth+1, heuristic)
@@ -379,3 +426,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 // }
 // fmt.Printf("\n priority = %d, heuristic = %d, depth = %d", priority, heuristic, state.depth + 1)
 // g.PrintBoard(child, size)
+=======
+		}
+	}
+}
+>>>>>>> little commit before checkout
