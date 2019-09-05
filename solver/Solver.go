@@ -22,7 +22,6 @@ import (
 
 >>>>>>> new openSet same problems
 	"github.com/AndreasBriese/bbloom"
-	// "time"
 )
 
 type Problem struct {
@@ -74,6 +73,7 @@ type State struct {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
@@ -83,6 +83,9 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 <<<<<<< HEAD
 =======
 func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
+=======
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
+>>>>>>> builds path from finish -> start
 	state := &State{}
 	state.index = 0
 	state.priority = priority
@@ -132,10 +135,14 @@ func Solver(Puzzle []int, size int, iterations int) {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	state := newState(Puzzle, 100000, 0, 0, nil)
 =======
 	state := newState(Puzzle, 100000, 0, 0)
 >>>>>>> new openSet same problems
+=======
+	state := newState(Puzzle, 100000, 0, 0, nil)
+>>>>>>> builds path from finish -> start
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -202,8 +209,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 
 		if bytes.Equal([]byte(parent), []byte(goal)) {
 			fmt.Println("This puzzle has been solved!\n")
-			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -215,6 +222,13 @@ func Solver(Puzzle []int, size int, iterations int) {
 			}
 =======
 >>>>>>> little commit before checkout
+=======
+			for p := state; p.before != nil; p = p.before {
+				g.PrintBoard(p.puzzle, size)
+				time.Sleep(1 * time.Second)
+			}
+			g.PrintBoard(problem.start, size)
+>>>>>>> builds path from finish -> start
 
 			// TESTING RUNTIME
 			elapsed := time.Since(start)
@@ -287,7 +301,10 @@ func Solver(Puzzle []int, size int, iterations int) {
 				fmt.Println("This puzzle has been solved!\n")
 				g.PrintBoard(state.puzzle, size)
 				// REBUILD PATH TO START
+<<<<<<< HEAD
 				// THIS DOESNT WORK YET
+=======
+>>>>>>> builds path from finish -> start
 				// for p := state; p != nil; p = state.before {
 				// 	g.PrintBoard(state.puzzle, size)
 				// }
@@ -370,10 +387,14 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// depth = -depth
 >>>>>>> solves half of time for size 7 + 8
 			heuristic := g.Manhattan(child, problem.goal, size)
+<<<<<<< HEAD
 >>>>>>> new openSet same problems
 			// priority = -priority
 			// priority :=  heuristic
 			s := newState(child, depth+heuristic, depth, heuristic)
+=======
+			s := newState(child, depth+heuristic, depth, heuristic, state)
+>>>>>>> builds path from finish -> start
 
 			// if _, exists := closedSet[tmpChild]; exists {
 			// 	continue
