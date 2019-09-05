@@ -38,7 +38,7 @@ tcumulative=0
 while [ $count -lt $case ]
 do
 #	echo ".\c"
-	solvable=$(python generator.py -s 6 >> rm_me.txt; ../n-puzzle rm_me.txt)
+	solvable=$(python generator.py -s 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
 	end=$(echo "$solvable" | tail -n -1)
 	if [ "$end"=" You've finished n-puzzle!" ]
 	then
@@ -61,12 +61,13 @@ do
 	if [ "$sigfig" = "0" ]
 	then
 		echo "heyy"
-		time2=$(echo "$time" | cut -c-1-11)
+		time=$(echo "$time" | rev | cut -c2-42 | rev)
+	elif [ "$sigfig" = "-3" ] || [ "$sigfig" = "-6" ]
+	then 
+		time=$(echo "$time" | rev | cut -c3-42 | rev)			
 	fi
-#	if [ "$sigfig" = "-3" ]
-#	fi
 	echo "$sigfig"
-	echo "time2: $time2"
+	echo "time2: $time"
 	
 
 ## s ms or µs
