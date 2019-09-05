@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"container/heap"
 	"fmt"
-	"log"
 	g "n-puzzle/golib"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/AndreasBriese/bbloom"
@@ -16,7 +16,6 @@ import (
 type Problem struct {
 	start []int
 	goal  []int
-	// solvable bool
 	//heuristic      string
 	//searchAlgo     string
 	solutionPath   map[int][]int // maybe unnecessary?
@@ -42,15 +41,17 @@ type State struct {
 	depth     int
 	heuristic int
 	puzzle    []int
+	before    *State
 }
 
-func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
-	state.depth = depth         // not sure if I need to store this either?
-	state.heuristic = heuristic // I don't think I need to keep this?
+	state.depth = depth         // not sure if we need to store this?
+	state.heuristic = heuristic // not sure about this one either?
 	state.puzzle = Puzzle
+	state.before = before
 	return state
 }
 
@@ -66,7 +67,7 @@ func Solver(Puzzle []int, size int) {
 		os.Exit(1)
 	}
 
-	state := newState(Puzzle, 100000, 0, 0)
+	state := newState(Puzzle, 100000, 0, 0, nil)
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -94,10 +95,16 @@ func Solver(Puzzle []int, size int) {
 			fmt.Println("This puzzle has been solved!\n")
 			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
+			for p := state; p != nil; p = state.before {
+				g.PrintBoard(p.puzzle, size)
+				if reflect.DeepEqual(problem.goal, p.puzzle) {
+					break
+				}
+			}
 
 			// TESTING RUNTIME
 			elapsed := time.Since(start)
-			log.Printf("Binomial took %s", elapsed)
+			fmt.Printf("Binomial took %s", elapsed)
 			unsolved = false
 			// os.Exit(1)
 		}
@@ -112,8 +119,6 @@ func Solver(Puzzle []int, size int) {
 		// os.Exit(1)
 		// }
 
-		// time.Sleep(1000 * time.Millisecond)
-
 		children := CreateNeighbors(state.puzzle, size)
 
 		for _, child := range children {
@@ -123,10 +128,14 @@ func Solver(Puzzle []int, size int) {
 				fmt.Println("This puzzle has been solved!\n")
 				g.PrintBoard(state.puzzle, size)
 				// REBUILD PATH TO START
+				// THIS DOESNT WORK YET
+				// for p := state; p != nil; p = state.before {
+				// 	g.PrintBoard(state.puzzle, size)
+				// }
 
 				// TESTING RUNTIME
 				elapsed := time.Since(start)
-				log.Printf("Binomial took %s", elapsed)
+				fmt.Printf("Binomial took %s", elapsed)
 				unsolved = false
 			}
 
@@ -144,10 +153,10 @@ func Solver(Puzzle []int, size int) {
 				continue
 			}
 
-			depth := state.depth + 1
-			depth = -depth
+			depth := -(state.depth + 1)
+			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic)
+			s := newState(child, depth+heuristic, depth, heuristic, state)
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
