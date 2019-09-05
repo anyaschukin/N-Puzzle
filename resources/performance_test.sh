@@ -4,10 +4,12 @@ echo "\x1b[1mLaunching N-Puzzle performance test ...\x1B[0m\n"
 
 # 3
 echo "\x1b[1mSize - 3\x1B[0m"
+
+# Unsolvable
 case=10
-count=1
+count=0
 u=0
-while [ $count -lt $(expr $case + 1) ]
+while [ $count -lt $case ]
 do	
 	echo "\r-- $count/$case --\c"
 	output=$(python generator.py -u 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
@@ -18,16 +20,18 @@ do
 	fi	
 	count=$(($count + 1))
 done
-count=$(($count - 1))
 if [ "$u" -lt "$count" ]
 then
 	echo "\x1b[31m"
 else
 	echo "\x1b[32m"
 fi
-echo "\nUnsolvable correctly identified: $u/$count\x1b[0m\n"
+echo "\nUnsolvable correctly identified: $u/$count\x1b[0m"
 
-
+# Solvable
+case=10
+count=0
+solved=0
 #while [ $count -lt $(expr $case + 1) ]
 #do
 #	echo "\r-- $count/$case --\c"
@@ -36,7 +40,6 @@ echo "\nUnsolvable correctly identified: $u/$count\x1b[0m\n"
 #	count=$(($count + 1))
 #done
 
-echo "Unsolvable correctly identified: " ## out of 10
 echo "Solvable correctly solved: " ## out of 10
 echo "Average solve time: "
 echo "Min solve time: "
