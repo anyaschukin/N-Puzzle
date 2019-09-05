@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/AndreasBriese/bbloom"
-	// "time"
 )
 
 type Problem struct {
@@ -41,15 +40,17 @@ type State struct {
 	depth     int
 	heuristic int
 	puzzle    []int
+	before    *State
 }
 
-func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
 	state.depth = depth         // not sure if we need to store this?
 	state.heuristic = heuristic // not sure about this one either?
 	state.puzzle = Puzzle
+	state.before = before
 	return state
 }
 
@@ -65,7 +66,7 @@ func Solver(Puzzle []int, size int) {
 		os.Exit(1)
 	}
 
-	state := newState(Puzzle, 100000, 0, 0)
+	state := newState(Puzzle, 100000, 0, 0, nil)
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -91,12 +92,16 @@ func Solver(Puzzle []int, size int) {
 
 		if bytes.Equal([]byte(parent), []byte(goal)) {
 			fmt.Println("This puzzle has been solved!\n")
-			g.PrintBoard(state.puzzle, size)
 			// REBUILD PATH TO START
+			for p := state; p.before != nil; p = p.before {
+				g.PrintBoard(p.puzzle, size)
+				time.Sleep(1 * time.Second)
+			}
+			g.PrintBoard(problem.start, size)
 
 			// TESTING RUNTIME
 			elapsed := time.Since(start)
-			log.Printf("Binomial took %s", elapsed)
+			fmt.Printf("Binomial took %s", elapsed)
 			unsolved = false
 			// os.Exit(1)
 		}
@@ -120,6 +125,9 @@ func Solver(Puzzle []int, size int) {
 				fmt.Println("This puzzle has been solved!\n")
 				g.PrintBoard(state.puzzle, size)
 				// REBUILD PATH TO START
+				// for p := state; p != nil; p = state.before {
+				// 	g.PrintBoard(state.puzzle, size)
+				// }
 
 				// TESTING RUNTIME
 				elapsed := time.Since(start)
@@ -144,7 +152,7 @@ func Solver(Puzzle []int, size int) {
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic)
+			s := newState(child, depth+heuristic, depth, heuristic, state)
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
