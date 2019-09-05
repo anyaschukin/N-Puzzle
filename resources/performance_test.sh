@@ -32,7 +32,8 @@ echo "Unsolvable correctly identified: $u/$count\x1b[0m"
 case=10
 count=0
 solved=0
-tmax=0
+best=42
+worst=0
 tcumulative=0
 while [ $count -lt $case ]
 do
@@ -46,22 +47,66 @@ do
 		continue
 	fi
 	time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
+#	echo "time: $time"
 	prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
 	if [ "$prefix" = "m" ]
 	then
 		time=$(echo "$time" | rev | cut -c3-42 | rev)
-#		time=$(echo "scale = 9; ($time / 1000)" | bc)	
-		tcumulative=$(echo "scale = 9; $tcumulative + ($time / 1000)" | bc)	
+		time=$(echo "scale = 9; ($time / 1000)" | bc)	
+		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
+		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+		best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+#		echo "time_up: $time_up"
+#		echo "worst_up: $worst_up"
+#		echo "best_up: $best_up"
+		if [ "$time_up" -gt "$worst_up" ]
+		then
+			worst=$time
+		fi
+		if [ "$time_up" -lt "$best_up" ]
+		then
+			best=$time
+		fi
 	elif [ "$prefix" = "µ" ]
 	then
 		time=$(echo "$time" | rev | cut -c3-42 | rev)
-		tcumulative=$(echo "scale = 9; $tcumulative + ($time / 1000000)" | bc)	
+		time=$(echo "scale = 9; ($time / 1000000)" | bc)	
+		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
+		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+		best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+#		echo "time_up: $time_up"
+#		echo "worst_up: $worst_up"
+#		echo "best_up: $best_up"
+		if [ "$time_up" -gt "$worst_up" ]
+		then
+			worst=$time
+		fi
+		if [ "$time_up" -lt "$best_up" ]
+		then
+			best=$time
+		fi
 	else
 		time=$(echo "$time" | rev | cut -c2-42 | rev)
-		tcumulative=$(echo "$tcumulative + $time" | bc)	
+		tcumulative=$(echo "$tcumulative + $time" | bc)i
+		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+		best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+#		echo "time_up: $time_up"
+#		echo "worst_up: $worst_up"
+#		echo "best_up: $best_up"
+		if [ "$time_up" -gt "$worst_up" ]
+		then
+			worst=$time
+		fi
+		if [ "$time_up" -lt "$best_up" ]
+		then
+			best=$time
+		fi
 	fi
-#	echo "time: $time"
 #	echo "tcumulative: $tcumulative"
+#	echo "worst: $worst"
 	count=$(($count + 1))
 	$(rm rm_me.txt)
 done
@@ -79,5 +124,5 @@ else
 fi
 echo "Solvable correctly solved: $solved/$count\x1b[0m"
 echo "Mean solve time: $mean seconds"
-echo "Max solve time: "
-echo "Min solve time: "
+echo "Worst solve time: $worst seconds"
+echo "Best solve time: $best seconds"
