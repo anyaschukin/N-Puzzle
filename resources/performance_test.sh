@@ -32,12 +32,11 @@ echo "Unsolvable correctly identified: $u/$count\x1b[0m"
 case=10
 count=0
 solved=0
-#tmin=60
-#tmax=0
+tmax=0
 tcumulative=0
 while [ $count -lt $case ]
 do
-#	echo ".\c"
+	echo ".\c"
 	solvable=$(python generator.py -s 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
 	end=$(echo "$solvable" | tail -n -1)
 	if [ "$end"=" You've finished n-puzzle!" ]
@@ -47,39 +46,30 @@ do
 		continue
 	fi
 	time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
-	echo "time: $time"
 	prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
-	echo "$prefix"
-	sigfig=0
 	if [ "$prefix" = "m" ]
 	then
-		sigfig=-3
+		time=$(echo "$time" | rev | cut -c3-42 | rev)
+#		time=$(echo "scale = 9; ($time / 1000)" | bc)	
+		tcumulative=$(echo "scale = 9; $tcumulative + ($time / 1000)" | bc)	
 	elif [ "$prefix" = "µ" ]
 	then
-		sigfig=-6
-	fi
-	if [ "$sigfig" = "0" ]
-	then
-		echo "heyy"
+		time=$(echo "$time" | rev | cut -c3-42 | rev)
+		tcumulative=$(echo "scale = 9; $tcumulative + ($time / 1000000)" | bc)	
+	else
 		time=$(echo "$time" | rev | cut -c2-42 | rev)
-	elif [ "$sigfig" = "-3" ] || [ "$sigfig" = "-6" ]
-	then 
-		time=$(echo "$time" | rev | cut -c3-42 | rev)			
+		tcumulative=$(echo "$tcumulative + $time" | bc)	
 	fi
-	echo "$sigfig"
-	echo "time2: $time"
-	
-
-## s ms or µs
-#	tcumulative=$(($tcumulative + $time))
-#	echo "$tcumulative"
-
+#	echo "time: $time"
+#	echo "tcumulative: $tcumulative"
 	count=$(($count + 1))
 	$(rm rm_me.txt)
 done
 
-#echo "$time"
-
+mean=$(echo "scale = 9; $tcumulative / $count" | bc)
+#echo "tcumulative: $tcumulative"
+#echo "count: $count"
+#echo "mean: $mean"
 
 if [ "$u" -lt "$count" ]
 then
@@ -88,6 +78,6 @@ else
 	echo "\x1b[32m"
 fi
 echo "Solvable correctly solved: $solved/$count\x1b[0m"
-echo "Average solve time: "
+echo "Mean solve time: $mean seconds"
 echo "Max solve time: "
 echo "Min solve time: "
