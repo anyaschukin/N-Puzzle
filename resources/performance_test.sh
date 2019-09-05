@@ -12,18 +12,14 @@ u=0
 while [ $count -lt $case ]
 do
 	echo ".\c"
-	output=$(python generator.py -u 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
-	if [ "$output"="This puzzle is unsolvable." ]
+	unsolvable=$(python generator.py -u 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
+	if [ "$unsolvable"="This puzzle is unsolvable." ]
 	then
 		u=$(($u + 1))
 	fi	
 	count=$(($count + 1))
 	$(rm rm_me.txt)
 done
-
-#echo "unsolvable: $unsolvable"
-#echo "output: $output"
-
 if [ "$u" -lt "$count" ]
 then
 	echo "\x1b[31m"
@@ -43,19 +39,19 @@ while [ $count -lt $case ]
 do
 #	echo ".\c"
 	solvable=$(python generator.py -s 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
-#	end=$( echo "$solvable" | tail -n -1)
-	finished=" You've finished n-puzzle!"
-	end="end"
-#	end=$( echo "$solvable")
-	time=$( echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
-	echo "time: $time"
-#	tcumulative=$(($tcumulative + $time))
-#	echo "$tcumulative"
-	if [[ "$end" == "$finished" ]]
+	end=$( echo "$solvable" | tail -n -1)
+	if [ "$end"=" You've finished n-puzzle!" ]
 	then
-		echo "end: $end"
 		solved=$(($solved + 1))
 	fi
+	time=$( echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
+	echo "time: $time"
+	
+
+## s ms or µs
+#	tcumulative=$(($tcumulative + $time))
+#	echo "$tcumulative"
+
 	count=$(($count + 1))
 	$(rm rm_me.txt)
 done
