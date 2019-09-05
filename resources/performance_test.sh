@@ -38,14 +38,35 @@ tcumulative=0
 while [ $count -lt $case ]
 do
 #	echo ".\c"
-	solvable=$(python generator.py -s 3 >> rm_me.txt; ../n-puzzle rm_me.txt)
-	end=$( echo "$solvable" | tail -n -1)
+	solvable=$(python generator.py -s 6 >> rm_me.txt; ../n-puzzle rm_me.txt)
+	end=$(echo "$solvable" | tail -n -1)
 	if [ "$end"=" You've finished n-puzzle!" ]
 	then
 		solved=$(($solved + 1))
+	else
+		continue
 	fi
-	time=$( echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
+	time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 	echo "time: $time"
+	prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
+	echo "$prefix"
+	sigfig=0
+	if [ "$prefix" = "m" ]
+	then
+		sigfig=-3
+	elif [ "$prefix" = "µ" ]
+	then
+		sigfig=-6
+	fi
+	if [ "$sigfig" = "0" ]
+	then
+		echo "heyy"
+		time2=$(echo "$time" | cut -c-1-11)
+	fi
+#	if [ "$sigfig" = "-3" ]
+#	fi
+	echo "$sigfig"
+	echo "time2: $time2"
 	
 
 ## s ms or µs
@@ -67,5 +88,5 @@ else
 fi
 echo "Solvable correctly solved: $solved/$count\x1b[0m"
 echo "Average solve time: "
-echo "Min solve time: "
 echo "Max solve time: "
+echo "Min solve time: "
