@@ -4,7 +4,7 @@ echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m...\n"
 ####  -- Config --  ####
 test_cases=10
 min_size=3
-max_size=5
+max_size=9
 
 echo "\x1b[4m-- Config --\x1b[0m"
 echo "Number of test cases = $test_cases"
