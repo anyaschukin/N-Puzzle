@@ -43,7 +43,7 @@ type State struct {
 	before    *State
 }
 
-func newState(Puzzle []int, priority int, depth int, heuristic int, before *State, after *State) *State {
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
@@ -51,7 +51,6 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	state.heuristic = heuristic // not sure about this one either?
 	state.puzzle = Puzzle
 	state.before = before
-	state.after = after
 	return state
 }
 
@@ -67,7 +66,7 @@ func Solver(Puzzle []int, size int) {
 		os.Exit(1)
 	}
 
-	state := newState(Puzzle, 100000, 0, 0, nil, nil)
+	state := newState(Puzzle, 100000, 0, 0, nil)
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -135,7 +134,7 @@ func Solver(Puzzle []int, size int) {
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic, state, nil)
+			s := newState(child, depth+heuristic, depth, heuristic, state)
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
