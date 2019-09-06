@@ -4,8 +4,12 @@ echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m...\n"
 ####  -- Config --  ####
 test_cases=10
 min_size=3
-max_size=9
-unit_tests=1
+max_size=5
+
+echo "\x1b[4m-- Config --\x1b[0m"
+echo "Number of test cases = $test_cases"
+echo "Minimum size = $min_size"
+echo "Maximum size = $max_size\n"
 
 ####  -- Test --  ####
 size=$min_size
@@ -151,3 +155,4 @@ do
 	echo "\tBest: \t$best\n"
 	size=$(($size + 1))
 done
+echo "\n\x1b[5mN-Puzzle performance test finished. Have a nice day!\x1B[0m"
