@@ -1,5 +1,4 @@
 echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m...\n"
-## if fail
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
 
 ####  -- Config --  ####
@@ -7,6 +6,7 @@ test_cases=10
 min_size=3
 max_size=9
 
+####  -- Test Loop --  ####
 size=$min_size
 while [ $size -lt $(expr $max_size + 1) ]
 do
@@ -46,11 +46,13 @@ do
 	do
 		echo ".\c"
 		solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+#		echo "$solvable"
 		end=$(echo "$solvable" | tail -n -1)
 		if [ "$end"=" You've finished n-puzzle!" ]
 		then
 			solved=$(($solved + 1))
 		else
+#			echo "\nHey there\n"
 			continue
 		fi
 		time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
@@ -64,9 +66,6 @@ do
 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	#		echo "time_up: $time_up"
-	#		echo "worst_up: $worst_up"
-	#		echo "best_up: $best_up"
 			if [ "$time_up" -gt "$worst_up" ]
 			then
 				worst=$time
@@ -83,9 +82,6 @@ do
 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	#		echo "time_up: $time_up"
-	#		echo "worst_up: $worst_up"
-	#		echo "best_up: $best_up"
 			if [ "$time_up" -gt "$worst_up" ]
 			then
 				worst=$time
@@ -96,13 +92,10 @@ do
 			fi
 		else
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
-			tcumulative=$(echo "$tcumulative + $time" | bc)i
+			tcumulative=$(echo "$tcumulative + $time" | bc)
 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	#		echo "time_up: $time_up"
-	#		echo "worst_up: $worst_up"
-	#		echo "best_up: $best_up"
 			if [ "$time_up" -gt "$worst_up" ]
 			then
 				worst=$time
@@ -112,8 +105,12 @@ do
 				best=$time
 			fi
 		fi
+	#	echo "time_up: $time_up"
+	#	echo "worst_up: $worst_up"
+	#	echo "best_up: $best_up"
 	#	echo "tcumulative: $tcumulative"
 	#	echo "worst: $worst"
+	#	echo "best: $best"
 		count=$(($count + 1))
 		$(rm rm_me.txt)
 	done
