@@ -207,9 +207,12 @@ do
 			best="\x1b[31mFailed\x1b[0m"
 		fi
 
-		if [ "$solved" -lt "$count" ]
+		if [ "$solved" = 0 ]
 		then
 			echo "\x1b[31m"
+		elif [ "$solved" -lt "$count" ]
+		then
+			echo "\x1b[33m"
 		else
 			echo "\x1b[32m"
 		fi
@@ -308,9 +311,12 @@ do
 			best="\x1b[31mFailed\x1b[0m"
 		fi
 
-		if [ "$solved" -lt "$count" ]
+		if [ "$solved" = 0 ]
 		then
 			echo "\x1b[31m"
+		elif [ "$solved" -lt "$count" ]
+		then
+			echo "\x1b[33m"
 		else
 			echo "\x1b[32m"
 		fi
