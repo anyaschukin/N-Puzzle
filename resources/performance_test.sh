@@ -1,4 +1,5 @@
-echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m\n"
+printf "\E[H\E[2J"
+echo "\x1b[1mLaunching N-Puzzle Performance Test\x1B[0m\n"
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
 
 #### -- Config -- ####
@@ -11,7 +12,7 @@ unsolvable_test=1
 solvable_test=1
 
 echo "\t\x1b[4m-- Config --\x1b[0m"
-echo "Run test cases: \t$test_cases"
+echo "Number of test cases: \t$test_cases"
 echo "Minimum size: \t\t$min_size"
 echo "Maximum size: \t\t$max_size"
 if [ "$unit_test" != 0 ]
