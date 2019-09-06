@@ -1,7 +1,6 @@
 package solver
 
 import (
-	"fmt"
 	g "n-puzzle/golib"
 )
 
@@ -36,9 +35,7 @@ func evenSize(solution []int, puzzle []int, size int) bool {
 	Inversions := countInversions(puzzle)
 	zeroIdx := g.FindIndexSlice(puzzle, 0)
 	row := (((size*size - 1) - zeroIdx) / size) + 1
-	fmt.Printf("endidx = %d, zeroidx = %d, row = %d, inversions = %d\n", (size*size - 1), zeroIdx, row, countInversions(puzzle))
 	if ((row%2 == 0) && (Inversions%2 != 0)) || (row%2 != 0) && (Inversions%2 == 0) {
-		fmt.Println("solvable\n")
 		return true
 	}
 	return false
