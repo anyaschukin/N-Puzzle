@@ -7,7 +7,10 @@ min_size=3
 max_size=9
 
 ####  -- Test Loop --  ####
-$(rm rm_me.txt)
+if [ -f "rm_me.txt" ]
+then
+	$(rm rm_me.txt)
+fi
 size=$min_size
 while [ $size -lt $(expr $max_size + 1) ]
 do
@@ -128,9 +131,9 @@ do
 		echo "\x1b[32m"
 	fi
 	echo "Solvable correctly solved: $solved/$count\x1b[0m"
-	echo "Solve time:"
-	echo "\tMean: \t$mean seconds"
-	echo "\tWorst: \t$worst seconds"
-	echo "\tBest: \t$best seconds\n"
+	echo "Solve time in seconds:"
+	echo "\tMean: \t$mean"
+	echo "\tWorst: \t$worst"
+	echo "\tBest: \t$best\n"
 	size=$(($size + 1))
 done
