@@ -23,12 +23,12 @@ do
 	while [ $count -lt $case ]
 	do
 		echo ".\c"
+		count=$(($count + 1))
 		unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 		if [ "$unsolvable"="This puzzle is unsolvable." ]
 		then
 			u=$(($u + 1))
 		fi	
-		count=$(($count + 1))
 		$(rm rm_me.txt)
 	done
 	if [ "$u" -lt "$count" ]
@@ -49,15 +49,16 @@ do
 	while [ $count -lt $case ]
 	do
 		echo ".\c"
+		count=$(($count + 1))
 		solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 #		echo "$solvable"
 		end=$(echo "$solvable" | tail -n -1)
-		if [ "$end"=" You've finished n-puzzle!" ]
+		if [ "$end" != " You've finished n-puzzle!" ]
 		then
-			solved=$(($solved + 1))
-		else
-#			echo "\nHey there\n"
+			$(rm rm_me.txt)
 			continue
+		else
+			solved=$(($solved + 1))
 		fi
 		time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 	#	echo "time: $time"
@@ -115,16 +116,16 @@ do
 	#	echo "tcumulative: $tcumulative"
 	#	echo "worst: $worst"
 	#	echo "best: $best"
-		count=$(($count + 1))
+#		count=$(($count + 1))
 		$(rm rm_me.txt)
 	done
 
-	mean=$(echo "scale = 9; $tcumulative / $count" | bc)
+	mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
 	#echo "tcumulative: $tcumulative"
 	#echo "count: $count"
 	#echo "mean: $mean"
 
-	if [ "$u" -lt "$count" ]
+	if [ "$solved" -lt "$count" ]
 	then
 		echo "\x1b[31m"
 	else
