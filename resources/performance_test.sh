@@ -21,39 +21,41 @@ while [ $size -lt $(expr $max_size + 1) ]
 do
 	echo "\x1b[1mSize - $size\x1B[0m"
 
-#### -- Unsolvable Unit -- ####
-#	case=$test_cases
-#	count=0
-#	u=0
-#	while [ $count -lt $case ]
-#	do
-#		echo ".\c"
-#		count=$(($count + 1))
-#		echo "/$size/$sizeu$count.txt"
-#		unsolvable=$(../n-puzzle Boards/Unsolvable/$size/$sizeu$count.txt)
-#		if [ "$unsolvable"="This puzzle is unsolvable." ]
-#		then
-#			u=$(($u + 1))
-#		fi	
-#	done
-#	if [ "$u" -lt "$count" ]
-#	then
-#		echo "\x1b[31m"
-#	else
-#		echo "\x1b[32m"
-#	fi
-#	echo "Unsolvable unit tests correctly identified: $u/$count\x1b[0m"
-
-#### -- Unsolvable Random -- ####
-	case=$test_cases
-	count=0
+#### -- Unsolvable Unit Tests -- ####
+	case=10
 	u=0
+	count=0
+	while [ $count -lt $case ]
+	do
+		echo ".\c"
+		count=$(($count + 1))
+		unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
+		unsolvable=$(../n-puzzle $unit)
+#		echo "$unsolvable"
+		if [ "$unsolvable" = "This puzzle in unsolvable." ]
+		then
+			u=$(($u + 1))
+		fi	
+	done
+	if [ "$u" -lt "$count" ]
+	then
+		echo "\x1b[31m"
+	else
+		echo "\x1b[32m"
+	fi
+	echo "Unsolvable unit tests correctly identified: \t$u/$count\x1b[0m"
+
+#### -- Unsolvable Random Boards-- ####
+	case=$test_cases
+	u=0
+	count=0
 	while [ $count -lt $case ]
 	do
 		echo ".\c"
 		count=$(($count + 1))
 		unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
-		if [ "$unsolvable"="This puzzle is unsolvable." ]
+#		echo "$unsolvable"
+		if [ "$unsolvable" = "This puzzle in unsolvable." ]
 		then
 			u=$(($u + 1))
 		fi	
@@ -65,15 +67,15 @@ do
 	else
 		echo "\x1b[32m"
 	fi
-	echo "Unsolvable random puzzles correctly identified: $u/$count\x1b[0m"
+	echo "Unsolvable random boards correctly identified: \t$u/$count\x1b[0m"
 
 #### -- Solvable Random -- ####
 	case=$test_cases
-	count=0
 	solved=0
 	best=42
 	worst=0
 	tcumulative=0
+	count=0
 	while [ $count -lt $case ]
 	do
 		echo ".\c"
@@ -171,7 +173,7 @@ do
 	else
 		echo "\x1b[32m"
 	fi
-	echo "Solvable correctly solved: $solved/$count\x1b[0m"
+	echo "Solvable correctly solved: \t\t\t$solved/$count\x1b[0m"
 	echo "Solve time in seconds:"
 	echo "\tMean: \t$mean"
 	echo "\tWorst: \t$worst"
