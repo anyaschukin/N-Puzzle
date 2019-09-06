@@ -74,6 +74,7 @@ type State struct {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
@@ -86,6 +87,9 @@ func newState(Puzzle []int, priority int, depth int, heuristic int) *State {
 =======
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 >>>>>>> builds path from finish -> start
+=======
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State, after *State) *State {
+>>>>>>> new binary for Drew tests
 	state := &State{}
 	state.index = 0
 	state.priority = priority
@@ -101,6 +105,7 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 >>>>>>> little commit before checkout
 	state.puzzle = Puzzle
 	state.before = before
+	state.after = after
 	return state
 }
 
@@ -130,10 +135,11 @@ func Solver(Puzzle []int, size int, iterations int) {
 >>>>>>> little commit before checkout
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
-		fmt.Println("This puzzle in unsolvable.")
+		fmt.Println("This puzzle is unsolvable.")
 		os.Exit(1)
 	}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	state := newState(Puzzle, 100000, 0, 0, nil)
@@ -143,6 +149,9 @@ func Solver(Puzzle []int, size int, iterations int) {
 =======
 	state := newState(Puzzle, 100000, 0, 0, nil)
 >>>>>>> builds path from finish -> start
+=======
+	state := newState(Puzzle, 100000, 0, 0, nil, nil)
+>>>>>>> new binary for Drew tests
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -214,6 +223,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 			for p := state; p != nil; p = state.before {
 				g.PrintBoard(p.puzzle, size)
 				if reflect.DeepEqual(problem.goal, p.puzzle) {
@@ -227,6 +237,13 @@ func Solver(Puzzle []int, size int, iterations int) {
 				g.PrintBoard(p.puzzle, size)
 				time.Sleep(1 * time.Second)
 			}
+=======
+			// for p := state; p.before != nil; p = p.before {
+
+			// 	g.PrintBoard(p.puzzle, size)
+			// 	time.Sleep(1 * time.Second)
+			// }
+>>>>>>> new binary for Drew tests
 			g.PrintBoard(problem.start, size)
 >>>>>>> builds path from finish -> start
 
@@ -238,6 +255,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 <<<<<<< HEAD
 		}
 
+<<<<<<< HEAD
 		// if reflect.DeepEqual(problem.goal, state.puzzle) {
 		// fmt.Println("This puzzle has been solved!\n")
 		// g.PrintBoard(state.puzzle, size)
@@ -249,6 +267,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 		// }
 
 <<<<<<< HEAD
+=======
+>>>>>>> new binary for Drew tests
 		children := CreateNeighbors(state.puzzle, size)
 <<<<<<< HEAD
 =======
@@ -315,6 +335,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 				unsolved = false
 			}
 
+<<<<<<< HEAD
 			// if reflect.DeepEqual(problem.goal, child) {
 			// fmt.Println("This puzzle has been solved!\n")
 			// g.PrintBoard(child, size)
@@ -327,6 +348,8 @@ func Solver(Puzzle []int, size int, iterations int) {
 			// }
 
 <<<<<<< HEAD
+=======
+>>>>>>> new binary for Drew tests
 			if closedSet.Has([]byte(tmpChild)) {
 =======
 			if reflect.DeepEqual(problem.goal, child) {
@@ -388,6 +411,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 >>>>>>> solves half of time for size 7 + 8
 			heuristic := g.Manhattan(child, problem.goal, size)
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> new openSet same problems
 			// priority = -priority
 			// priority :=  heuristic
@@ -404,6 +428,9 @@ func Solver(Puzzle []int, size int, iterations int) {
 >>>>>>> priorityqueue empty before solution
 =======
 			// fmt.Printf("\n priority = %d, heuristic = %d, depth = %d\n", s.priority, s.heuristic, s.depth)
+=======
+			s := newState(child, depth+heuristic, depth, heuristic, state, nil)
+>>>>>>> new binary for Drew tests
 
 =======
 >>>>>>> little commit before checkout
@@ -451,4 +478,17 @@ func Solver(Puzzle []int, size int, iterations int) {
 		}
 	}
 }
+<<<<<<< HEAD
 >>>>>>> little commit before checkout
+=======
+
+// if reflect.DeepEqual(problem.goal, state.puzzle) {
+// fmt.Println("This puzzle has been solved!\n")
+// g.PrintBoard(state.puzzle, size)
+// REBUILD PATH TO START
+// unsolved = false
+// elapsed := time.Since(start)
+// log.Printf("Binomial took %s", elapsed)
+// os.Exit(1)
+// }
+>>>>>>> new binary for Drew tests
