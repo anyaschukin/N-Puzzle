@@ -1,4 +1,4 @@
-echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m...\n"
+echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m\n"
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
 
 #### -- Config -- ####
@@ -62,13 +62,15 @@ do
 		count=0
 		while [ $count -lt $case ]
 		do
-			echo ".\c"
 			count=$(($count + 1))
 			unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
 			unsolvable=$(../n-puzzle $unit)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
+				echo "\x1b[32m.\x1b[0m\c"
+			else	
+				echo "\x1b[31m.\x1b[0m\c"
 			fi	
 		done
 		if [ "$u" -lt "$count" ]
@@ -88,12 +90,14 @@ do
 		count=0
 		while [ $count -lt $case ]
 		do
-			echo ".\c"
 			count=$(($count + 1))
 			unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
+				echo "\x1b[32m.\x1b[0m\c"
+			else	
+				echo "\x1b[31m.\x1b[0m\c"
 			fi	
 			$(rm rm_me.txt)
 		done
@@ -122,16 +126,17 @@ do
 		count=0
 		while [ $count -lt $case ]
 		do
-			echo ".\c"
 			count=$(($count + 1))
 			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
 			solvable=$(../n-puzzle $unit)
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != " You've finished n-puzzle!" ]
 			then
+				echo "\x1b[31m.\x1b[0m\c"
 				continue
 			else
 				solved=$(($solved + 1))
+				echo "\x1b[32m.\x1b[0m\c"
 			fi
 			time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
@@ -221,16 +226,17 @@ do
 		count=0
 		while [ $count -lt $case ]
 		do
-			echo ".\c"
 			count=$(($count + 1))
 			solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != " You've finished n-puzzle!" ]
 			then
 				$(rm rm_me.txt)
+				echo "\x1b[31m.\x1b[0m\c"
 				continue
 			else
 				solved=$(($solved + 1))
+				echo "\x1b[32m.\x1b[0m\c"
 			fi
 			time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
