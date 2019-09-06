@@ -43,7 +43,7 @@ type State struct {
 	before    *State
 }
 
-func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State, after *State) *State {
 	state := &State{}
 	state.index = 0
 	state.priority = priority
@@ -51,6 +51,7 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	state.heuristic = heuristic // not sure about this one either?
 	state.puzzle = Puzzle
 	state.before = before
+	state.after = after
 	return state
 }
 
@@ -62,11 +63,11 @@ func Solver(Puzzle []int, size int) {
 	goal := g.PuzzleToString(problem.goal, ",")
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
-		fmt.Println("This puzzle in unsolvable.")
+		fmt.Println("This puzzle is unsolvable.")
 		os.Exit(1)
 	}
 
-	state := newState(Puzzle, 100000, 0, 0, nil)
+	state := newState(Puzzle, 100000, 0, 0, nil, nil)
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -93,10 +94,11 @@ func Solver(Puzzle []int, size int) {
 		if bytes.Equal([]byte(parent), []byte(goal)) {
 			fmt.Println("This puzzle has been solved!\n")
 			// REBUILD PATH TO START
-			for p := state; p.before != nil; p = p.before {
-				g.PrintBoard(p.puzzle, size)
-				time.Sleep(1 * time.Second)
-			}
+			// for p := state; p.before != nil; p = p.before {
+
+			// 	g.PrintBoard(p.puzzle, size)
+			// 	time.Sleep(1 * time.Second)
+			// }
 			g.PrintBoard(problem.start, size)
 
 			// TESTING RUNTIME
@@ -105,16 +107,6 @@ func Solver(Puzzle []int, size int) {
 			unsolved = false
 			// os.Exit(1)
 		}
-
-		// if reflect.DeepEqual(problem.goal, state.puzzle) {
-		// fmt.Println("This puzzle has been solved!\n")
-		// g.PrintBoard(state.puzzle, size)
-		// REBUILD PATH TO START
-		// unsolved = false
-		// elapsed := time.Since(start)
-		// log.Printf("Binomial took %s", elapsed)
-		// os.Exit(1)
-		// }
 
 		children := CreateNeighbors(state.puzzle, size)
 
@@ -135,15 +127,6 @@ func Solver(Puzzle []int, size int) {
 				unsolved = false
 			}
 
-			// if reflect.DeepEqual(problem.goal, child) {
-			// fmt.Println("This puzzle has been solved!\n")
-			// g.PrintBoard(child, size)
-			// REBUILD PATH TO START
-			// elapsed := time.Since(start)
-			// log.Printf("Binomial took %s", elapsed)
-			// os.Exit(1)
-			// }
-
 			if closedSet.Has([]byte(tmpChild)) {
 				problem.sizeComplexity++
 				continue
@@ -152,7 +135,7 @@ func Solver(Puzzle []int, size int) {
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic, state)
+			s := newState(child, depth+heuristic, depth, heuristic, state, nil)
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
@@ -168,3 +151,13 @@ func Solver(Puzzle []int, size int) {
 		}
 	}
 }
+
+// if reflect.DeepEqual(problem.goal, state.puzzle) {
+// fmt.Println("This puzzle has been solved!\n")
+// g.PrintBoard(state.puzzle, size)
+// REBUILD PATH TO START
+// unsolved = false
+// elapsed := time.Since(start)
+// log.Printf("Binomial took %s", elapsed)
+// os.Exit(1)
+// }
