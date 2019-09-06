@@ -1,32 +1,23 @@
+#### -- Config -- ####
+
+min_size=3
+max_size=9
+test_cases=10
+unsolvable_test=1
+solvable_test=1
+unit_test=1
+random_test=1
+
+
+#### -- Print Header -- ####
 printf "\E[H\E[2J"
 echo "\x1b[1mLaunching N-Puzzle Performance Test\x1B[0m\n"
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
 
-#### -- Config -- ####
-test_cases=10
-min_size=3
-max_size=9
-unit_test=1
-random_test=1
-unsolvable_test=1
-solvable_test=1
-
 echo "\t\x1b[4m-- Config --\x1b[0m"
-echo "Number of test cases: \t$test_cases"
 echo "Minimum size: \t\t$min_size"
 echo "Maximum size: \t\t$max_size"
-if [ "$unit_test" != 0 ]
-then
-	echo "Unit Tests: \t\t\x1b[32mon\x1b[0m"
-else	
-	echo "Unit Tests: \t\t\x1b[31moff\x1b[0m"
-fi
-if [ "$random_test" != 0 ]
-then
-	echo "Random Tests: \t\t\x1b[32mon\x1b[0m"
-else	
-	echo "Random Tests: \t\t\x1b[31moff\x1b[0m"
-fi
+echo "Number of test cases: \t$test_cases"
 if [ "$unsolvable_test" != 0 ]
 then
 	echo "Unsolvable Tests: \t\x1b[32mon\x1b[0m"
@@ -35,9 +26,21 @@ else
 fi
 if [ "$solvable_test" != 0 ]
 then
-	echo "Solvable Tests: \t\x1b[32mon\x1b[0m\n"
+	echo "Solvable Tests: \t\x1b[32mon\x1b[0m"
 else	
-	echo "Solvable Tests: \t\x1b[31moff\x1b[0m\n"
+	echo "Solvable Tests: \t\x1b[31moff\x1b[0m"
+fi
+if [ "$unit_test" != 0 ]
+then
+	echo "Unit Tests: \t\t\x1b[32mon\x1b[0m"
+else	
+	echo "Unit Tests: \t\t\x1b[31moff\x1b[0m"
+fi
+if [ "$random_test" != 0 ]
+then
+	echo "Random Tests: \t\t\x1b[32mon\x1b[0m\n"
+else	
+	echo "Random Tests: \t\t\x1b[31moff\x1b[0m\n"
 fi
 
 #### -- Test -- ####
