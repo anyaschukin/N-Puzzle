@@ -10,6 +10,7 @@ random_test=1
 
 
 #### -- Print Header -- ####
+start=`date +%s`
 printf "\E[H\E[2J"
 echo "\x1b[1mLaunching N-Puzzle Performance Test\x1B[0m\n"
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
@@ -192,10 +193,10 @@ do
 				fi
 			fi
 		done
-
-		mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
-		if [ "$mean" = "" ]
+		if [ "$solved" != 0 ]
 		then
+			mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
+		else
 			mean="\x1b[31mFailed\x1b[0m"
 		fi
 		if [ "$worst" = 0 ]
@@ -296,10 +297,10 @@ do
 			fi
 			$(rm rm_me.txt)
 		done
-
-		mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
-		if [ "$mean" = "" ]
+		if [ "$solved" != 0 ]
 		then
+			mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
+		else
 			mean="\x1b[31mFailed\x1b[0m"
 		fi
 		if [ "$worst" = 0 ]
@@ -328,4 +329,7 @@ do
 	echo " "
 	size=$(($size + 1))
 done
-echo "\n\x1b[5mN-Puzzle performance test finished. Have a nice day!\x1B[0m"
+end=`date +%s`
+runtime=$((end-start))
+echo "Total perfomance test time: $runtime seconds"
+echo "\x1b[5mN-Puzzle performance test finished. Have a nice day!\x1B[0m"
