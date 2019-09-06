@@ -75,6 +75,7 @@ type State struct {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
 	state := &State{}
 	state.index = 0
@@ -90,6 +91,9 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 =======
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State, after *State) *State {
 >>>>>>> new binary for Drew tests
+=======
+func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
+>>>>>>> small edits to Sovler
 	state := &State{}
 	state.index = 0
 	state.priority = priority
@@ -105,7 +109,6 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 >>>>>>> little commit before checkout
 	state.puzzle = Puzzle
 	state.before = before
-	state.after = after
 	return state
 }
 
@@ -142,6 +145,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	state := newState(Puzzle, 100000, 0, 0, nil)
 =======
 	state := newState(Puzzle, 100000, 0, 0)
@@ -152,6 +156,9 @@ func Solver(Puzzle []int, size int, iterations int) {
 =======
 	state := newState(Puzzle, 100000, 0, 0, nil, nil)
 >>>>>>> new binary for Drew tests
+=======
+	state := newState(Puzzle, 100000, 0, 0, nil)
+>>>>>>> small edits to Sovler
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
@@ -412,6 +419,7 @@ func Solver(Puzzle []int, size int, iterations int) {
 			heuristic := g.Manhattan(child, problem.goal, size)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> new openSet same problems
 			// priority = -priority
 			// priority :=  heuristic
@@ -431,6 +439,9 @@ func Solver(Puzzle []int, size int, iterations int) {
 =======
 			s := newState(child, depth+heuristic, depth, heuristic, state, nil)
 >>>>>>> new binary for Drew tests
+=======
+			s := newState(child, depth+heuristic, depth, heuristic, state)
+>>>>>>> small edits to Sovler
 
 =======
 >>>>>>> little commit before checkout
