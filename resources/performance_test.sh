@@ -7,6 +7,7 @@ min_size=3
 max_size=9
 
 ####  -- Test Loop --  ####
+$(rm rm_me.txt)
 size=$min_size
 while [ $size -lt $(expr $max_size + 1) ]
 do
