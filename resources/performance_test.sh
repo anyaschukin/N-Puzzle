@@ -5,13 +5,14 @@ echo "\x1b[1mLaunching N-Puzzle performance test \x1B[0m...\n"
 test_cases=10
 min_size=3
 max_size=9
+unit_tests=1
 
-####  -- Test Loop --  ####
+####  -- Test --  ####
+size=$min_size
 if [ -f "rm_me.txt" ]
 then
 	$(rm rm_me.txt)
 fi
-size=$min_size
 while [ $size -lt $(expr $max_size + 1) ]
 do
 	echo "\x1b[1mSize - $size\x1B[0m"
@@ -116,11 +117,23 @@ do
 	#	echo "tcumulative: $tcumulative"
 	#	echo "worst: $worst"
 	#	echo "best: $best"
-#		count=$(($count + 1))
 		$(rm rm_me.txt)
 	done
 
 	mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
+	if [ "$mean" = "" ]
+	then
+		mean="\x1b[31mFailed\x1b[0m"
+	fi
+	if [ "$worst" = 0 ]
+	then
+		worst="\x1b[31mFailed\x1b[0m"
+	fi
+	if [ "$best" = 42 ]
+	then
+		best="\x1b[31mFailed\x1b[0m"
+	fi
+
 	#echo "tcumulative: $tcumulative"
 	#echo "count: $count"
 	#echo "mean: $mean"
