@@ -46,6 +46,7 @@ fi
 
 #### -- Test -- ####
 size=$min_size
+test_num=0
 if [ -f "rm_me.txt" ]
 then
 	$(rm rm_me.txt)
@@ -76,7 +77,8 @@ do
 				echo "\x1b[32m.\x1b[0m\c"
 			else	
 				echo "\x1b[31m.\x1b[0m\c"
-			fi	
+			fi
+			test_num=$(($test_num + 1))
 		done
 		if [ "$u" -lt "$count" ]
 		then
@@ -105,6 +107,7 @@ do
 				echo "\x1b[31m.\x1b[0m\c"
 			fi	
 			$(rm rm_me.txt)
+			test_num=$(($test_num + 1))
 		done
 		if [ "$u" -lt "$count" ]
 		then
@@ -132,6 +135,7 @@ do
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
+			test_num=$(($test_num + 1))
 			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
 			solvable=$(../n-puzzle $unit)
 			end=$(echo "$solvable" | tail -n -1)
@@ -235,6 +239,7 @@ do
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
+			test_num=$(($test_num + 1))
 			solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != " You've finished n-puzzle!" ]
@@ -331,5 +336,5 @@ do
 done
 end=`date +%s`
 runtime=$((end-start))
-echo "Total perfomance test time: $runtime seconds"
-echo "\x1b[5mN-Puzzle performance test finished. Have a nice day!\x1B[0m"
+echo "N-Puzzle performance test finished, $test_num tests run in $runtime seconds."
+echo "Have a nice day!"
