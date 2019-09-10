@@ -4,7 +4,6 @@ import (
 	"fmt"
 	p "n-puzzle/parsing"
 	s "n-puzzle/solver"
-	"os"
 )
 
 func main() {
@@ -23,9 +22,9 @@ func main() {
 	// elapsed := time.Since(start)
 	// log.Printf("Binomial took %s", elapsed)
 
-	fmt.Println("\n You've finished n-puzzle!")
+	fmt.Println("\nYou've finished n-puzzle!")
 
-	os.Exit(1)
+	// os.Exit(1)
 
 	//fmt.Println("no file or random board")
 }

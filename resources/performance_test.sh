@@ -139,7 +139,7 @@ do
 			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
 			solvable=$(../n-puzzle $unit)
 			end=$(echo "$solvable" | tail -n -1)
-			if [ "$end" != " You've finished n-puzzle!" ]
+			if [ "$end" != "You've finished n-puzzle!" ]
 			then
 				echo "\x1b[31m.\x1b[0m\c"
 				continue
@@ -242,7 +242,7 @@ do
 			test_num=$(($test_num + 1))
 			solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
 			end=$(echo "$solvable" | tail -n -1)
-			if [ "$end" != " You've finished n-puzzle!" ]
+			if [ "$end" != "You've finished n-puzzle!" ]
 			then
 				$(rm rm_me.txt)
 				echo "\x1b[31m.\x1b[0m\c"
