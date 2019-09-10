@@ -102,18 +102,19 @@ func Solver(Puzzle []int, size int) {
 	unsolved := true
 	for unsolved {
 		tmp := len(openQueue)
-		if tmp > problem.sizeComplexity {
-			problem.sizeComplexity = tmp
-		}
 		if tmp == 0 {
 			fmt.Println("This priorityQueue is empty.")
 			g.PrintBoard(state.puzzle, size)
-			os.Exit(1) //
+			unsolved = false
+			os.Exit(1)
+			//			continue
+		}
+		if tmp > problem.sizeComplexity {
+			problem.sizeComplexity = tmp
 		}
 		state = heap.Pop(&openQueue).(*State)
 		parent = g.PuzzleToString(state.puzzle, ",")
 		delete(openSet, parent)
-		closedSet.AddIfNotHas([]byte(parent))
 		children := CreateNeighbors(state.puzzle, size)
 
 		for _, child := range children {
@@ -132,10 +133,6 @@ func Solver(Puzzle []int, size int) {
 				continue
 			}
 
-			if closedSet.Has([]byte(tmpChild)) {
-				continue
-			}
-
 			depth := -(state.depth + 1)
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
@@ -146,10 +143,14 @@ func Solver(Puzzle []int, size int) {
 					continue
 				}
 			}
+			if closedSet.Has([]byte(tmpChild)) {
+				continue
+			}
 
 			openSet[tmpChild] = s.priority
 			heap.Push(&openQueue, s)
 			problem.timeComplexity++
 		}
+		closedSet.AddIfNotHas([]byte(parent))
 	}
 }
