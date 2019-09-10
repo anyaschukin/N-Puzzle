@@ -41,6 +41,7 @@ type State struct {
 	heuristic int
 	puzzle    []int
 	before    *State
+	path      *State
 }
 
 func newState(Puzzle []int, priority int, depth int, heuristic int, before *State) *State {
@@ -51,7 +52,20 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	state.heuristic = heuristic // not sure about this one either?
 	state.puzzle = Puzzle
 	state.before = before
+	state.path = nil
 	return state
+}
+
+func printPath(state *State, size int) {
+	var tmp *State
+	tmp = nil
+	for p := state; p != nil; p = p.before {
+		p.path = tmp
+		tmp = p
+	}
+	for p := tmp; p != nil; p = p.path {
+		g.PrintBoard(p.puzzle, size)
+	}
 }
 
 func Solver(Puzzle []int, size int) {
@@ -113,14 +127,10 @@ func Solver(Puzzle []int, size int) {
 		for _, child := range children {
 			tmpChild := g.PuzzleToString(child, ",")
 
-			if bytes.Equal([]byte(parent), []byte(tmpChild)) {
+			if bytes.Equal([]byte(goal), []byte(tmpChild)) {
 				fmt.Println("This puzzle has been solved!\n")
-				g.PrintBoard(state.puzzle, size)
-				// REBUILD PATH TO START
-				// THIS DOESNT WORK YET
-				// for p := state; p != nil; p = state.before {
-				// 	g.PrintBoard(state.puzzle, size)
-				// }
+				printPath(state, size)
+				g.PrintBoard(child, size)
 
 				// TESTING RUNTIME
 				elapsed := time.Since(start)
