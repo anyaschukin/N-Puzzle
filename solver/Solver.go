@@ -115,6 +115,10 @@ func Solver(Puzzle []int, size int) {
 		state = heap.Pop(&openQueue).(*State)
 		parent = g.PuzzleToString(state.puzzle, ",")
 		delete(openSet, parent)
+
+		// fmt.Println("---Current Node---")
+		g.PuzzleToString(state.puzzle, ",")
+
 		children := CreateNeighbors(state.puzzle, size)
 
 		for _, child := range children {
@@ -133,18 +137,19 @@ func Solver(Puzzle []int, size int) {
 				continue
 			}
 
-			depth := -(state.depth + 1)
+			depth := state.depth - 1
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic, state)
+			s := newState(child, (depth*-1)+heuristic, depth, heuristic, state)
+
+			if closedSet.Has([]byte(tmpChild)) {
+				continue
+			}
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
 					continue
 				}
-			}
-			if closedSet.Has([]byte(tmpChild)) {
-				continue
 			}
 
 			openSet[tmpChild] = s.priority
