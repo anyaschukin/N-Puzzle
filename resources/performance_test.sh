@@ -5,7 +5,7 @@ max_size=9
 test_cases=10
 unsolvable_test=1
 solvable_test=1
-unit_test=1
+unit_test=0
 random_test=1
 
 

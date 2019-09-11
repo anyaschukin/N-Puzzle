@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/AndreasBriese/bbloom"
+	// "github.com/AndreasBriese/bbloom"
 	// "time"
 )
 
@@ -92,14 +92,16 @@ func Solver(Puzzle []int, size int) {
 		os.Exit(1)
 	}
 
-	state := newState(Puzzle, 100000, 0, 0, nil)
+	// state := newState(Puzzle, 100000, 0, 0, nil)
+	state := newState(Puzzle, 0, 0, 0, nil)
 
 	openSet := make(map[string]int)
 	parent := g.PuzzleToString(state.puzzle, ",")
 	openSet[parent] = state.priority
 
 	openQueue := CreateQueue(*state)
-	closedSet := bbloom.New(float64(1<<16), float64(0.01))
+	// closedSet := bbloom.New(float64(1<<16), float64(0.01))
+	closedSet := make(map[string]int)
 
 	unsolved := true
 	for unsolved {
@@ -115,16 +117,15 @@ func Solver(Puzzle []int, size int) {
 		state = heap.Pop(&openQueue).(*State)
 		parent = g.PuzzleToString(state.puzzle, ",")
 		delete(openSet, parent)
-		closedSet.AddIfNotHas([]byte(parent))
 		children := CreateNeighbors(state.puzzle, size)
 
 		for _, child := range children {
 			tmpChild := g.PuzzleToString(child, ",")
+
 			if bytes.Equal([]byte(goal), []byte(tmpChild)) {
 				elapsed := time.Since(start)
 				fmt.Println("This puzzle has been solved!\n")
 				printPath(state, child, size)
-
 				// Print Space and Time Complexity, & Runtime
 				fmt.Printf("Size Complexity: %d\n", problem.sizeComplexity)
 				fmt.Printf("Time Complexity: %d\n", problem.timeComplexity)
@@ -134,14 +135,10 @@ func Solver(Puzzle []int, size int) {
 				continue
 			}
 
-			if closedSet.Has([]byte(tmpChild)) {
-				continue
-			}
-
-			depth := -(state.depth + 1)
+			depth := state.depth - 1
 			// depth = -depth
 			heuristic := g.Manhattan(child, problem.goal, size)
-			s := newState(child, depth+heuristic, depth, heuristic, state)
+			s := newState(child, (depth*-1)+heuristic, depth, heuristic, state)
 
 			if _, exists := openSet[tmpChild]; exists {
 				if openSet[tmpChild] < s.priority {
@@ -149,9 +146,18 @@ func Solver(Puzzle []int, size int) {
 				}
 			}
 
+			if _, exists := closedSet[tmpChild]; exists {
+				continue
+			}
+			// if closedSet.Has([]byte(tmpChild)) {	
+			// 	continue
+			// } 
+
 			openSet[tmpChild] = s.priority
 			heap.Push(&openQueue, s)
 			problem.timeComplexity++
 		}
+		closedSet[parent] = state.priority
+		// closedSet.AddIfNotHas([]byte(parent))
 	}
 }
