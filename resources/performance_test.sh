@@ -70,7 +70,7 @@ do
 		do
 			count=$(($count + 1))
 			unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-			unsolvable=$(../n-puzzle $unit)
+			unsolvable=$(../n-puzzle $unit | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
@@ -98,7 +98,7 @@ do
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
-			unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+			unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))

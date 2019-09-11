@@ -86,7 +86,9 @@ func Solver(Puzzle []int, size int) {
 	goal := g.PuzzleToString(problem.goal, ",")
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
+		elapsed := time.Since(start)
 		fmt.Println("This puzzle is unsolvable.")
+		fmt.Printf("Binomial took %s\n", elapsed)
 		os.Exit(1)
 	}
 
