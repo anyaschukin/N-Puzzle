@@ -7,8 +7,7 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"time"
-
-	// "github.com/AndreasBriese/bbloom"
+	"github.com/AndreasBriese/bbloom"
 	// "time"
 )
 
@@ -100,7 +99,7 @@ func Solver(Puzzle []int, size int) {
 	openSet[parent] = state.priority
 
 	openQueue := CreateQueue(*state)
-	// closedSet := bbloom.New(float64(1<<16), float64(0.01))
+	closedBloom := bbloom.New(float64(1<<16), float64(0.01))
 	closedSet := make(map[string]int)
 
 	unsolved := true
@@ -146,18 +145,17 @@ func Solver(Puzzle []int, size int) {
 				}
 			}
 
-			if _, exists := closedSet[tmpChild]; exists {
-				continue
-			}
-			// if closedSet.Has([]byte(tmpChild)) {	
-			// 	continue
-			// } 
+			if closedBloom.Has([]byte(tmpChild)) {	
+				if _, exists := closedSet[tmpChild]; exists {
+					continue
+				}
+			} 
 
 			openSet[tmpChild] = s.priority
 			heap.Push(&openQueue, s)
 			problem.timeComplexity++
 		}
 		closedSet[parent] = state.priority
-		// closedSet.AddIfNotHas([]byte(parent))
+		closedBloom.AddIfNotHas([]byte(parent))
 	}
 }
