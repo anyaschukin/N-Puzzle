@@ -1,11 +1,11 @@
 #### -- Config -- ####
 
-min_size=4
+min_size=3
 max_size=5
 test_cases=5
 unsolvable_test=1
 solvable_test=1
-unit_test=0
+unit_test=1
 random_test=1
 
 

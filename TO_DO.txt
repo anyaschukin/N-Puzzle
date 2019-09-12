@@ -15,8 +15,8 @@ PARSING
 {x} filter out duplicates   ... should these be admissible ??
 {x} leave empty space (0) in random board generation
 {x} are both row and col between 0 and (n - 1) ?
-{ } panics when passed a file from command line that's misspelled
-{ } check for panics
+{x} panics when passed a file from command line that's misspelled
+{x} check for panics
 
 SOLVER
 {x} test IsSolvable

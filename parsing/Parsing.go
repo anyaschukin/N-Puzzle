@@ -37,7 +37,7 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	args := os.Args[1:]
 	arg := strings.Join(args, "")
 	file, err := ioutil.ReadFile(arg)
-	g.Check(err)
+	g.Check(err, "Error reading file")
 
 	if strings.ContainsAny(string(file), ".") || strings.ContainsAny(string(file), "-") {
 		fmt.Println("Error: Board values cannot be negative or floats.")
@@ -55,11 +55,11 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	for _, number := range numbers {
 		if i++; i == 0 {
 			size, err = strconv.Atoi(number)
-			g.Check(err)
+			g.Check(err, "Error board contains non-integers")
 			continue
 		}
 		integer, err := strconv.Atoi(number)
-		g.Check(err)
+		g.Check(err, "Error board contains non-integers")
 		Puzzle = append(Puzzle, integer)
 	}
 
