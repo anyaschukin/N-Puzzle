@@ -1,11 +1,11 @@
 #### -- Config -- ####
 
 min_size=3
-max_size=9
-test_cases=10
+max_size=90
+test_cases=5
 unsolvable_test=1
-solvable_test=1
-unit_test=0
+solvable_test=0
+unit_test=1
 random_test=1
 
 
@@ -66,11 +66,66 @@ do
 		fi
 		u=0
 		count=0
+		best=42
+		worst=0
+		tcumulative=0
+		count=0
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
 			unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-			unsolvable=$(../n-puzzle $unit | tail -n -2 | head -n 1)
+			output=$(../n-puzzle $unit)
+			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
+			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
+			if [ "$prefix" = "m" ]
+			then
+				time=$(echo "$time" | rev | cut -c3-42 | rev)
+				time=$(echo "scale = 9; ($time / 1000)" | bc)	
+				tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			elif [ "$prefix" = "µ" ]
+			then
+				time=$(echo "$time" | rev | cut -c3-42 | rev)
+				time=$(echo "scale = 9; ($time / 1000000)" | bc)	
+				tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			else
+				time=$(echo "$time" | rev | cut -c2-42 | rev)
+				tcumulative=$(echo "$tcumulative + $time" | bc)
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			fi
+
+			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
@@ -80,13 +135,34 @@ do
 			fi
 			test_num=$(($test_num + 1))
 		done
-		if [ "$u" -lt "$count" ]
+		if [ "$u" != 0 ]
+		then
+			mean=$(echo "scale = 9; $tcumulative / $u" | bc)
+		else
+			mean="\x1b[31mFailed\x1b[0m"
+		fi
+		if [ "$worst" = 0 ]
+		then
+			worst="\x1b[31mFailed\x1b[0m"
+		fi
+		if [ "$best" = 42 ]
+		then
+			best="\x1b[31mFailed\x1b[0m"
+		fi
+
+		if [ "$solved" = 0 ]
 		then
 			echo "\x1b[31m"
+		elif [ "$u" -lt "$count" ]
+		then
+			echo "\x1b[33m"
 		else
 			echo "\x1b[32m"
 		fi
 		echo "Unsolvable unit tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Solve time in seconds:\t\t\tMean: \t$mean"
+		echo "\t\t\t\t\tWorst: \t$worst"
+		echo "\t\t\t\t\tBest: \t$best"
 	fi
 
 #### -- Unsolvable Random Boards -- ####
@@ -95,27 +171,103 @@ do
 		case=$test_cases
 		u=0
 		count=0
+		best=42
+		worst=0
+		tcumulative=0
+		count=0
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
-			unsolvable=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt | tail -n -2 | head -n 1)
+			output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
+			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
+			if [ "$prefix" = "m" ]
+			then
+				time=$(echo "$time" | rev | cut -c3-42 | rev)
+				time=$(echo "scale = 9; ($time / 1000)" | bc)	
+				tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			elif [ "$prefix" = "µ" ]
+			then
+				time=$(echo "$time" | rev | cut -c3-42 | rev)
+				time=$(echo "scale = 9; ($time / 1000000)" | bc)	
+				tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			else
+				time=$(echo "$time" | rev | cut -c2-42 | rev)
+				tcumulative=$(echo "$tcumulative + $time" | bc)
+				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+				if [ "$time_up" -gt "$worst_up" ]
+				then
+					worst=$time
+				fi
+				if [ "$time_up" -lt "$best_up" ]
+				then
+					best=$time
+				fi
+			fi
+
+			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
 				echo "\x1b[32m.\x1b[0m\c"
 			else	
 				echo "\x1b[31m.\x1b[0m\c"
-			fi	
-			$(rm rm_me.txt)
+			fi
 			test_num=$(($test_num + 1))
+			$(rm rm_me.txt)
 		done
-		if [ "$u" -lt "$count" ]
+		if [ "$u" != 0 ]
+		then
+			mean=$(echo "scale = 9; $tcumulative / $u" | bc)
+		else
+			mean="\x1b[31mFailed\x1b[0m"
+		fi
+		if [ "$worst" = 0 ]
+		then
+			worst="\x1b[31mFailed\x1b[0m"
+		fi
+		if [ "$best" = 42 ]
+		then
+			best="\x1b[31mFailed\x1b[0m"
+		fi
+
+		if [ "$solved" = 0 ]
 		then
 			echo "\x1b[31m"
+		elif [ "$u" -lt "$count" ]
+		then
+			echo "\x1b[33m"
 		else
 			echo "\x1b[32m"
 		fi
-		echo "Unsolvable random tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Unsolvable unit tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Solve time in seconds:\t\t\tMean: \t$mean"
+		echo "\t\t\t\t\tWorst: \t$worst"
+		echo "\t\t\t\t\tBest: \t$best"
 	fi
 
 #### -- Solvable Unit Tests -- ####
