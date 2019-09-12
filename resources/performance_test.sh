@@ -1,10 +1,10 @@
 #### -- Config -- ####
 
 min_size=3
-max_size=90
-test_cases=5
+max_size=5
+test_cases=10
 unsolvable_test=1
-solvable_test=0
+solvable_test=1
 unit_test=1
 random_test=1
 
@@ -264,7 +264,7 @@ do
 		else
 			echo "\x1b[32m"
 		fi
-		echo "Unsolvable unit tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Unsolvable random tests correctly identified: \t$u/$count\x1b[0m"
 		echo "Solve time in seconds:\t\t\tMean: \t$mean"
 		echo "\t\t\t\t\tWorst: \t$worst"
 		echo "\t\t\t\t\tBest: \t$best"
@@ -334,18 +334,41 @@ do
 					best=$time
 				fi
 			else
-				time=$(echo "$time" | rev | cut -c2-42 | rev)
-				tcumulative=$(echo "$tcumulative + $time" | bc)
-				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-				if [ "$time_up" -gt "$worst_up" ]
+				echo "$time" ##########################
+				minute=$(echo "$time" | rev | cut -d "." -f 2 | cut -c-2-2)
+				if [ "$minute" = "m" ]
 				then
-					worst=$time
-				fi
-				if [ "$time_up" -lt "$best_up" ]
-				then
-					best=$time
+					echo "$time" ##########################
+					minutes=$(echo "$time" | cut -d "m" -f 1)
+					seconds=$(echo "$time" | rev | cat -d "m" -f 1 | cut -c-2-42 | rev)
+					time=$(echo "scale = 9; ($minutes * 60) + $seconds" | bc | cut -d "." -f 1)
+					echo "minutes calc: $time" ##################
+					tcumulative=$(echo "$tcumulative + $time" | bc)
+					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+					best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+					if [ "$time_up" -gt "$worst_up" ]
+					then
+						worst=$time
+					fi
+					if [ "$time_up" -lt "$best_up" ]
+					then
+						best=$time
+					fi
+				else
+					time=$(echo "$time" | rev | cut -c2-42 | rev)
+					tcumulative=$(echo "$tcumulative + $time" | bc)
+					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+					best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+					if [ "$time_up" -gt "$worst_up" ]
+					then
+						worst=$time
+					fi
+					if [ "$time_up" -lt "$best_up" ]
+					then
+						best=$time
+					fi
 				fi
 			fi
 		done
