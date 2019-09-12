@@ -1,11 +1,11 @@
 #### -- Config -- ####
 
-min_size=3
+min_size=4
 max_size=5
-test_cases=10
+test_cases=5
 unsolvable_test=1
 solvable_test=1
-unit_test=1
+unit_test=0
 random_test=1
 
 
@@ -73,8 +73,19 @@ do
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
+			test_num=$(($test_num + 1))
 			unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
 			output=$(../n-puzzle $unit)
+			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
+			if [ "$unsolvable" = "This puzzle is unsolvable." ]
+			then
+				u=$(($u + 1))
+				echo "\x1b[32m.\x1b[0m\c"
+			else	
+				echo "\x1b[31m.\x1b[0m\c"
+				continue
+			fi
+
 			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
 			if [ "$prefix" = "m" ]
@@ -124,16 +135,6 @@ do
 					best=$time
 				fi
 			fi
-
-			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
-			if [ "$unsolvable" = "This puzzle is unsolvable." ]
-			then
-				u=$(($u + 1))
-				echo "\x1b[32m.\x1b[0m\c"
-			else	
-				echo "\x1b[31m.\x1b[0m\c"
-			fi
-			test_num=$(($test_num + 1))
 		done
 		if [ "$u" != 0 ]
 		then
@@ -178,7 +179,19 @@ do
 		while [ $count -lt $case ]
 		do
 			count=$(($count + 1))
+			test_num=$(($test_num + 1))
 			output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
+			if [ "$unsolvable" = "This puzzle is unsolvable." ]
+			then
+				u=$(($u + 1))
+				echo "\x1b[32m.\x1b[0m\c"
+			else	
+				echo "\x1b[31m.\x1b[0m\c"
+				$(rm rm_me.txt)
+				continue
+			fi
+
 			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
 			if [ "$prefix" = "m" ]
@@ -228,16 +241,6 @@ do
 					best=$time
 				fi
 			fi
-
-			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
-			if [ "$unsolvable" = "This puzzle is unsolvable." ]
-			then
-				u=$(($u + 1))
-				echo "\x1b[32m.\x1b[0m\c"
-			else	
-				echo "\x1b[31m.\x1b[0m\c"
-			fi
-			test_num=$(($test_num + 1))
 			$(rm rm_me.txt)
 		done
 		if [ "$u" != 0 ]
@@ -334,15 +337,13 @@ do
 					best=$time
 				fi
 			else
-				echo "$time" ##########################
-				minute=$(echo "$time" | rev | cut -d "." -f 2 | cut -c-2-2)
-				if [ "$minute" = "m" ]
+				minute=$(echo "$time" | rev | cut -d "." -f 2 | cut -c 2-2)
+				minute_alt=$(echo "$time" | rev | cut -d "." -f 2 | cut -c 3-3)
+				if [ "$minute" = "m" -o "$minute_alt" = "m" ]
 				then
-					echo "$time" ##########################
 					minutes=$(echo "$time" | cut -d "m" -f 1)
-					seconds=$(echo "$time" | rev | cat -d "m" -f 1 | cut -c-2-42 | rev)
-					time=$(echo "scale = 9; ($minutes * 60) + $seconds" | bc | cut -d "." -f 1)
-					echo "minutes calc: $time" ##################
+					seconds=$(echo "$time" | rev | cut -d "m" -f 1 | cut -c 2-42 | rev)
+					time=$(echo "scale = 9; ($minutes * 60) + $seconds" | bc)
 					tcumulative=$(echo "$tcumulative + $time" | bc)
 					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
@@ -356,7 +357,7 @@ do
 						best=$time
 					fi
 				else
-					time=$(echo "$time" | rev | cut -c2-42 | rev)
+					time=$(echo "$time" | rev | cut -c 2-42 | rev)
 					tcumulative=$(echo "$tcumulative + $time" | bc)
 					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
@@ -461,18 +462,39 @@ do
 					best=$time
 				fi
 			else
-				time=$(echo "$time" | rev | cut -c2-42 | rev)
-				tcumulative=$(echo "$tcumulative + $time" | bc)
-				time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-				worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-				best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-				if [ "$time_up" -gt "$worst_up" ]
+				minute=$(echo "$time" | rev | cut -d "." -f 2 | cut -c 2-2)
+				minute_alt=$(echo "$time" | rev | cut -d "." -f 2 | cut -c 3-3)
+				if [ "$minute" = "m" -o "$minute_alt" = "m" ]
 				then
-					worst=$time
-				fi
-				if [ "$time_up" -lt "$best_up" ]
-				then
-					best=$time
+					minutes=$(echo "$time" | cut -d "m" -f 1)
+					seconds=$(echo "$time" | rev | cut -d "m" -f 1 | cut -c 2-42 | rev)
+					time=$(echo "scale = 9; ($minutes * 60) + $seconds" | bc)
+					tcumulative=$(echo "$tcumulative + $time" | bc)
+					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+					best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+					if [ "$time_up" -gt "$worst_up" ]
+					then
+						worst=$time
+					fi
+					if [ "$time_up" -lt "$best_up" ]
+					then
+						best=$time
+					fi
+				else
+					time=$(echo "$time" | rev | cut -c 2-42 | rev)
+					tcumulative=$(echo "$tcumulative + $time" | bc)
+					time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+					worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+					best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+					if [ "$time_up" -gt "$worst_up" ]
+					then
+						worst=$time
+					fi
+					if [ "$time_up" -lt "$best_up" ]
+					then
+						best=$time
+					fi
 				fi
 			fi
 			$(rm rm_me.txt)
