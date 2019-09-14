@@ -84,6 +84,7 @@ func OutRowCol(board []int, target []int, s int) int {
 
 // foundCurrent returns true if the position matches the current tile
 func foundCurrent(currentRow int, currentCol int, row int, col int) bool {
+
 	if currentRow == row && currentCol == col {
 		return true
 	}
@@ -94,55 +95,73 @@ func foundCurrent(currentRow int, currentCol int, row int, col int) bool {
 func findNext(s int, current int) int {
 	left, top, right, bottom := 0, 0, s-1, s-1
 	row, col := 0, 0
-	found := false
 	next := 0
 	currentRow := current / s
 	currentCol := current % s
+	found := false
+	first := true
 	for left < right {
 		// work right, along top
 		for i := left; i <= right; i++ {
+			if first == true && i == right {
+				first = false
+				continue
+			}
+			next++
+			found = foundCurrent(currentRow, currentCol, row, col)
 			if found {
 				return next
 			}
-			found = foundCurrent(currentRow, currentCol, row, col)
-			next++
 			col++
 		}
 		top++
 		// work down right side
 		for j := top; j <= bottom; j++ {
+			next += s
+			found = foundCurrent(currentRow, currentCol, row, col)
 			if found {
 				return next
 			}
-			found = foundCurrent(currentRow, currentCol, row, col)
-			next += s
 			row++
 		}
 		right--
 		if top == bottom {
-			return next
+			continue
 		}
 		// work left, along bottom
 		for i := right; i >= left; i-- {
+			next--
+			found = foundCurrent(currentRow, currentCol, row, col)
 			if found {
 				return next
 			}
-			found = foundCurrent(currentRow, currentCol, row, col)
-			next--
 			col--
 		}
 		bottom--
 		// work up left size
 		for j := bottom; j >= top; j-- {
+			next -= s
+			found = foundCurrent(currentRow, currentCol, row, col)
 			if found {
 				return next
 			}
-			found = foundCurrent(currentRow, currentCol, row, col)
-			next -= s
 			row--
 		}
 		left++
 	}
+	for i := left; i <= right; i++ {
+		if first == true && i == right {
+			first = false
+			continue
+		}
+		next++
+		found = foundCurrent(currentRow, currentCol, row, col)
+		if found {
+			return next
+		}
+		col++
+	}
+	// fmt.Printf("Error in func foundCurrent for Nilsson's Sequence Score. Should we get here?\n")
 	return next
 }
 
