@@ -94,7 +94,6 @@ func CheckFlags() (int, string, int) {
 		heuristic = "manhattan"
 	}
 	fmt.Printf("Using %s as heuristic...\n", heuristic)
-	time.Sleep(1 * time.Second)
 
 	if file {
 		return 0, heuristic, flags
