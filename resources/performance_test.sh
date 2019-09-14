@@ -7,6 +7,7 @@ unsolvable_test=1
 solvable_test=1
 unit_test=1
 random_test=1
+heuristic="manhattan"
 
 
 #### -- Print Header -- ####
@@ -39,10 +40,11 @@ else
 fi
 if [ "$random_test" != 0 ]
 then
-	echo "Random Tests: \t\t\x1b[32mon\x1b[0m\n"
+	echo "Random Tests: \t\t\x1b[32mon\x1b[0m"
 else	
-	echo "Random Tests: \t\t\x1b[31moff\x1b[0m\n"
+	echo "Random Tests: \t\t\x1b[31moff\x1b[0m"
 fi
+echo "Heuristic: \t\t$heuristic\n"
 
 #### -- Test -- ####
 size=$min_size
@@ -75,7 +77,7 @@ do
 			count=$(($count + 1))
 			test_num=$(($test_num + 1))
 			unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-			output=$(../n-puzzle $unit)
+			output=$(../n-puzzle -h=$heuristic $unit)
 			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
@@ -180,7 +182,7 @@ do
 		do
 			count=$(($count + 1))
 			test_num=$(($test_num + 1))
-			output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+			output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle -h=$heuristic rm_me.txt)
 			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
@@ -292,7 +294,7 @@ do
 			count=$(($count + 1))
 			test_num=$(($test_num + 1))
 			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
-			solvable=$(../n-puzzle $unit)
+			solvable=$(../n-puzzle -h=$heuristic $unit)
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
@@ -416,7 +418,7 @@ do
 		do
 			count=$(($count + 1))
 			test_num=$(($test_num + 1))
-			solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle rm_me.txt)
+			solvable=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle -h=$heuristic rm_me.txt)
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
