@@ -49,22 +49,3 @@ func IsSolvable(solution []int, puzzle []int, size int) bool {
 		return evenSize(solution, puzzle, size)
 	}
 }
-
-// HOLD UP... THIS IS FOR A NON-SNAIL BOARD!! MAYBE NOT THE BEST TO FOLLOW
-// FROM https://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
-// The formula says:
-// If the grid width is odd, then the number of inversions in a solvable situation is even.
-// If the grid width is even, and the blank is on an even row counting from the bottom (second-last, fourth-last etc), then the number of inversions in a solvable situation is odd.
-// If the grid width is even, and the blank is on an odd row counting from the bottom (last, third-last, fifth-last etc) then the number of inversions in a solvable situation is even.
-// That gives us this formula for determining solvability:
-//
-// ( (grid width odd) && (#inversions even) )  ||  ( (grid width even) && ((blank on odd row from bottom) == (#inversions even)) )
-
-// from Damien
-// If N is even, position of 0 from bottom is needed
-// else {
-// const row = find(this.puzzle, { value: 0 });
-// const snailRow = find(this.snail, { value: 0 });
-// const numberOfRows = Math.abs(snailRow.y - row.y) + Math.abs(snailRow.x - row.x);
-// this.solvable = (numberOfRows % 2 !== numberOfPermutations % 2);
-// }

@@ -7,18 +7,14 @@ import (
 	g "n-puzzle/golib"
 	"os"
 	"time"
-	// "time"
 )
 
 type Problem struct {
-	start     []int
-	goal      []int
-	heuristic string
-	//searchAlgo     string
-	solutionPath   map[int][]int // maybe unnecessary?
+	start          []int
+	goal           []int
+	heuristic      string
 	sizeComplexity int
 	timeComplexity int
-	solutionFound  bool
 }
 
 func newProblem(Puzzle []int, size int, h string) Problem {
@@ -26,7 +22,6 @@ func newProblem(Puzzle []int, size int, h string) Problem {
 	problem.start = Puzzle
 	problem.goal = MakeGoal(size)
 	problem.heuristic = h
-	//problem.searchAlgo = "A_STAR"
 	problem.sizeComplexity = 0
 	problem.timeComplexity = 1
 	return problem
@@ -46,8 +41,8 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	state := &State{}
 	state.index = 0
 	state.priority = priority
-	state.depth = depth         // not sure if we need to store this?
-	state.heuristic = heuristic // not sure about this one either?
+	state.depth = depth
+	state.heuristic = heuristic
 	state.puzzle = Puzzle
 	state.before = before
 	state.path = nil
@@ -55,7 +50,6 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 }
 
 func Solver(Puzzle []int, size int, h string) {
-	// TESTING RUNTIME
 	start := time.Now()
 
 	problem := newProblem(Puzzle, size, h)
@@ -68,7 +62,6 @@ func Solver(Puzzle []int, size int, h string) {
 		return
 	}
 
-	// state := newState(Puzzle, 100000, 0, 0, nil)
 	state := newState(Puzzle, 0, 0, 0, nil)
 
 	openSet := make(map[string]int)
@@ -87,7 +80,7 @@ func Solver(Puzzle []int, size int, h string) {
 		if tmp == 0 {
 			fmt.Println("This priorityQueue is empty.")
 			g.PrintBoard(state.puzzle, size)
-			os.Exit(1) //
+			os.Exit(1)
 		}
 		state = heap.Pop(&openQueue).(*State)
 		parent = g.PuzzleToString(state.puzzle, ",")
@@ -104,7 +97,6 @@ func Solver(Puzzle []int, size int, h string) {
 			}
 
 			depth := state.depth - 1
-			// depth = -depth
 			heuristic := pickHeuristic(child, problem.goal, size, problem.heuristic)
 			s := newState(child, (depth*-1)+heuristic, depth, heuristic, state)
 

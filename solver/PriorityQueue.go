@@ -48,26 +48,3 @@ func CreateQueue(state State) PriorityQueue {
 	heap.Init(&Pq)
 	return Pq
 }
-
-//	for priority, puzzle := range States {
-//		pq[i] = &State{
-//			index:    i,
-//			priority: priority,
-//			puzzle:    puzzle,
-//		}
-//		i++
-//	}
-
-//		Puzzle4 := p.GenerateRandomBoard(3)
-//		fmt.Printf("Puzzle 4 = %v\n", Puzzle4)
-// state := &State{
-// 	priority: 1,
-// 	puzzle:    Puzzle4,
-// }
-// heap.Push(&pq, state)
-// pq.update(state, state.puzzle, 5)
-//
-//		for pq.Len() > 0 {
-//			State := heap.Pop(&pq).(*State)
-//			fmt.Printf("%.2d:%v \n", State.priority, State.puzzle)
-//		}

@@ -100,7 +100,7 @@ func CheckFlags() (int, string, int) {
 	}
 
 	if *sizePtr < 3 {
-		flag.PrintDefaults() // replace with Print Usage
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
