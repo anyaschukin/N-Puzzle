@@ -5,7 +5,6 @@ import (
 	"container/heap"
 	"fmt"
 	g "n-puzzle/golib"
-	"os"
 	"time"
 )
 
@@ -76,11 +75,6 @@ func Solver(Puzzle []int, size int, h string) {
 		tmp := len(openQueue)
 		if tmp > problem.sizeComplexity {
 			problem.sizeComplexity = tmp
-		}
-		if tmp == 0 {
-			fmt.Println("This priorityQueue is empty.")
-			g.PrintBoard(state.puzzle, size)
-			os.Exit(1)
 		}
 		state = heap.Pop(&openQueue).(*State)
 		parent = g.PuzzleToString(state.puzzle, ",")
