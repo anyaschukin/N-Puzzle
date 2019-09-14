@@ -81,3 +81,88 @@ func OutRowCol(board []int, target []int, s int) int {
 	}
 	return outRowCol
 }
+
+// foundCurrent returns true if the position matches the current tile
+func foundCurrent(currentRow int, currentCol int, row int, col int) bool {
+	if currentRow == row && currentCol == col {
+		return true
+	}
+	return false
+}
+
+// findNext returns the string index of next tile in snail order
+func findNext(s int, current int) int {
+	left, top, right, bottom := 0, 0, s-1, s-1
+	row, col := 0, 0
+	found := false
+	next := 0
+	currentRow := current / s
+	currentCol := current % s
+	for left < right {
+		// work right, along top
+		for i := left; i <= right; i++ {
+			if found {
+				return next
+			}
+			found = foundCurrent(currentRow, currentCol, row, col)
+			next++
+			col++
+		}
+		top++
+		// work down right side
+		for j := top; j <= bottom; j++ {
+			if found {
+				return next
+			}
+			found = foundCurrent(currentRow, currentCol, row, col)
+			next += s
+			row++
+		}
+		right--
+		if top == bottom {
+			return next
+		}
+		// work left, along bottom
+		for i := right; i >= left; i-- {
+			if found {
+				return next
+			}
+			found = foundCurrent(currentRow, currentCol, row, col)
+			next--
+			col--
+		}
+		bottom--
+		// work up left size
+		for j := bottom; j >= top; j-- {
+			if found {
+				return next
+			}
+			found = foundCurrent(currentRow, currentCol, row, col)
+			next -= s
+			row--
+		}
+		left++
+	}
+	return next
+}
+
+// Nilsson's Sequence Score: Manhattan + 3 S(n)
+func Nilsson(board []int, target []int, s int) int {
+	length := s * s
+	manhattan := Manhattan(board, target, s)
+	sequenceScore := 0
+	current := 0
+	next := 1
+	for i := 1; i < length; i++ {
+		next := findNext(s, current)
+		if target[next] != board[current]+1 {
+			sequenceScore += 2
+		}
+		current = next
+	}
+	if board[next] != 0 {
+		sequenceScore++
+	}
+	nilsson := manhattan + 3*sequenceScore
+	return nilsson
+}
