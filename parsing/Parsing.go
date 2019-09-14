@@ -87,13 +87,13 @@ func CheckFlags() (int, string, int) {
 	switch heuristic {
 	case "manhattan":
 	case "hamming":
-	case "euclidian":
+	case "euclidean":
 	case "nilsson":
 	case "outRowCol":
 	default:
 		heuristic = "manhattan"
 	}
-	fmt.Printf("Using %s as heuristic...\n", heuristic)
+	fmt.Printf("Using %s as heuristic ...\n", heuristic)
 
 	if file {
 		return 0, heuristic, flags
