@@ -54,7 +54,7 @@ func newState(Puzzle []int, priority int, depth int, heuristic int, before *Stat
 	return state
 }
 
-func Solver(Puzzle []int, size int) {
+func Solver(Puzzle []int, size int, h string) {
 	// TESTING RUNTIME
 	start := time.Now()
 

@@ -72,8 +72,9 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	return Puzzle, size
 }
 
-func CheckFlags() int {
-	sizePtr := flag.Int("size", 1, "Size of the puzzle's side. Must be >3.")
+func CheckFlags() (int, string) {
+	sizePtr := flag.Int("size", 1, "size of the puzzle's side must be > 3.")
+	heuristicPtr := flag.String("heuristic", "manhattan", "Heuristic options include: manhattan, hamming, euclydian, nillsen, and drew special.")
 
 	flag.Parse()
 	args := flag.Args()
@@ -81,8 +82,21 @@ func CheckFlags() int {
 	arg := strings.Join(args, "")
 	file := strings.Contains(arg, ".txt")
 
+	heuristic := *heuristicPtr
+	switch heuristic {
+	case "manhattan":
+	case "hamming":
+	case "euclydian":
+	case "nilsson":
+	case "drew special":
+	default:
+		heuristic = "manhattan"
+		fmt.Printf("Using Manhattan distance as default heuristic...\n")
+		time.Sleep(1 * time.Second)
+	}
+
 	if len(args) == 1 && file {
-		return 0
+		return 0, heuristic
 	}
 
 	if len(args) > 1 && file {
@@ -102,5 +116,5 @@ func CheckFlags() int {
 
 	size := *sizePtr
 
-	return size
+	return size, heuristic
 }
