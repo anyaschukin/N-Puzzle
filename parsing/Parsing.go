@@ -32,12 +32,12 @@ func GenerateRandomBoard(size int) []int {
 	return Puzzle
 }
 
-func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
+func ReadBoardFromFile(Puzzle []int, size int, flags int) ([]int, int) {
 
-	args := os.Args[1:]
+	args := os.Args[flags+1:]
 	arg := strings.Join(args, "")
 	file, err := ioutil.ReadFile(arg)
-	g.Check(err, "Error reading file")
+	g.Check(err, "Error reading file.\nUsage: $> ./n-puzzle -h={heuristic} file.txt")
 
 	if strings.ContainsAny(string(file), ".") || strings.ContainsAny(string(file), "-") {
 		fmt.Println("Error: Board values cannot be negative or floats.")
@@ -72,12 +72,13 @@ func ReadBoardFromFile(Puzzle []int, size int) ([]int, int) {
 	return Puzzle, size
 }
 
-func CheckFlags() (int, string) {
-	sizePtr := flag.Int("size", 1, "size of the puzzle's side must be > 3.")
-	heuristicPtr := flag.String("heuristic", "manhattan", "Heuristic options include: manhattan, hamming, euclydian, nillsen, and drew special.")
+func CheckFlags() (int, string, int) {
+	sizePtr := flag.Int("s", 1, "size of the puzzle's side must be > 3.")
+	heuristicPtr := flag.String("h", "manhattan", "Heuristic options include: manhattan, hamming, euclidian, nilsson, and outRowCol.")
 
 	flag.Parse()
 	args := flag.Args()
+	flags := flag.NFlag()
 
 	arg := strings.Join(args, "")
 	file := strings.Contains(arg, ".txt")
@@ -86,22 +87,17 @@ func CheckFlags() (int, string) {
 	switch heuristic {
 	case "manhattan":
 	case "hamming":
-	case "euclydian":
+	case "euclidian":
 	case "nilsson":
-	case "drew special":
+	case "outRowCol":
 	default:
 		heuristic = "manhattan"
-		fmt.Printf("Using Manhattan distance as default heuristic...\n")
-		time.Sleep(1 * time.Second)
 	}
+	fmt.Printf("Using %s as heuristic...\n", heuristic)
+	time.Sleep(1 * time.Second)
 
-	if len(args) == 1 && file {
-		return 0, heuristic
-	}
-
-	if len(args) > 1 && file {
-		fmt.Println("Error: must input one file OR flags as argument.")
-		os.Exit(1)
+	if file {
+		return 0, heuristic, flags
 	}
 
 	if *sizePtr < 3 {
@@ -116,5 +112,5 @@ func CheckFlags() (int, string) {
 
 	size := *sizePtr
 
-	return size, heuristic
+	return size, heuristic, flags
 }

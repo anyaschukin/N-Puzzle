@@ -8,10 +8,10 @@ import (
 
 func main() {
 
-	size, heuristic := p.CheckFlags()
+	size, heuristic, flags := p.CheckFlags()
 	var Puzzle []int
 	if size == 0 {
-		Puzzle, size = p.ReadBoardFromFile(Puzzle, size)
+		Puzzle, size = p.ReadBoardFromFile(Puzzle, size, flags)
 	} else {
 		Puzzle = p.GenerateRandomBoard(size)
 	}

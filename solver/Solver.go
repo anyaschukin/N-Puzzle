@@ -11,9 +11,9 @@ import (
 )
 
 type Problem struct {
-	start []int
-	goal  []int
-	//heuristic      string
+	start     []int
+	goal      []int
+	heuristic string
 	//searchAlgo     string
 	solutionPath   map[int][]int // maybe unnecessary?
 	sizeComplexity int
@@ -21,11 +21,11 @@ type Problem struct {
 	solutionFound  bool
 }
 
-func newProblem(Puzzle []int, size int) Problem {
+func newProblem(Puzzle []int, size int, h string) Problem {
 	problem := Problem{}
 	problem.start = Puzzle
 	problem.goal = MakeGoal(size)
-	//problem.heuristic = "MANHATTAN"
+	problem.heuristic = h
 	//problem.searchAlgo = "A_STAR"
 	problem.sizeComplexity = 0
 	problem.timeComplexity = 1
@@ -58,7 +58,7 @@ func Solver(Puzzle []int, size int, h string) {
 	// TESTING RUNTIME
 	start := time.Now()
 
-	problem := newProblem(Puzzle, size)
+	problem := newProblem(Puzzle, size, h)
 	goal := g.PuzzleToString(problem.goal, ",")
 
 	if IsSolvable(problem.goal, Puzzle, size) == false {
@@ -112,7 +112,7 @@ func Solver(Puzzle []int, size int, h string) {
 
 			depth := state.depth - 1
 			// depth = -depth
-			heuristic := g.Manhattan(child, problem.goal, size)
+			heuristic := pickHeuristic(child, problem.goal, size, problem.heuristic)
 			s := newState(child, (depth*-1)+heuristic, depth, heuristic, state)
 
 			if _, exists := openSet[tmpChild]; exists {

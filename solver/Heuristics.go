@@ -1,4 +1,9 @@
-package golib
+package solver
+
+import (
+	"math"
+	g "n-puzzle/golib"
+)
 
 // Hamming returns the sum of misplaced tiles.
 func Hamming(board []int, target []int, s int) int {
@@ -27,7 +32,7 @@ func absInt(val int) int {
 
 // ManhattanDistance returns the manhattan distance between two misplaced tiles
 func manhattanDistance(val int, indexBoard int, size int, target []int) int {
-	indexTarget := FindIndexSlice(target, val)
+	indexTarget := g.FindIndexSlice(target, val)
 	xT, yT := indexToCoordinates(indexTarget, size)
 	xC, yC := indexToCoordinates(indexBoard, size)
 	return (absInt(xT-xC) + absInt(yT-yC))
@@ -184,4 +189,34 @@ func Nilsson(board []int, target []int, s int) int {
 	}
 	nilsson := manhattan + 3*sequenceScore
 	return nilsson
+}
+
+// Euclidean returns the Euclidean distance between misplaced tiles.
+func Euclidean(board []int, target []int, s int) int {
+	length := s * s
+	euclidean := 0.0
+	for i := 0; i < length; i++ {
+		goal := g.FindIndexSlice(target, board[i])
+		euclidean += (math.Pow(float64(goal/s), 2) + math.Pow(float64(goal%s), 2))
+	}
+	euclidean = math.Round(math.Sqrt(euclidean))
+	return int(euclidean)
+}
+
+func pickHeuristic(board []int, target []int, size int, heuristic string) int {
+	value := 0
+	switch heuristic {
+	case "hamming":
+		value = Hamming(board, target, size)
+	case "euclidean":
+		value = Euclidean(board, target, size)
+	case "nilsson":
+		value = Nilsson(board, target, size)
+	case "outRowCol":
+		value = OutRowCol(board, target, size)
+	default:
+		// manhattan is default heuristic
+		value = Manhattan(board, target, size)
+	}
+	return value
 }
