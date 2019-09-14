@@ -93,7 +93,6 @@ func CheckFlags() (int, string, int) {
 	default:
 		heuristic = "manhattan"
 	}
-	fmt.Printf("Using %s as heuristic ...\n", heuristic)
 
 	if file {
 		return 0, heuristic, flags
