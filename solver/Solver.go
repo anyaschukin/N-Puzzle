@@ -65,7 +65,7 @@ func Solver(Puzzle []int, size int, h string) {
 		elapsed := time.Since(start)
 		fmt.Println("This puzzle is unsolvable.")
 		fmt.Printf("Binomial took %s\n", elapsed)
-		os.Exit(1)
+		return
 	}
 
 	// state := newState(Puzzle, 100000, 0, 0, nil)
@@ -99,15 +99,8 @@ func Solver(Puzzle []int, size int, h string) {
 
 			if bytes.Equal([]byte(goal), []byte(tmpChild)) {
 				elapsed := time.Since(start)
-				fmt.Println("This puzzle has been solved!\n")
-				PrintPath(state, child, size)
-				// Print Space and Time Complexity, & Runtime
-				fmt.Printf("Size Complexity: %d\n", problem.sizeComplexity)
-				fmt.Printf("Time Complexity: %d\n", problem.timeComplexity)
-				fmt.Printf("Binomial took %s", elapsed)
-				unsolved = false
-				// exit program
-				continue
+				PrintSolved(elapsed, problem, state, child, size)
+				return
 			}
 
 			depth := state.depth - 1

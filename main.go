@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	p "n-puzzle/parsing"
 	s "n-puzzle/solver"
 )
@@ -16,7 +15,4 @@ func main() {
 		Puzzle = p.GenerateRandomBoard(size)
 	}
 	s.Solver(Puzzle, size, heuristic)
-
-	fmt.Println("\nYou've finished n-puzzle!")
-
 }
