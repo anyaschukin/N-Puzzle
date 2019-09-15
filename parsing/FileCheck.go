@@ -121,13 +121,14 @@ func FileIsValid(file []byte) bool {
 			if i >= len {
 				return false
 			}
-			i = iterateBlank(f, i, len)
-			if i >= len {
-				return false
-			}
+		}
+		i = iterateBlank(f, i, len)
+		if i >= len {
+			return false
 		}
 		if isComment(f[i]) == true {
 			i = iterateComment(f, i, len)
+			i--
 		}
 		if isNewLine(f[i]) == false {
 			return false
