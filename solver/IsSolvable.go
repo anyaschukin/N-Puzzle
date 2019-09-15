@@ -39,7 +39,6 @@ func evenSize(solution []int, puzzle []int, size int) bool {
 		return true
 	}
 	return false
-	// return ((row%2 == 0) && (Inversions%2 != 0)) || ((row%2 != 0) && (Inversions%2 == 0))
 }
 
 func IsSolvable(solution []int, puzzle []int, size int) bool {

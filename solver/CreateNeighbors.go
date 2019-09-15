@@ -48,7 +48,6 @@ func CreateNeighbors(puzzle []int, size int) map[string][]int {
 		neighbor := make([]int, len(puzzle))
 		copy(neighbor, puzzle)
 		neighbors[key] = neighbor
-		// use switch for up, down, left, right?
 		if up == 1 {
 			neighbor[empty], neighbor[empty-size] = neighbor[empty-size], neighbor[empty]
 			up = 0
