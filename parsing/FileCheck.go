@@ -109,7 +109,7 @@ func FileIsValid(file []byte) bool {
 	}
 	// Board
 	for row := 0; row < size; row++ {
-		for col := 0; col < size; col++ {
+		for col := 0; col < size; {
 			i = iterateBlank(f, i, len)
 			if i >= len {
 				return false
@@ -121,6 +121,7 @@ func FileIsValid(file []byte) bool {
 			if i >= len {
 				return false
 			}
+			col++
 		}
 		i = iterateBlank(f, i, len)
 		if i >= len {
