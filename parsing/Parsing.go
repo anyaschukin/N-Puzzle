@@ -60,11 +60,23 @@ func ReadBoardFromFile(Puzzle []int, size int, flags int) ([]int, int) {
 		}
 		integer, err := strconv.Atoi(number)
 		g.Check(err, "Error board contains non-integers")
+		if integer == 0 {
+			
+		}
 		Puzzle = append(Puzzle, integer)
 	}
 
-	var filtered int
-	Puzzle, filtered = g.FilterDuplicates(Puzzle)
+	if g.FindIndexSlice(Puzzle, 0) == -1 {
+		fmt.Println("Error: No zero tile.\n")
+		os.Exit(1)
+	}
+	fmt.Printf("i = %d, size*size = %d\n", i, (size*size))
+	if i != (size * size) {
+		fmt.Println("Error: too many numbers for this puzzle size")
+		os.Exit(1)
+	}
+
+	Puzzle, filtered := g.FilterDuplicates(Puzzle)
 	if ((i - filtered) % size) != 0 {
 		fmt.Print("\n Not enough pieces to fill board!\n")
 		os.Exit(1)
