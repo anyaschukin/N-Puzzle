@@ -38,7 +38,10 @@ func ReadBoardFromFile(Puzzle []int, size int, flags int) ([]int, int) {
 	arg := strings.Join(args, "")
 	file, err := ioutil.ReadFile(arg)
 	g.Check(err, "Error reading file.\nUsage: $> ./n-puzzle -h={heuristic} file.txt")
-
+	if FileIsValid(file) == false {
+		fmt.Println("Error: File format invalid")
+		os.Exit(1)
+	}
 	if strings.ContainsAny(string(file), ".") || strings.ContainsAny(string(file), "-") {
 		fmt.Println("Error: Board values cannot be negative or floats.")
 		os.Exit(1)
