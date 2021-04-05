@@ -203,19 +203,19 @@ do
 	echo $BRIGHT
 	echo "Size - $size$RESET"
 
-	if [ "$UNIT_TEST" != 0 -a "$UNSOLVABLE_TEST" != 0 ]
+	if [ "$UNSOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
 	then
 		unit_test Unsolvable Unit
 	fi
-	if [ "$RANDOM_TEST" != 0 -a "$UNSOLVABLE_TEST" != 0 ]
+	if [ "$UNSOLVABLE_TEST" != 0  -a "$RANDOM_TEST" != 0 ]
 	then
 		unit_test Unsolvable Random
 	fi
-	if [ "$UNIT_TEST" != 0 -a "$SOLVABLE_TEST" != 0 ]
+	if [ "$SOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
 	then
 		unit_test Solvable Unit
 	fi
-	if [ "$RANDOM_TEST" != 0 -a "$SOLVABLE_TEST" != 0 ]
+	if [ "$SOLVABLE_TEST" != 0 -a "$RANDOM_TEST" != 0 ]
 	then
 		unit_test Solvable Random
 	fi
