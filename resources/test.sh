@@ -70,23 +70,21 @@ unit_test()
 {
 	SOLVABLE=$1
 	UNIT=$2
-	if [ "$TEST_CASES" -lt 10 ]
-	then
-		case=$TEST_CASES
-	else
-		case=10
-	fi
+	case=$TEST_CASES
 	solved=0
 	count=0
 	best=42
 	worst=0
 	tcumulative=0
 	count=0
+
+	## Test loop
 	while [ $count -lt $case ]
 	do
 		count=$(($count + 1))
 		test_num=$(($test_num + 1))
 
+		## Run
 		if [ "$SOLVABLE" == "Unsolvable" ]
 		then ## Unsolvable
 			if [ "$UNIT" == "Unit" ]
@@ -111,8 +109,13 @@ unit_test()
 			fi
 			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
 		else ## Solvable
-			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
-			output=$(../n-puzzle -h=$HEURISTIC $unit)
+			if [ "$UNIT" == "Unit" ]
+			then ## Unit
+				unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
+				output=$(../n-puzzle -h=$HEURISTIC $unit)
+			else ## Random
+				output=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle -h=$HEURISTIC rm_me.txt)
+			fi
 			end=$(echo "$output" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
@@ -187,7 +190,6 @@ unit_test()
 	else
 		echo $GREEN
 	fi
-	# echo "$SOLVABLE $UNIT: \t$solved/$count$RESET"
 	printf "%s %s: \t %s/%s$RESET\n" $SOLVABLE $UNIT $solved $count 
 	echo "Solve time in seconds"
 	echo "\t\t Worst: $worst"
