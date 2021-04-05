@@ -1,3 +1,6 @@
+#### -- N-Puzzle Performance Test -- ####
+## Runs Unsolvable & Solvable Unit tests from Boards/
+## and Random tests using Boards/generator.py
 ## To run: ./test.sh
 go build
 
@@ -7,6 +10,7 @@ BRIGHT="\x1b[1m"
 RED="\x1b[31m"
 GREEN="\x1b[32m"
 YELLOW="\x1b[33m"
+CLEAR_LINE="\r"
 
 printf "\E[H\E[2J" ## Clear screen
 printf $BRIGHT
@@ -15,18 +19,16 @@ echo "Launching N-Puzzle Performance Test$RESET\n"
 start=`date +%s`
 
 #### -- Config -- ####
-
 MIN_SIZE=3			# 3 min
-MAX_SIZE=3			# 5
-TEST_CASES=2		# 5
+MAX_SIZE=5			# 5 
+TEST_CASES=5		# 5 default
 UNSOLVABLE_TEST=1	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
 RANDOM_TEST=1		# 0 = off, 1 = on
 HEURISTIC="manhattan"
 
-
-#### -- Print Config -- ####
+## Print Config
 echo "\t\x1b[4m-- Config --$RESET"
 echo "Minimum size:\t\t$MIN_SIZE"
 echo "Maximum size:\t\t$MAX_SIZE"
@@ -55,7 +57,7 @@ then
 else	
 	echo "Random Tests:$RED\t\toff$RESET"
 fi
-echo "Heuristic:\t\t$HEURISTIC\n"
+echo "Heuristic:\t\t$HEURISTIC\n\n"
 
 
 #### -- Test Function -- ####
@@ -76,6 +78,17 @@ unit_test()
 	do
 		count=$(($count + 1))
 		test_num=$(($test_num + 1))
+		## Print ...
+		type=$(echo $SOLVABLE $UNIT)
+		if [ "$solved" = 0 ]
+		then
+			printf "%s %s ...$CLEAR_LINE" $SOLVABLE $UNIT
+		elif [ "$solved" -lt $(($count - 1)) ]
+		then
+			printf "$YELLOW%s %s%-4s\t%s/%s ...$RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
+		else
+			printf "$GREEN%s %s%-4s\t%s/%s OK ...$RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
+		fi
 
 		## Run
 		if [ "$SOLVABLE" == "Unsolvable" ]
@@ -91,9 +104,7 @@ unit_test()
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				solved=$(($solved + 1))
-				echo "$GREEN.$RESET\c"
 			else	
-				echo "$RED.$RESET\c"
 				if [ -f "rm_me.txt" ]
 				then
 					rm rm_me.txt
@@ -112,11 +123,9 @@ unit_test()
 			end=$(echo "$output" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
-				echo "$RED.$RESET\c"
 				continue
 			else
 				solved=$(($solved + 1))
-				echo "$GREEN.$RESET\c"
 			fi
 			time=$(echo "$output" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 		fi
@@ -152,13 +161,26 @@ unit_test()
 			best=$time
 		fi
 
+		## Print Solved
+		type=$(echo $SOLVABLE $UNIT)
+		if [ "$solved" = 0 ]
+		then
+			printf "$RED%s %s%-3s\t%s/%s ERROR $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+		elif [ "$solved" -lt "$count" ]
+		then
+			printf "$YELLOW%s %s%-3s\t%s/%s       $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+		else
+			printf "$GREEN%s %s%-3s\t%s/%s OK     $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+		fi
+		
+		## Cleanup
 		if [ -f "rm_me.txt" ]
 		then
 			rm rm_me.txt
 		fi
 	done
 
-	## Print results
+	## Print Time
 	if [ "$solved" != 0 ]
 	then
 		mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
@@ -173,21 +195,11 @@ unit_test()
 	then
 		best="$RED""Failed$RESET"
 	fi
-
-	if [ "$solved" = 0 ]
-	then
-		echo $RED
-	elif [ "$solved" -lt "$count" ]
-	then
-		echo $YELLOW
-	else
-		echo $GREEN
-	fi
-	printf "%s %s: \t %s/%s$RESET\n" $SOLVABLE $UNIT $solved $count 
-	echo "Solve time in seconds"
-	echo "\t\t Worst: $worst"
-	echo "\t\t Mean:  $mean"
-	echo "\t\t Best:  $best"
+	echo
+	echo "Solve time       Worst: $worst"
+	echo "(Seconds)        Mean:  $mean"
+	echo "                 Best:  $best"
+	echo
 }
 
 
@@ -198,12 +210,13 @@ if [ -f "rm_me.txt" ]
 then
 	rm rm_me.txt
 fi
+
 ## Loop size
 while [ $size -lt $(expr $MAX_SIZE + 1) ]
 do
-	echo $BRIGHT
+	printf $BRIGHT
 	echo "Size - $size$RESET"
-
+	echo
 	if [ "$UNSOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
 	then
 		unit_test Unsolvable Unit
@@ -225,8 +238,9 @@ do
 	size=$(($size + 1))
 done
 
+## Print End
 end=`date +%s`
 runtime=$((end-start))
-echo $BRIGHT
+printf $BRIGHT
 echo "N-Puzzle performance test finished, $test_num tests run in $runtime seconds.\n"
 rm n-puzzle
