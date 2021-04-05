@@ -57,124 +57,125 @@ echo "Heuristic: \t\t $HEURISTIC\n"
 
 
 
+size=$MIN_SIZE
+test_num=0
+if [ -f "rm_me.txt" ]
+then
+	$(rm rm_me.txt)
+fi
+
 #### -- Test Function -- ####
-# unit_test()
-# {
-# 	echo hi!
-# }
+unit_test()
+{
+	if [ "$TEST_CASES" -lt 10 ]
+	then
+		case=$TEST_CASES
+	else
+		case=10
+	fi
+	u=0
+	count=0
+	best=42
+	worst=0
+	tcumulative=0
+	count=0
+	while [ $count -lt $case ]
+	do
+		count=$(($count + 1))
+		test_num=$(($test_num + 1))
+		unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
+		output=$(../n-puzzle -h=$HEURISTIC $unit)
+		unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
+		if [ "$unsolvable" = "This puzzle is unsolvable." ]
+		then
+			u=$(($u + 1))
+			echo "$GREEN.$RESET\c"
+		else	
+			echo "$RED.$RESET\c"
+			continue
+		fi
 
-	# 	if [ "$TEST_CASES" -lt 10 ]
-	# 	then
-	# 		case=$TEST_CASES
-	# 	else
-	# 		case=10
-	# 	fi
-	# 	u=0
-	# 	count=0
-	# 	best=42
-	# 	worst=0
-	# 	tcumulative=0
-	# 	count=0
-	# 	while [ $count -lt $case ]
-	# 	do
-	# 		count=$(($count + 1))
-	# 		test_num=$(($test_num + 1))
-	# 		unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-	# 		output=$(../n-puzzle -h=$HEURISTIC $unit)
-	# 		unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
-	# 		if [ "$unsolvable" = "This puzzle is unsolvable." ]
-	# 		then
-	# 			u=$(($u + 1))
-	# 			echo "$GREEN.$RESET\c"
-	# 		else	
-	# 			echo "$RED.$RESET\c"
-	# 			continue
-	# 		fi
+		time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
+		prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
+		if [ "$prefix" = "m" ]
+		then
+			time=$(echo "$time" | rev | cut -c3-42 | rev)
+			time=$(echo "scale = 9; ($time / 1000)" | bc)	
+			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
+			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+			if [ "$time_up" -gt "$worst_up" ]
+			then
+				worst=$time
+			fi
+			if [ "$time_up" -lt "$best_up" ]
+			then
+				best=$time
+			fi
+		elif [ "$prefix" = "µ" ]
+		then
+			time=$(echo "$time" | rev | cut -c3-42 | rev)
+			time=$(echo "scale = 9; ($time / 1000000)" | bc)	
+			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
+			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+			if [ "$time_up" -gt "$worst_up" ]
+			then
+				worst=$time
+			fi
+			if [ "$time_up" -lt "$best_up" ]
+			then
+				best=$time
+			fi
+		else
+			time=$(echo "$time" | rev | cut -c2-42 | rev)
+			tcumulative=$(echo "$tcumulative + $time" | bc)
+			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+			if [ "$time_up" -gt "$worst_up" ]
+			then
+				worst=$time
+			fi
+			if [ "$time_up" -lt "$best_up" ]
+			then
+				best=$time
+			fi
+		fi
+	done
+	if [ "$u" != 0 ]
+	then
+		mean=$(echo "scale = 9; $tcumulative / $u" | bc)
+	else
+		mean="$RED Failed$RESET"
+	fi
+	if [ "$worst" = 0 ]
+	then
+		worst="$RED Failed$RESET"
+	fi
+	if [ "$best" = 42 ]
+	then
+		best="$RED Failed$RESET"
+	fi
 
-	# 		time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
-	# 		prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
-	# 		if [ "$prefix" = "m" ]
-	# 		then
-	# 			time=$(echo "$time" | rev | cut -c3-42 | rev)
-	# 			time=$(echo "scale = 9; ($time / 1000)" | bc)	
-	# 			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
-	# 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-	# 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-	# 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	# 			if [ "$time_up" -gt "$worst_up" ]
-	# 			then
-	# 				worst=$time
-	# 			fi
-	# 			if [ "$time_up" -lt "$best_up" ]
-	# 			then
-	# 				best=$time
-	# 			fi
-	# 		elif [ "$prefix" = "µ" ]
-	# 		then
-	# 			time=$(echo "$time" | rev | cut -c3-42 | rev)
-	# 			time=$(echo "scale = 9; ($time / 1000000)" | bc)	
-	# 			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
-	# 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-	# 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-	# 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	# 			if [ "$time_up" -gt "$worst_up" ]
-	# 			then
-	# 				worst=$time
-	# 			fi
-	# 			if [ "$time_up" -lt "$best_up" ]
-	# 			then
-	# 				best=$time
-	# 			fi
-	# 		else
-	# 			time=$(echo "$time" | rev | cut -c2-42 | rev)
-	# 			tcumulative=$(echo "$tcumulative + $time" | bc)
-	# 			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-	# 			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-	# 			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-	# 			if [ "$time_up" -gt "$worst_up" ]
-	# 			then
-	# 				worst=$time
-	# 			fi
-	# 			if [ "$time_up" -lt "$best_up" ]
-	# 			then
-	# 				best=$time
-	# 			fi
-	# 		fi
-	# 	done
-	# 	if [ "$u" != 0 ]
-	# 	then
-	# 		mean=$(echo "scale = 9; $tcumulative / $u" | bc)
-	# 	else
-	# 		mean="$RED Failed$RESET"
-	# 	fi
-	# 	if [ "$worst" = 0 ]
-	# 	then
-	# 		worst="$RED Failed$RESET"
-	# 	fi
-	# 	if [ "$best" = 42 ]
-	# 	then
-	# 		best="$RED Failed$RESET"
-	# 	fi
+	if [ "$solved" = 0 ]
+	then
+		echo "$RED"
+	elif [ "$u" -lt "$count" ]
+	then
+		echo "\x1b[33m"
+	else
+		echo "$GREEN"
+	fi
+	echo "Unsolvable unit tests correctly identified: \t$u/$count$RESET"
+	echo "Solve time in seconds:\t\t\tMean: \t$mean"
+	echo "\t\t\t\t\tWorst: \t$worst"
+	echo "\t\t\t\t\tBest: \t$best"
+}
 
-	# 	if [ "$solved" = 0 ]
-	# 	then
-	# 		echo "$RED"
-	# 	elif [ "$u" -lt "$count" ]
-	# 	then
-	# 		echo "\x1b[33m"
-	# 	else
-	# 		echo "$GREEN"
-	# 	fi
-	# 	echo "Unsolvable unit tests correctly identified: \t$u/$count$RESET"
-	# 	echo "Solve time in seconds:\t\t\tMean: \t$mean"
-	# 	echo "\t\t\t\t\tWorst: \t$worst"
-	# 	echo "\t\t\t\t\tBest: \t$best"
-	# fi
-
-
-
-
-# unit_test
+unit_test
 
 
 #### -- Test -- ####
