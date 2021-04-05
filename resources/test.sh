@@ -1,7 +1,7 @@
 #### -- Config -- ####
 
 min_size=3
-max_size=5
+max_size=3
 test_cases=5
 unsolvable_test=1
 solvable_test=1
@@ -12,39 +12,59 @@ heuristic="manhattan"
 
 #### -- Print Header -- ####
 start=`date +%s`
-printf "\E[H\E[2J"
-echo "\x1b[1mLaunching N-Puzzle Performance Test\x1B[0m\n"
+
+RESET="\x1b[0m"
+BRIGHT="\x1b[1m"
+RED="\x1b[31m"
+GREEN="\x1b[32m"
+
+printf "\E[H\E[2J" ## Clear screen
+printf $BRIGHT
+echo "Launching N-Puzzle Performance Test$RESET\n"
 ## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
 
-echo "\t\x1b[4m-- Config --\x1b[0m"
-echo "Minimum size: \t\t$min_size"
-echo "Maximum size: \t\t$max_size"
-echo "Number of test cases: \t$test_cases"
+echo "\t\x1b[4m-- Config --$RESET"
+echo "Minimum size: \t\t $min_size"
+echo "Maximum size: \t\t $max_size"
+echo "Number of test cases: \t $test_cases"
 if [ "$unsolvable_test" != 0 ]
 then
-	echo "Unsolvable Tests: \t\x1b[32mon\x1b[0m"
+	echo "Unsolvable Tests: \t$GREEN on$RESET"
 else	
-	echo "Unsolvable Tests: \t\x1b[31moff\x1b[0m"
+	echo "Unsolvable Tests: \t$RED off$RESET"
 fi
 if [ "$solvable_test" != 0 ]
 then
-	echo "Solvable Tests: \t\x1b[32mon\x1b[0m"
+	echo "Solvable Tests: \t$GREEN on$RESET"
 else	
-	echo "Solvable Tests: \t\x1b[31moff\x1b[0m"
+	echo "Solvable Tests: \t$RED off$RESET"
 fi
 if [ "$unit_test" != 0 ]
 then
-	echo "Unit Tests: \t\t\x1b[32mon\x1b[0m"
+	echo "Unit Tests: \t\t$GREEN on$RESET"
 else	
-	echo "Unit Tests: \t\t\x1b[31moff\x1b[0m"
+	echo "Unit Tests: \t\t$RED off$RESET"
 fi
 if [ "$random_test" != 0 ]
 then
-	echo "Random Tests: \t\t\x1b[32mon\x1b[0m"
+	echo "Random Tests: \t\t$GREEN on$RESET"
 else	
-	echo "Random Tests: \t\t\x1b[31moff\x1b[0m"
+	echo "Random Tests: \t\t$RED off$RESET"
 fi
-echo "Heuristic: \t\t$heuristic\n"
+echo "Heuristic: \t\t $heuristic\n"
+
+
+
+#### -- Test Function -- ####
+
+
+
+
+
+
+
+
+
 
 #### -- Test -- ####
 size=$min_size
@@ -55,7 +75,8 @@ then
 fi
 while [ $size -lt $(expr $max_size + 1) ]
 do
-	echo "\x1b[1mSize - $size\x1B[0m"
+	echo $BRIGHT
+	echo "Size - $size$RESET"
 
 #### -- Unsolvable Unit Tests -- ####
 	if [ "$unit_test" != 0 -a "$unsolvable_test" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
@@ -82,9 +103,9 @@ do
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
-				echo "\x1b[32m.\x1b[0m\c"
+				echo "$GREEN.$RESET\c"
 			else	
-				echo "\x1b[31m.\x1b[0m\c"
+				echo "$RED.$RESET\c"
 				continue
 			fi
 
@@ -142,27 +163,27 @@ do
 		then
 			mean=$(echo "scale = 9; $tcumulative / $u" | bc)
 		else
-			mean="\x1b[31mFailed\x1b[0m"
+			mean="$RED Failed$RESET"
 		fi
 		if [ "$worst" = 0 ]
 		then
-			worst="\x1b[31mFailed\x1b[0m"
+			worst="$RED Failed$RESET"
 		fi
 		if [ "$best" = 42 ]
 		then
-			best="\x1b[31mFailed\x1b[0m"
+			best="$RED Failed$RESET"
 		fi
 
 		if [ "$solved" = 0 ]
 		then
-			echo "\x1b[31m"
+			echo "$RED"
 		elif [ "$u" -lt "$count" ]
 		then
 			echo "\x1b[33m"
 		else
-			echo "\x1b[32m"
+			echo "$GREEN"
 		fi
-		echo "Unsolvable unit tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Unsolvable unit tests correctly identified: \t$u/$count$RESET"
 		echo "Solve time in seconds:\t\t\tMean: \t$mean"
 		echo "\t\t\t\t\tWorst: \t$worst"
 		echo "\t\t\t\t\tBest: \t$best"
@@ -187,9 +208,9 @@ do
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				u=$(($u + 1))
-				echo "\x1b[32m.\x1b[0m\c"
+				echo "$GREEN.$RESET\c"
 			else	
-				echo "\x1b[31m.\x1b[0m\c"
+				echo "$RED.$RESET\c"
 				$(rm rm_me.txt)
 				continue
 			fi
@@ -249,27 +270,27 @@ do
 		then
 			mean=$(echo "scale = 9; $tcumulative / $u" | bc)
 		else
-			mean="\x1b[31mFailed\x1b[0m"
+			mean="$RED Failed$RESET"
 		fi
 		if [ "$worst" = 0 ]
 		then
-			worst="\x1b[31mFailed\x1b[0m"
+			worst="$RED Failed$RESET"
 		fi
 		if [ "$best" = 42 ]
 		then
-			best="\x1b[31mFailed\x1b[0m"
+			best="$RED Failed$RESET"
 		fi
 
 		if [ "$solved" = 0 ]
 		then
-			echo "\x1b[31m"
+			echo "$RED"
 		elif [ "$u" -lt "$count" ]
 		then
 			echo "\x1b[33m"
 		else
-			echo "\x1b[32m"
+			echo "$GREEN"
 		fi
-		echo "Unsolvable random tests correctly identified: \t$u/$count\x1b[0m"
+		echo "Unsolvable random tests correctly identified: \t$u/$count$RESET"
 		echo "Solve time in seconds:\t\t\tMean: \t$mean"
 		echo "\t\t\t\t\tWorst: \t$worst"
 		echo "\t\t\t\t\tBest: \t$best"
@@ -298,11 +319,11 @@ do
 			end=$(echo "$solvable" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
-				echo "\x1b[31m.\x1b[0m\c"
+				echo "$RED.$RESET\c"
 				continue
 			else
 				solved=$(($solved + 1))
-				echo "\x1b[32m.\x1b[0m\c"
+				echo "$GREEN.$RESET\c"
 			fi
 			time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
@@ -379,27 +400,27 @@ do
 		then
 			mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
 		else
-			mean="\x1b[31mFailed\x1b[0m"
+			mean="$RED Failed$RESET"
 		fi
 		if [ "$worst" = 0 ]
 		then
-			worst="\x1b[31mFailed\x1b[0m"
+			worst="$RED Failed$RESET"
 		fi
 		if [ "$best" = 42 ]
 		then
-			best="\x1b[31mFailed\x1b[0m"
+			best="$RED Failed$RESET"
 		fi
 
 		if [ "$solved" = 0 ]
 		then
-			echo "\x1b[31m"
+			echo "$RED"
 		elif [ "$solved" -lt "$count" ]
 		then
 			echo "\x1b[33m"
 		else
-			echo "\x1b[32m"
+			echo "$GREEN"
 		fi
-		echo "Solvable unit tests correctly solved: \t\t$solved/$count\x1b[0m"
+		echo "Solvable unit tests correctly solved: \t\t$solved/$count$RESET"
 		echo "Solve time in seconds:\t\t\tMean: \t$mean"
 		echo "\t\t\t\t\tWorst: \t$worst"
 		echo "\t\t\t\t\tBest: \t$best"
@@ -423,11 +444,11 @@ do
 			if [ "$end" != "You've finished n-puzzle!" ]
 			then
 				$(rm rm_me.txt)
-				echo "\x1b[31m.\x1b[0m\c"
+				echo "$RED.$RESET\c"
 				continue
 			else
 				solved=$(($solved + 1))
-				echo "\x1b[32m.\x1b[0m\c"
+				echo "$GREEN.$RESET\c"
 			fi
 			time=$(echo "$solvable" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 			prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
@@ -505,27 +526,27 @@ do
 		then
 			mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
 		else
-			mean="\x1b[31mFailed\x1b[0m"
+			mean="$RED Failed$RESET"
 		fi
 		if [ "$worst" = 0 ]
 		then
-			worst="\x1b[31mFailed\x1b[0m"
+			worst="$RED Failed$RESET"
 		fi
 		if [ "$best" = 42 ]
 		then
-			best="\x1b[31mFailed\x1b[0m"
+			best="$RED Failed$RESET"
 		fi
 
 		if [ "$solved" = 0 ]
 		then
-			echo "\x1b[31m"
+			echo "$RED"
 		elif [ "$solved" -lt "$count" ]
 		then
 			echo "\x1b[33m"
 		else
-			echo "\x1b[32m"
+			echo "$GREEN"
 		fi
-		echo "Solvable random tests correctly solved: \t$solved/$count\x1b[0m"
+		echo "Solvable random tests correctly solved: \t$solved/$count$RESET"
 		echo "Solve time in seconds:\t\t\tMean: \t$mean"
 		echo "\t\t\t\t\tWorst: \t$worst"
 		echo "\t\t\t\t\tBest: \t$best"
