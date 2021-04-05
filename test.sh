@@ -20,7 +20,7 @@ start=`date +%s`
 
 #### -- Config -- ####
 MIN_SIZE=3			# 3 min
-MAX_SIZE=5			# 5 
+MAX_SIZE=4			# 4
 TEST_CASES=5		# 5 default
 UNSOLVABLE_TEST=1	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
@@ -71,13 +71,17 @@ unit_test()
 	best=42
 	worst=0
 	tcumulative=0
-	count=0
 
 	## Loop cases
 	while [ $count -lt $case ]
 	do
-		count=$(($count + 1))
 		test_num=$(($test_num + 1))
+		count=$(($count + 1))
+		if [ "$UNIT" == "Unit" -a "$count" -gt 10 ]
+		then
+			break
+		fi
+
 		## Print ...
 		type=$(echo $SOLVABLE $UNIT)
 		if [ "$solved" = 0 ]
@@ -85,9 +89,9 @@ unit_test()
 			printf "%s %s ...$CLEAR_LINE" $SOLVABLE $UNIT
 		elif [ "$solved" -lt $(($count - 1)) ]
 		then
-			printf "$YELLOW%s %s%-4s\t%s/%s ...$RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
+			printf "$YELLOW%s %s%-4s\t%s/%s ...    $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
 		else
-			printf "$GREEN%s %s%-4s\t%s/%s OK ...$RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
+			printf "$GREEN%s %s%-4s\t%s/%s OK ...    $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $(($count - 1))
 		fi
 
 		## Run
@@ -165,12 +169,12 @@ unit_test()
 		type=$(echo $SOLVABLE $UNIT)
 		if [ "$solved" = 0 ]
 		then
-			printf "$RED%s %s%-3s\t%s/%s ERROR $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+			printf "$RED%s %s%-3s\t%s/%s ERROR    $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
 		elif [ "$solved" -lt "$count" ]
 		then
-			printf "$YELLOW%s %s%-3s\t%s/%s       $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+			printf "$YELLOW%s %s%-3s\t%s/%s          $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
 		else
-			printf "$GREEN%s %s%-3s\t%s/%s OK     $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
+			printf "$GREEN%s %s%-3s\t%s/%s OK        $RESET $CLEAR_LINE" $SOLVABLE $UNIT ":" $solved $count
 		fi
 		
 		## Cleanup
