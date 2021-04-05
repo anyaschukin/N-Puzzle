@@ -1,3 +1,6 @@
+## To run: ./test.sh
+go build
+
 #### -- Print Header -- ####
 RESET="\x1b[0m"
 BRIGHT="\x1b[1m"
@@ -10,13 +13,11 @@ printf $BRIGHT
 echo "Launching N-Puzzle Performance Test$RESET\n"
 
 start=`date +%s`
-## echo "Usage: '''go build''' to build the binary 'n-puzzle'. then ./performance_test.sh"
-
 
 #### -- Config -- ####
 
 MIN_SIZE=3			# 3 min
-MAX_SIZE=4			# 5
+MAX_SIZE=3			# 5
 TEST_CASES=2		# 5
 UNSOLVABLE_TEST=1	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
@@ -82,9 +83,9 @@ unit_test()
 			if [ "$UNIT" == "Unit" ]
 			then ## Unit
 				unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-				output=$(../n-puzzle -h=$HEURISTIC $unit)
+				output=$(./n-puzzle -h=$HEURISTIC $unit)
 			else ## Random
-				output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle -h=$HEURISTIC rm_me.txt)
+				output=$(python Boards/generator.py -u $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
 			fi
 			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
@@ -104,9 +105,9 @@ unit_test()
 			if [ "$UNIT" == "Unit" ]
 			then ## Unit
 				unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
-				output=$(../n-puzzle -h=$HEURISTIC $unit)
+				output=$(./n-puzzle -h=$HEURISTIC $unit)
 			else ## Random
-				output=$(python generator.py -s $size >> rm_me.txt; ../n-puzzle -h=$HEURISTIC rm_me.txt)
+				output=$(python Boards/generator.py -s $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
 			fi
 			end=$(echo "$output" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
@@ -228,3 +229,4 @@ end=`date +%s`
 runtime=$((end-start))
 echo $BRIGHT
 echo "N-Puzzle performance test finished, $test_num tests run in $runtime seconds.\n"
+rm n-puzzle
