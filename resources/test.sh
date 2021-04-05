@@ -3,6 +3,7 @@ RESET="\x1b[0m"
 BRIGHT="\x1b[1m"
 RED="\x1b[31m"
 GREEN="\x1b[32m"
+YELLOW="\x1b[33m"
 
 printf "\E[H\E[2J" ## Clear screen
 printf $BRIGHT
@@ -14,10 +15,10 @@ start=`date +%s`
 
 #### -- Config -- ####
 
-MIN_SIZE=3
-MAX_SIZE=3
-TEST_CASES=5
-UNSOLVABLE_TEST=1
+MIN_SIZE=3 # 3
+MAX_SIZE=4 # 5
+TEST_CASES=2 # 5
+UNSOLVABLE_TEST=1 # 0 = off, 1 = on
 SOLVABLE_TEST=1
 UNIT_TEST=1
 RANDOM_TEST=1
@@ -67,13 +68,15 @@ fi
 #### -- Test Function -- ####
 unit_test()
 {
+	SOLVABLE=$1
+	UNIT=$2
 	if [ "$TEST_CASES" -lt 10 ]
 	then
 		case=$TEST_CASES
 	else
 		case=10
 	fi
-	u=0
+	solved=0
 	count=0
 	best=42
 	worst=0
@@ -83,99 +86,121 @@ unit_test()
 	do
 		count=$(($count + 1))
 		test_num=$(($test_num + 1))
-		unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
-		output=$(../n-puzzle -h=$HEURISTIC $unit)
-		unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
-		if [ "$unsolvable" = "This puzzle is unsolvable." ]
-		then
-			u=$(($u + 1))
-			echo "$GREEN.$RESET\c"
-		else	
-			echo "$RED.$RESET\c"
-			continue
+
+		if [ "$SOLVABLE" == "Unsolvable" ]
+		then ## Unsolvable
+			if [ "$UNIT" == "Unit" ]
+			then ## Unit
+				unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
+				output=$(../n-puzzle -h=$HEURISTIC $unit)
+			else ## Random
+				output=$(python generator.py -u $size >> rm_me.txt; ../n-puzzle -h=$HEURISTIC rm_me.txt)
+			fi
+			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
+			if [ "$unsolvable" = "This puzzle is unsolvable." ]
+			then
+				solved=$(($solved + 1))
+				echo "$GREEN.$RESET\c"
+			else	
+				echo "$RED.$RESET\c"
+				if [ -f "rm_me.txt" ]
+				then
+					rm rm_me.txt
+				fi
+				continue
+			fi
+			time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
+		else ## Solvable
+			unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
+			output=$(../n-puzzle -h=$HEURISTIC $unit)
+			end=$(echo "$output" | tail -n -1)
+			if [ "$end" != "You've finished n-puzzle!" ]
+			then
+				echo "$RED.$RESET\c"
+				continue
+			else
+				solved=$(($solved + 1))
+				echo "$GREEN.$RESET\c"
+			fi
+			time=$(echo "$output" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 		fi
 
-		time=$(echo "$output" | tail -n -1 | cut -d " " -f 3)
+		## Time
 		prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
 		if [ "$prefix" = "m" ]
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000)" | bc)	
-			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
-			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-			if [ "$time_up" -gt "$worst_up" ]
-			then
-				worst=$time
-			fi
-			if [ "$time_up" -lt "$best_up" ]
-			then
-				best=$time
-			fi
 		elif [ "$prefix" = "µ" ]
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
-			time=$(echo "scale = 9; ($time / 1000000)" | bc)	
-			tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)	
-			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-			if [ "$time_up" -gt "$worst_up" ]
-			then
-				worst=$time
-			fi
-			if [ "$time_up" -lt "$best_up" ]
-			then
-				best=$time
-			fi
+			time=$(echo "scale = 9; ($time / 1000000)" | bc)
+
+		elif [ "$prefix" = "n" ]
+		then
+			time=$(echo "$time" | rev | cut -c3-42 | rev)
+			time=$(echo "scale = 9; ($time / 1000000000)" | bc)
 		else
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
-			tcumulative=$(echo "$tcumulative + $time" | bc)
-			time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
-			worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
-			best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
-			if [ "$time_up" -gt "$worst_up" ]
-			then
-				worst=$time
-			fi
-			if [ "$time_up" -lt "$best_up" ]
-			then
-				best=$time
-			fi
+		fi
+		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
+		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
+		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
+		best_up=$(echo "scale = 0; $best * 1000000000" | bc | cut -d "." -f 1)
+		if [ "$time_up" -gt "$worst_up" ]
+		then
+			worst=$time
+		fi
+		if [ "$time_up" -lt "$best_up" ]
+		then
+			best=$time
+		fi
+
+		if [ -f "rm_me.txt" ]
+		then
+			rm rm_me.txt
 		fi
 	done
-	if [ "$u" != 0 ]
+
+	## Print results
+	if [ "$solved" != 0 ]
 	then
-		mean=$(echo "scale = 9; $tcumulative / $u" | bc)
+		mean=$(echo "scale = 9; $tcumulative / $solved" | bc)
 	else
 		mean="$RED Failed$RESET"
 	fi
 	if [ "$worst" = 0 ]
 	then
-		worst="$RED Failed$RESET"
+		worst="$RED""Failed$RESET"
 	fi
 	if [ "$best" = 42 ]
 	then
-		best="$RED Failed$RESET"
+		best="$RED""Failed$RESET"
 	fi
 
 	if [ "$solved" = 0 ]
 	then
-		echo "$RED"
-	elif [ "$u" -lt "$count" ]
+		echo $RED
+	elif [ "$solved" -lt "$count" ]
 	then
-		echo "\x1b[33m"
+		echo $YELLOW
 	else
-		echo "$GREEN"
+		echo $GREEN
 	fi
-	echo "Unsolvable unit tests correctly identified: \t$u/$count$RESET"
-	echo "Solve time in seconds:\t\t\tMean: \t$mean"
-	echo "\t\t\t\t\tWorst: \t$worst"
-	echo "\t\t\t\t\tBest: \t$best"
+	# echo "$SOLVABLE $UNIT: \t$solved/$count$RESET"
+	printf "%s %s: \t %s/%s$RESET\n" $SOLVABLE $UNIT $solved $count 
+	echo "Solve time in seconds"
+	echo "\t\t Worst: $worst"
+	echo "\t\t Mean:  $mean"
+	echo "\t\t Best:  $best"
 }
 
-unit_test
+
+unit_test Unsolvable Unit
+unit_test Unsolvable Random
+unit_test Solvable Unit
+unit_test Solvable Random
+
 
 
 #### -- Test -- ####
@@ -218,6 +243,7 @@ do
 				echo "$GREEN.$RESET\c"
 			else	
 				echo "$RED.$RESET\c"
+								rm rm_me.txt
 				continue
 			fi
 
@@ -271,6 +297,20 @@ do
 				fi
 			fi
 		done
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 		if [ "$u" != 0 ]
 		then
 			mean=$(echo "scale = 9; $tcumulative / $u" | bc)
@@ -323,7 +363,7 @@ do
 				echo "$GREEN.$RESET\c"
 			else	
 				echo "$RED.$RESET\c"
-				$(rm rm_me.txt)
+				rm rm_me.txt
 				continue
 			fi
 
