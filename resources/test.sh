@@ -70,7 +70,7 @@ unit_test()
 	tcumulative=0
 	count=0
 
-	## Test loop
+	## Loop cases
 	while [ $count -lt $case ]
 	do
 		count=$(($count + 1))
@@ -197,6 +197,7 @@ if [ -f "rm_me.txt" ]
 then
 	rm rm_me.txt
 fi
+## Loop size
 while [ $size -lt $(expr $MAX_SIZE + 1) ]
 do
 	echo $BRIGHT
