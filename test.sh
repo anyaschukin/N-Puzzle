@@ -11,6 +11,7 @@ RED="\x1b[31m"
 GREEN="\x1b[32m"
 YELLOW="\x1b[33m"
 CLEAR_LINE="\r"
+UNDERLINE="\x1b[4m"
 
 printf "\E[H\E[2J" ## Clear screen
 printf $BRIGHT
@@ -29,7 +30,7 @@ RANDOM_TEST=1		# 0 = off, 1 = on
 HEURISTIC="manhattan"
 
 ## Print Config
-echo "\t\x1b[4m-- Config --$RESET"
+echo "\t$UNDERLINE-- Config --$RESET"
 echo "Minimum size:\t\t$MIN_SIZE"
 echo "Maximum size:\t\t$MAX_SIZE"
 echo "Number of test cases:\t$TEST_CASES"
@@ -219,6 +220,7 @@ fi
 while [ $size -lt $(expr $MAX_SIZE + 1) ]
 do
 	printf $BRIGHT
+	printf $UNDERLINE
 	echo "Size - $size$RESET"
 	echo
 	if [ "$UNSOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
