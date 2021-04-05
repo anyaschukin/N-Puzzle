@@ -15,7 +15,7 @@ UNDERLINE="\x1b[4m"
 
 printf "\E[H\E[2J" ## Clear screen
 printf $BRIGHT
-echo "Launching N-Puzzle Performance Test$RESET\n"
+echo "Launching N-Puzzle Performance Test ...$RESET\n"
 
 start=`date +%s`
 
@@ -23,14 +23,14 @@ start=`date +%s`
 MIN_SIZE=3			# 3 min
 MAX_SIZE=4			# 4
 TEST_CASES=5		# 5 default
-UNSOLVABLE_TEST=1	# 0 = off, 1 = on
+UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
 RANDOM_TEST=1		# 0 = off, 1 = on
-HEURISTIC="manhattan"
+declare -a heuristics=("Manhattan" "Hamming" "Euclidian" "Nilsson" "OutRowCol")
 
 ## Print Config
-echo "\t$UNDERLINE-- Config --$RESET"
+echo "$BRIGHT$UNDERLINE""Configuration$RESET"
 echo "Minimum size:\t\t$MIN_SIZE"
 echo "Maximum size:\t\t$MAX_SIZE"
 echo "Number of test cases:\t$TEST_CASES"
@@ -58,8 +58,12 @@ then
 else	
 	echo "Random Tests:$RED\t\toff$RESET"
 fi
-echo "Heuristic:\t\t$HEURISTIC\n\n"
-
+printf "Heuristics:\t\t"
+for heuristic in "${heuristics[@]}"
+do
+   printf "$heuristic\n\t\t\t"
+done
+echo
 
 #### -- Test Function -- ####
 unit_test()
@@ -219,30 +223,34 @@ fi
 ## Loop size
 while [ $size -lt $(expr $MAX_SIZE + 1) ]
 do
-	printf $BRIGHT
-	printf $UNDERLINE
-	echo "Size - $size$RESET"
-	echo
-	if [ "$UNSOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
-	then
-		unit_test Unsolvable Unit
-	fi
-	if [ "$UNSOLVABLE_TEST" != 0  -a "$RANDOM_TEST" != 0 ]
-	then
-		unit_test Unsolvable Random
-	fi
-	if [ "$SOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
-	then
-		unit_test Solvable Unit
-	fi
-	if [ "$SOLVABLE_TEST" != 0 -a "$RANDOM_TEST" != 0 ]
-	then
-		unit_test Solvable Random
-	fi
-
-	echo
+	## Loop heuristic
+	for heuristic in "${heuristics[@]}"
+	do
+		printf $BRIGHT
+		printf $UNDERLINE
+		echo "Size - $size,  Heuristic - $heuristic$RESET"
+		echo
+		if [ "$UNSOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
+		then
+			unit_test Unsolvable Unit $heuristic
+		fi
+		if [ "$UNSOLVABLE_TEST" != 0  -a "$RANDOM_TEST" != 0 ]
+		then
+			unit_test Unsolvable Random $heuristic
+		fi
+		if [ "$SOLVABLE_TEST" != 0 -a "$UNIT_TEST" != 0 -a "$size" -gt 2 -a "$size" -lt 10 ]
+		then
+			unit_test Solvable Unit $heuristic
+		fi
+		if [ "$SOLVABLE_TEST" != 0 -a "$RANDOM_TEST" != 0 ]
+		then
+			unit_test Solvable Random $heuristic
+		fi
+		echo
+	done
 	size=$(($size + 1))
 done
+
 
 ## Print End
 end=`date +%s`
