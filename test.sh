@@ -141,20 +141,25 @@ unit_test()
 
 		## Time
 		prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
-		if [ "$prefix" = "m" ]
+		if [ "$prefix" = "m" ] ## Milliseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000)" | bc)	
-		elif [ "$prefix" = "µ" ]
+		elif [ "$prefix" = "µ" ] ## Microseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000000)" | bc)
 
-		elif [ "$prefix" = "n" ]
+		elif [ "$prefix" = "n" ] ## Nanoseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000000000)" | bc)
-		else
+		elif [[ "$time" =~ "m" ]] ## Minutes
+		then
+			minutes=$(echo "$time" | cut -d "m" -f 1)
+			seconds=$(echo "$time" | cut -d "m" -f 2 | rev | cut -c3-42 | rev)
+			time=$(echo "scale = 9; $seconds + ($minutes * 60)" | bc)
+		else ## Seconds
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
 		fi
 		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
