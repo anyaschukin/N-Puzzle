@@ -13,16 +13,17 @@ YELLOW="\x1b[33m"
 CLEAR_LINE="\r"
 UNDERLINE="\x1b[4m"
 
-printf "\E[H\E[2J" ## Clear screen
+printf "\E[H\E[2J" # Clear screen
 printf $BRIGHT
 echo "Launching N-Puzzle Performance Test ...$RESET\n"
 
 start=`date +%s`
 
+
 #### -- Config -- ####
 MIN_SIZE=3			# 3 min
-MAX_SIZE=4			# 4
-TEST_CASES=5		# 5 default
+MAX_SIZE=4			# 4 default
+TEST_CASES=5		# 10 unit cases available for sizes 3 to 9
 UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
@@ -64,6 +65,7 @@ do
    printf "$heuristic\n\t\t\t"
 done
 echo
+
 
 #### -- Test Function -- ####
 unit_test()
@@ -113,6 +115,7 @@ unit_test()
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
 			then
 				solved=$(($solved + 1))
+				total_solved=$(($total_solved + 1))
 			else	
 				if [ -f "rm_me.txt" ]
 				then
@@ -135,31 +138,32 @@ unit_test()
 				continue
 			else
 				solved=$(($solved + 1))
+				total_solved=$(($total_solved + 1))
 			fi
 			time=$(echo "$output" | tail -n -2 | head -n 1 | cut -d " " -f 3)
 		fi
 
 		## Time
 		prefix=$(echo "$time" | rev | cut -c-1-2 | rev | cut -c-1-1)
-		if [ "$prefix" = "m" ] ## Milliseconds
+		if [ "$prefix" = "m" ]		# Milliseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000)" | bc)	
-		elif [ "$prefix" = "µ" ] ## Microseconds
+		elif [ "$prefix" = "µ" ]	# Microseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000000)" | bc)
 
-		elif [ "$prefix" = "n" ] ## Nanoseconds
+		elif [ "$prefix" = "n" ]	# Nanoseconds
 		then
 			time=$(echo "$time" | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; ($time / 1000000000)" | bc)
-		elif [[ "$time" =~ "m" ]] ## Minutes
+		elif [[ "$time" =~ "m" ]]	# Minutes
 		then
 			minutes=$(echo "$time" | cut -d "m" -f 1)
 			seconds=$(echo "$time" | cut -d "m" -f 2 | rev | cut -c3-42 | rev)
 			time=$(echo "scale = 9; $seconds + ($minutes * 60)" | bc)
-		else ## Seconds
+		else						# Seconds
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
 		fi
 		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
@@ -220,6 +224,7 @@ unit_test()
 #### -- Test -- ####
 size=$MIN_SIZE
 test_num=0
+total_solved=0
 if [ -f "rm_me.txt" ]
 then
 	rm rm_me.txt
@@ -261,5 +266,21 @@ done
 end=`date +%s`
 runtime=$((end-start))
 printf $BRIGHT
-echo "N-Puzzle performance test finished, $test_num tests run in $runtime seconds.\n"
+if [ "$runtime" == 1 ]
+then
+	echo "N-Puzzle performance test finished, total runtime $runtime second.\n"
+else
+	echo "N-Puzzle performance test finished, total runtime $runtime seconds.\n"
+fi
+
+if [ "$total_solved" == "$test_num" ]
+then
+	echo "Passed$GREEN $total_solved / $test_num$RESET$BRIGHT total tests\n"
+elif [ "$total_solved" == "0" ]
+then
+	echo "Passed$RED $total_solved / $test_num$RESET$BRIGHT total tests\n"	
+else
+	echo "Passed$YELLOW $total_solved / $test_num$RESET$BRIGHT total tests\n"
+fi
+
 rm n-puzzle
