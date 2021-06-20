@@ -1,6 +1,6 @@
 #### -- N-Puzzle Performance Test -- ####
-## Runs Unsolvable & Solvable Unit tests from Boards/
-## and Random tests using Boards/generator.py
+## Runs Unsolvable & Solvable Unit tests from boards/
+## and Random tests using boards/generator.py
 ## To run: ./test.sh
 go build
 
@@ -106,10 +106,10 @@ unit_test()
 		then ## Unsolvable
 			if [ "$UNIT" == "Unit" ]
 			then ## Unit
-				unit=$(echo "Boards/Unsolvable/$size/$size""u$count.txt")
+				unit=$(echo "boards/Unsolvable/$size/$size""u$count.txt")
 				output=$(./n-puzzle -h=$HEURISTIC $unit)
 			else ## Random
-				output=$(python Boards/generator.py -u $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
+				output=$(python boards/generator.py -u $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
 			fi
 			unsolvable=$(echo "$output" | tail -n -2 | head -n 1)
 			if [ "$unsolvable" = "This puzzle is unsolvable." ]
@@ -127,10 +127,10 @@ unit_test()
 		else ## Solvable
 			if [ "$UNIT" == "Unit" ]
 			then ## Unit
-				unit=$(echo "Boards/Solvable/$size/$size""s$count.txt")
+				unit=$(echo "boards/Solvable/$size/$size""s$count.txt")
 				output=$(./n-puzzle -h=$HEURISTIC $unit)
 			else ## Random
-				output=$(python Boards/generator.py -s $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
+				output=$(python boards/generator.py -s $size >> rm_me.txt; ./n-puzzle -h=$HEURISTIC rm_me.txt)
 			fi
 			end=$(echo "$output" | tail -n -1)
 			if [ "$end" != "You've finished n-puzzle!" ]
