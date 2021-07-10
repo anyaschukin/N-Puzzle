@@ -1,6 +1,8 @@
 # N-Puzzle
 
-solve N-puzzles using A* algorithm
+solve [N-puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) using the A* search algorithm with several heuristics.
+
+The goal is to solve quickly, with a target of under 10 seconds for puzzle size 3. This project solves size 3 in at worst a few milliseconds.
 
 See the [subject](https://github.com/anyaschukin/N-Puzzle/blob/master/subject.pdf) for more details.
 
@@ -35,6 +37,8 @@ If the puzzle is solvable *N-Puzzle* prints the solution from inital state to so
 
 ## Puzzle
 
+Find a valid sequence of moves to reach the solved state, a.k.a the "snail solution".
+
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/puzzle.png" width="320">
 
 
@@ -54,3 +58,10 @@ If the puzzle is solvable *N-Puzzle* prints the solution from inital state to so
 ## test.sh
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/test.png" width="420">
+
+
+## Links
+
+https://tristanpenman.com/demos/n-puzzle/
+
+https://qiao.github.io/PathFinding.js/visual/
