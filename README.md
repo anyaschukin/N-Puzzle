@@ -1,6 +1,6 @@
 # N-Puzzle
 
-Solve [sliding puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) using the A* search algorithm with several heuristics.
+A [sliding puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) solver using the A* search algorithm with several heuristics.
 
 The goal is to solve quickly, with a target of under 10 seconds for puzzle size 3. This project solves size 3 in at worst a few milliseconds.
 
@@ -42,36 +42,26 @@ Find a valid sequence of moves to reach the solved state, a.k.a the "snail solut
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/puzzle.png" width="320">
 
 
-## Flag -s Size
+## Flags
+
+### -s Size
 
 Set puzzle size.
 
-```go run main.go -s 3```
+```go run main.go -s 4```
 
 
-## Flag -h Heuristic
+### -h Heuristic
 
-Set heuristic to guide the A* search.
+Set heuristic to guide the A* search. Default manhattan. Options:
 
-### manhattan
-
-Default heuristic. 
-
-### hamming
+* manhattan
+* hamming
+* euclidean
+* nilsson
+* outRowCol
 
 ```go run main.go -s 3 -h hamming```
-
-### euclidean
-
-```go run main.go -s 3 -h euclidean```
-
-### nilsson
-
-```go run main.go -s 3 -h nilsson```
-
-### outRowCol
-
-```go run main.go -s 3 -h outRowCol```
 
 
 ## test.sh
