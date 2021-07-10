@@ -1,6 +1,6 @@
 # N-Puzzle
 
-A [sliding puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) solver using the A* search algorithm with several heuristics.
+A [sliding puzzle](https://en.wikipedia.org/wiki/Sliding_puzzle) solver using the A* search algorithm with several heuristics.
 
 The goal is to solve quickly, with a target of under 10 seconds for puzzle size 3. This project solves size 3 in at worst a few milliseconds.
 
