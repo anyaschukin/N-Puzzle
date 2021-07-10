@@ -1,6 +1,6 @@
 # N-Puzzle
 
-solve [N-puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) using the A* search algorithm with several heuristics.
+solve [sliding puzzles](https://en.wikipedia.org/wiki/Sliding_puzzle) using the A* search algorithm with several heuristics.
 
 The goal is to solve quickly, with a target of under 10 seconds for puzzle size 3. This project solves size 3 in at worst a few milliseconds.
 
@@ -42,17 +42,36 @@ Find a valid sequence of moves to reach the solved state, a.k.a the "snail solut
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/puzzle.png" width="320">
 
 
-## Heuristics
+## Flag -s Size
 
-### Manhattan
+Set puzzle size.
 
-### Hamming
+```go run main.go -s 3```
 
-### Euclidian
 
-### Nilsson
+## Flag -h Heuristic
 
-### OutRowCol
+Set heuristic to guide the A* search.
+
+### manhattan
+
+Default heuristic. 
+
+### hamming
+
+```go run main.go -s 3 -h hamming```
+
+### euclidean
+
+```go run main.go -s 3 -h euclidean```
+
+### nilsson
+
+```go run main.go -s 3 -h nilsson```
+
+### outRowCol
+
+```go run main.go -s 3 -h outRowCol```
 
 
 ## test.sh
@@ -62,6 +81,7 @@ Find a valid sequence of moves to reach the solved state, a.k.a the "snail solut
 
 ## Links
 
-https://tristanpenman.com/demos/n-puzzle/
+[Path finding visualizer](https://qiao.github.io/PathFinding.js/visual/)
 
-https://qiao.github.io/PathFinding.js/visual/
+[Tristan Penman n-puzzle app](https://tristanpenman.com/demos/n-puzzle/)
+
