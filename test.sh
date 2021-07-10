@@ -28,7 +28,7 @@ UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
 RANDOM_TEST=1		# 0 = off, 1 = on
-declare -a heuristics=("Manhattan" "Hamming" "Euclidian" "Nilsson" "OutRowCol")
+declare -a heuristics=("Manhattan" "Hamming" "Euclidean" "Nilsson" "OutRowCol")
 
 ## Print Config
 echo "$BRIGHT$UNDERLINE""Configuration$RESET"
