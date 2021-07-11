@@ -8,7 +8,7 @@
 #### -- Config -- ####
 MIN_SIZE=3			# 3 min
 MAX_SIZE=4			# 4 default
-TEST_CASES=5		# 10 unit cases available for sizes 3 to 9
+TEST_CASES=5		# 11 unit cases available for sizes 3 to 9
 UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
@@ -213,7 +213,7 @@ unit_test()
 			printf "%d" $moves >> moves.csv
 			printf "%d" $size_complexity >> size_complexity.csv
 			printf "%d" $time_complexity >> time_complexity.csv
-			if [ "$UNIT" == "Unit" -o $count -lt $case ]
+			if [ $count -lt $case -o "$UNIT" == "Unit" -a $RANDOM_TEST != "0" ]
 			then
 				printf ", " >> solve_time.csv
 				printf ", " >> moves.csv
