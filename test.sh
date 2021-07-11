@@ -3,6 +3,10 @@
 ## and Random tests using boards/generator.py
 ## To run: ./test.sh
 go build
+if [ -e test_output.csv ]
+then
+    rm test_output.csv
+fi
 
 #### -- Print Header -- ####
 RESET="\x1b[0m"
@@ -28,7 +32,8 @@ UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
 RANDOM_TEST=1		# 0 = off, 1 = on
-declare -a heuristics=("manhattan" "hamming" "euclidean" "nilsson" "outRowCol")
+declare -a heuristics=("manhattan" "nilsson" "outRowCol" "hamming" "euclidean")
+
 
 ## Print Config
 echo "$BRIGHT$UNDERLINE""Configuration$RESET"
@@ -167,19 +172,6 @@ unit_test()
 		else						# Seconds
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
 		fi
-
-		## Write to file
-		if [ "$SOLVABLE" != "Unsolvable" ]
-		then
-			printf "%f" $time >> test_output.csv
-			if [ "$UNIT" == "Unit" -o $count -lt $case ]
-			then
-				printf ", " >> test_output.csv
-			else 
-				printf "\n" >> test_output.csv
-			fi
-		fi
-
 		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
 		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
@@ -191,6 +183,18 @@ unit_test()
 		if [ "$time_up" -lt "$best_up" ]
 		then
 			best=$time
+		fi
+
+		## Write to .csv
+		if [ "$SOLVABLE" != "Unsolvable" ]
+		then
+			printf "%f" $time >> test_output.csv
+			if [ "$UNIT" == "Unit" -o $count -lt $case ]
+			then
+				printf ", " >> test_output.csv
+			else 
+				printf "\n" >> test_output.csv
+			fi
 		fi
 
 		## Print Solved
@@ -274,6 +278,7 @@ do
 		echo
 	done
 	size=$(($size + 1))
+	python3 test_plot.py
 done
 
 
@@ -298,4 +303,6 @@ else
 	echo "Passed$YELLOW $total_solved / $test_num$RESET$BRIGHT total tests\n"
 fi
 
+## Cleanup
 rm n-puzzle
+rm test_output.csv
