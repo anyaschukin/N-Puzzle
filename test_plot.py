@@ -16,7 +16,7 @@ def read_csv(filepath):
 
 # visualize plots min, mean & max values for each heuristic
 def visualize(data, title, y_label):
-	fig1, ax1 = plt.subplots()
+	_, ax1 = plt.subplots()
 	ax1.boxplot(data)
 	plt.title(title)
 	plt.ylabel(y_label)
@@ -24,7 +24,7 @@ def visualize(data, title, y_label):
 	plt.xticks([1, 2, 3, 4, 5], ["manhattan", "nilsson", "outRowCol", "hamming", "euclidean"])
 	plt.show()
 
-# main reads accuracy.csv & plots accuracy over depth
+# main reads .csv & visualizes test output
 def main():
 	try:
 		solve_time = read_csv('solve_time.csv')
@@ -32,6 +32,12 @@ def main():
 
 		moves = read_csv('moves.csv')
 		visualize(moves, 'Moves by heuristic', 'Moves')
+
+		size_complexity = read_csv('size_complexity.csv')
+		visualize(size_complexity, 'Size complexity by heuristic', 'Size complexity')
+
+		time_complexity = read_csv('time_complexity.csv')
+		visualize(time_complexity, 'Time complexity by heuristic', 'Time complexity')
 
 	except Exception:
 		print("Error: Failed to visualize data. Is data valid?")

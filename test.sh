@@ -11,6 +11,14 @@ if [ -e moves.csv ]
 then
     rm moves.csv
 fi
+if [ -e size_complexity.csv ]
+then
+    rm size_complexity.csv
+fi
+if [ -e time_complexity.csv ]
+then
+    rm time_complexity.csv
+fi
 
 #### -- Print Header -- ####
 RESET="\x1b[0m"
@@ -192,17 +200,25 @@ unit_test()
 		## Write to .csv
 		if [ "$SOLVABLE" != "Unsolvable" ]
 		then
-			printf "%f" $time >> solve_time.csv
 			moves=$(echo "$output" | grep moves | cut -d ":" -f 2)
-			printf "%d" $moves >> moves.csv
+			size_complexity=$(echo "$output" | grep Size | cut -d ":" -f 2)
+			time_complexity=$(echo "$output" | grep Time | cut -d ":" -f 2)
 
+			printf "%f" $time >> solve_time.csv
+			printf "%d" $moves >> moves.csv
+			printf "%d" $size_complexity >> size_complexity.csv
+			printf "%d" $time_complexity >> time_complexity.csv
 			if [ "$UNIT" == "Unit" -o $count -lt $case ]
 			then
 				printf ", " >> solve_time.csv
 				printf ", " >> moves.csv
+				printf ", " >> size_complexity.csv
+				printf ", " >> time_complexity.csv
 			else 
 				printf "\n" >> solve_time.csv
 				printf "\n" >> moves.csv
+				printf "\n" >> size_complexity.csv
+				printf "\n" >> time_complexity.csv
 			fi
 		fi
 
@@ -316,3 +332,5 @@ fi
 rm n-puzzle
 rm solve_time.csv
 rm moves.csv
+rm size_complexity.csv
+rm time_complexity.csv
