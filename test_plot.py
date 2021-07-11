@@ -11,9 +11,6 @@ def read_csv():
 			heuristic = []
 			for test in row:
 				heuristic.append(float(test))
-			# heuristic.append(float(row[0]))
-			# heuristic.append(float(row[1]))
-			# heuristic.append(float(row[2]))
 			heuristics.append(heuristic)
 	return heuristics
 
@@ -22,15 +19,10 @@ def visualize(data):
 	fig1, ax1 = plt.subplots()
 	ax1.set_title('Solve time by heuristic')
 	ax1.boxplot(data)
-	# ax1.labels("manhattan" "nilsson" "outRowCol" "hamming" "euclidean")
-# 	depth = list(range(1, len(test_accuracy) + 1))
-
-# 	plt.plot(depth, train_accuracy, label='train accuracy')
-# 	plt.plot(depth, test_accuracy, label='test accuracy')
-# 	plt.title('Accuracy over Depth')
+	plt.title('Solve time by heuristic')
 	plt.xlabel('Heuristic')
-	plt.ylabel('Solve time (seconds)')
-# 	plt.legend()
+	plt.ylabel('Solve Time (Seconds)')
+	plt.xticks([1, 2, 3, 4, 5], ["manhattan", "nilsson", "outRowCol", "hamming", "euclidean"])
 	plt.show()
 
 # main reads accuracy.csv & plots accuracy over depth
@@ -44,19 +36,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-
-
-
-
-# Fixing random state for reproducibility
-# np.random.seed(19680801)
-
-# # fake up some data
-# spread = np.random.rand(50) * 100
-# center = np.ones(25) * 50
-# flier_high = np.random.rand(10) * 100 + 100
-# flier_low = np.random.rand(10) * -100
-# data = np.concatenate((spread, center, flier_high, flier_low))
-# Copy to clipboard
