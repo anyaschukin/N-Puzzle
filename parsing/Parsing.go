@@ -72,7 +72,7 @@ func ReadBoardFromFile(Puzzle []int, size int, flags int) ([]int, int) {
 }
 
 func CheckFlags() (int, string, int) {
-	sizePtr := flag.Int("s", 1, "size of the puzzle's side must be > 3.")
+	sizePtr := flag.Int("s", 3, "size of the puzzle's side must be >= 3.")
 	heuristicPtr := flag.String("h", "manhattan", "Heuristic options include: manhattan, hamming, euclidean, nilsson, and outRowCol.")
 
 	flag.Parse()
