@@ -6,3 +6,5 @@ N-Puzzle
 rm_me.txt
 solve_time.csv
 moves.csv
+size_complexity.csv
+time_complexity.csv

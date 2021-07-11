@@ -1,24 +1,20 @@
 #### -- N-Puzzle Performance Test -- ####
 ## Runs Unsolvable & Solvable Unit tests from boards/
-## and Random tests using boards/generator.py
+## & Random tests using boards/generator.py
+## Then plots solve time, moves, size & time complexity by heuristic
 ## To run: ./test.sh
-go build
-if [ -e solve_time.csv ]
-then
-    rm solve_time.csv
-fi
-if [ -e moves.csv ]
-then
-    rm moves.csv
-fi
-if [ -e size_complexity.csv ]
-then
-    rm size_complexity.csv
-fi
-if [ -e time_complexity.csv ]
-then
-    rm time_complexity.csv
-fi
+
+
+#### -- Config -- ####
+MIN_SIZE=3			# 3 min
+MAX_SIZE=4			# 4 default
+TEST_CASES=5		# 10 unit cases available for sizes 3 to 9
+UNSOLVABLE_TEST=0	# 0 = off, 1 = on
+SOLVABLE_TEST=1		# 0 = off, 1 = on
+UNIT_TEST=1			# 0 = off, 1 = on
+RANDOM_TEST=1		# 0 = off, 1 = on
+declare -a heuristics=("manhattan" "nilsson" "outRowCol" "hamming" "euclidean")
+
 
 #### -- Print Header -- ####
 RESET="\x1b[0m"
@@ -32,22 +28,12 @@ UNDERLINE="\x1b[4m"
 printf "\E[H\E[2J" # Clear screen
 printf $BRIGHT
 echo "Launching N-Puzzle Performance Test ...$RESET\n"
+go build
 
 start=`date +%s`
 
 
-#### -- Config -- ####
-MIN_SIZE=3			# 3 min
-MAX_SIZE=3			# 4 default
-TEST_CASES=5		# 10 unit cases available for sizes 3 to 9
-UNSOLVABLE_TEST=0	# 0 = off, 1 = on
-SOLVABLE_TEST=1		# 0 = off, 1 = on
-UNIT_TEST=1			# 0 = off, 1 = on
-RANDOM_TEST=1		# 0 = off, 1 = on
-declare -a heuristics=("manhattan" "nilsson" "outRowCol" "hamming" "euclidean")
-
-
-## Print Config
+#### -- Print Config -- ####
 echo "$BRIGHT$UNDERLINE""Configuration$RESET"
 echo "Minimum size:\t\t$MIN_SIZE"
 echo "Maximum size:\t\t$MAX_SIZE"
@@ -82,6 +68,25 @@ do
    printf "$heuristic\n\t\t\t"
 done
 echo
+
+
+#### -- Cleanup .csv -- ####
+if [ -e solve_time.csv ]
+then
+    rm solve_time.csv
+fi
+if [ -e moves.csv ]
+then
+    rm moves.csv
+fi
+if [ -e size_complexity.csv ]
+then
+    rm size_complexity.csv
+fi
+if [ -e time_complexity.csv ]
+then
+    rm time_complexity.csv
+fi
 
 
 #### -- Test Function -- ####
@@ -328,7 +333,7 @@ else
 	echo "Passed$YELLOW $total_solved / $test_num$RESET$BRIGHT total tests\n"
 fi
 
-## Cleanup
+#### -- Cleanup -- ####
 rm n-puzzle
 rm solve_time.csv
 rm moves.csv
