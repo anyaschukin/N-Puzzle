@@ -167,6 +167,19 @@ unit_test()
 		else						# Seconds
 			time=$(echo "$time" | rev | cut -c2-42 | rev)
 		fi
+
+		## Write to file
+		if [ "$SOLVABLE" != "Unsolvable" ]
+		then
+			printf "%f" $time >> test_output.csv
+			if [ "$UNIT" == "Unit" -o $count -lt $case ]
+			then
+				printf ", " >> test_output.csv
+			else 
+				printf "\n" >> test_output.csv
+			fi
+		fi
+
 		tcumulative=$(echo "scale = 9; $tcumulative + $time" | bc)
 		time_up=$(echo "scale = 0; $time * 1000000000" | bc | cut -d "." -f 1)
 		worst_up=$(echo "scale = 0; $worst * 1000000000" | bc | cut -d "." -f 1)
@@ -219,6 +232,7 @@ unit_test()
 	echo "(Seconds)        Mean:  $mean"
 	echo "                 Best:  $best"
 	echo
+	# echo "$worst, $mean, $best" >> test_output.csv ################
 }
 
 
