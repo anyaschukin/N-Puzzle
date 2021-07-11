@@ -2,10 +2,10 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
-# read_csv reads test_output.csv
-def read_csv():
+# read_csv reads solve_time.csv
+def read_csv(filepath):
 	heuristics = []
-	with open('test_output.csv', 'r') as file:
+	with open(filepath, 'r') as file:
 		reader = csv.reader(file)
 		for row in reader:
 			heuristic = []
@@ -15,21 +15,24 @@ def read_csv():
 	return heuristics
 
 # visualize plots min, mean & max values for each heuristic
-def visualize(data):
+def visualize(data, title, y_label):
 	fig1, ax1 = plt.subplots()
-	ax1.set_title('Solve time by heuristic')
 	ax1.boxplot(data)
-	plt.title('Solve time by heuristic')
+	plt.title(title)
+	plt.ylabel(y_label)
 	plt.xlabel('Heuristic')
-	plt.ylabel('Solve Time (Seconds)')
 	plt.xticks([1, 2, 3, 4, 5], ["manhattan", "nilsson", "outRowCol", "hamming", "euclidean"])
 	plt.show()
 
 # main reads accuracy.csv & plots accuracy over depth
 def main():
 	try:
-		data = read_csv()
-		visualize(data)
+		solve_time = read_csv('solve_time.csv')
+		visualize(solve_time, 'Solve time by heuristic', 'Solve Time (Seconds)')
+
+		moves = read_csv('moves.csv')
+		visualize(moves, 'Moves by heuristic', 'Moves')
+
 	except Exception:
 		print("Error: Failed to visualize data. Is data valid?")
 		pass

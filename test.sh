@@ -3,9 +3,13 @@
 ## and Random tests using boards/generator.py
 ## To run: ./test.sh
 go build
-if [ -e test_output.csv ]
+if [ -e solve_time.csv ]
 then
-    rm test_output.csv
+    rm solve_time.csv
+fi
+if [ -e moves.csv ]
+then
+    rm moves.csv
 fi
 
 #### -- Print Header -- ####
@@ -26,7 +30,7 @@ start=`date +%s`
 
 #### -- Config -- ####
 MIN_SIZE=3			# 3 min
-MAX_SIZE=4			# 4 default
+MAX_SIZE=3			# 4 default
 TEST_CASES=5		# 10 unit cases available for sizes 3 to 9
 UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
@@ -188,14 +192,20 @@ unit_test()
 		## Write to .csv
 		if [ "$SOLVABLE" != "Unsolvable" ]
 		then
-			printf "%f" $time >> test_output.csv
+			printf "%f" $time >> solve_time.csv
+			moves=$(echo "$output" | grep moves | cut -d ":" -f 2)
+			printf "%d" $moves >> moves.csv
+
 			if [ "$UNIT" == "Unit" -o $count -lt $case ]
 			then
-				printf ", " >> test_output.csv
+				printf ", " >> solve_time.csv
+				printf ", " >> moves.csv
 			else 
-				printf "\n" >> test_output.csv
+				printf "\n" >> solve_time.csv
+				printf "\n" >> moves.csv
 			fi
 		fi
+
 
 		## Print Solved
 		type=$(echo $SOLVABLE $UNIT)
@@ -236,7 +246,6 @@ unit_test()
 	echo "(Seconds)        Mean:  $mean"
 	echo "                 Best:  $best"
 	echo
-	# echo "$worst, $mean, $best" >> test_output.csv ################
 }
 
 
@@ -305,4 +314,5 @@ fi
 
 ## Cleanup
 rm n-puzzle
-rm test_output.csv
+rm solve_time.csv
+rm moves.csv
