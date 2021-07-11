@@ -18,11 +18,11 @@ Then clone this repo into your go-workspace/src/ folder. <br>
 Download dependencies. <br>
 ```go get -d ./...; pip install -r requirements.txt```
 
-To run with puzzle size 3. <br>
-```go run main.go -s 3```
+To run. <br>
+```go run main.go```
 
 Alternatively, build & run the binary. <br>
-```go build; ./N-Puzzle -s 3```
+```go build; ./N-Puzzle```
 
 *N-Puzzle* first generates a random puzzle.
 If the puzzle is solvable *N-Puzzle* prints the solution from inital state to solved.
@@ -46,7 +46,7 @@ Find a valid sequence of moves to reach the solved state, a.k.a the "snail solut
 
 ### -s Size
 
-Set puzzle size.
+Set puzzle size, default 3.
 
 ```go run main.go -s 4```
 
