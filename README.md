@@ -66,7 +66,31 @@ Set heuristic to guide the A* search. Default manhattan. Options:
 
 ## test.sh
 
+The *boards/* folder contains 169 unit tests, solvable and unsolvable, depth 3 to 9. *boards/* also contains [generator.py](https://github.com/anyaschukin/N-Puzzle/blob/master/boards/generator.py), a random boards generator.
+
+*test.sh* runs static unit tests from the *boards/* folder, & random tests using *generator.py*.
+
+```./test.sh```
+
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/test.png" width="420">
+
+For each size *test.sh* then plots solve time, moves, size & time complexity by heuristic. For size 3:
+
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3solve_time.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3moves.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3size_complexity.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3time_complexity.png" width="420">
+
+These plots show for size 3 the manhattan heuristic performs the best, it solves the fastest while still providing as low a number of moves as the other heuristics.
+
+the nilsson heuristic is almost as quick as manhattan, but takes more moves. The other heuristics take significantly more time to solve.
+
+For size 4:
+
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4solve_time.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4moves.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4size_complexity.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4time_complexity.png" width="420">
 
 
 ## Links
