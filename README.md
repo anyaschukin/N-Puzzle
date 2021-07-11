@@ -61,7 +61,7 @@ Set heuristic to guide the A* search. Default manhattan. Options:
 * nilsson
 * outRowCol
 
-```go run main.go -s 3 -h hamming```
+```go run main.go -h hamming```
 
 
 ## test.sh
