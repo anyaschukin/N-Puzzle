@@ -83,7 +83,7 @@ For each size *test.sh* then plots solve time, moves, size & time complexity by 
 
 These plots show for size 3 the manhattan heuristic performs the best, it solves the fastest while still providing as low a number of moves as the other heuristics.
 
-the nilsson heuristic is almost as quick as manhattan, but takes more moves. The other heuristics take significantly more time to solve.
+the nilsson heuristic is almost as quick as manhattan, but usually takes slightly more moves. The other heuristics take significantly more time to solve.
 
 For size 4:
 
