@@ -74,12 +74,12 @@ The *boards/* folder contains 169 unit tests, solvable and unsolvable, depth 3 t
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/test.png" width="420">
 
-For each size *test.sh* then plots solve time, moves, size & time complexity by heuristic. For size 3:
+For each size *test.sh* then plots solve time, size & time complexity, & moves by heuristic. For size 3:
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3solve_time.png" width="420">
-<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3moves.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3size_complexity.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3time_complexity.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3moves.png" width="420">
 
 These plots show for size 3 the manhattan heuristic performs best, it solves fastest while still providing a low number of moves.
 
@@ -88,9 +88,9 @@ the nilsson heuristic is almost as quick as manhattan, but usually takes more mo
 For size 4 only manhattan & nilsson heuristics return a solution in under a minute, the other heuristics are omitted:
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4solve_time.png" width="420">
-<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4moves.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4size_complexity.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4time_complexity.png" width="420">
+<img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4moves.png" width="420">
 
 These plots show for size 4 the nilsson heuristic performs best, solving in under a second. This is reflected by a smaller size & time complexity than manhattan, the trade off being a greater number of moves.
 
