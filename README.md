@@ -83,7 +83,7 @@ For each size *test.sh* then plots solve time, size & time complexity, & moves b
 
 These plots show for size 3 the manhattan heuristic performs best, it solves fastest while still providing a low number of moves.
 
-the nilsson heuristic is almost as quick as manhattan, but usually takes more moves. Heuristics outRowCol, hamming, & euclidean take progressively more time to solve compared to manhattan for no improvement in number of moves.
+The nilsson heuristic is almost as quick as manhattan, but usually takes more moves. Heuristics outRowCol, hamming, & euclidean take progressively more time to solve compared to manhattan for no improvement in number of moves.
 
 For size 4 only manhattan & nilsson heuristics return a solution in under a minute, the other heuristics are omitted:
 
