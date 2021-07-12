@@ -21,7 +21,10 @@ def visualize(data, title, y_label):
 	plt.title(title)
 	plt.ylabel(y_label)
 	plt.xlabel('Heuristic')
-	plt.xticks([1, 2, 3, 4, 5], ["manhattan", "nilsson", "outRowCol", "hamming", "euclidean"])
+	if len(data) == 5:
+		plt.xticks([1, 2, 3, 4, 5], ["manhattan", "nilsson", "outRowCol", "hamming", "euclidean"])
+	if len(data) == 2:
+		plt.xticks([1, 2], ["manhattan", "nilsson"])
 	plt.show()
 
 # main reads .csv & visualizes test output

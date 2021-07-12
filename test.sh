@@ -8,7 +8,7 @@
 #### -- Config -- ####
 MIN_SIZE=3			# 3 min
 MAX_SIZE=4			# 4 default
-TEST_CASES=5		# 11 unit cases available for sizes 3 to 9
+TEST_CASES=5		# 11 unit cases available for sizes 3 to 9, in boards/
 UNSOLVABLE_TEST=0	# 0 = off, 1 = on
 SOLVABLE_TEST=1		# 0 = off, 1 = on
 UNIT_TEST=1			# 0 = off, 1 = on
@@ -282,6 +282,10 @@ fi
 ## Loop size
 while [ $size -lt $(expr $MAX_SIZE + 1) ]
 do
+	if [ $size -gt 3 ]
+	then
+		declare -a heuristics=("manhattan" "nilsson")
+	fi
 	## Loop heuristic
 	for heuristic in "${heuristics[@]}"
 	do
@@ -308,7 +312,25 @@ do
 		echo
 	done
 	size=$(($size + 1))
+
 	python3 test_plot.py
+	## Cleanup .csv
+	if [ -e solve_time.csv ]
+	then
+		rm solve_time.csv
+	fi
+	if [ -e moves.csv ]
+	then
+		rm moves.csv
+	fi
+	if [ -e size_complexity.csv ]
+	then
+		rm size_complexity.csv
+	fi
+	if [ -e time_complexity.csv ]
+	then
+		rm time_complexity.csv
+	fi
 done
 
 
@@ -335,7 +357,3 @@ fi
 
 #### -- Cleanup -- ####
 rm n-puzzle
-rm solve_time.csv
-rm moves.csv
-rm size_complexity.csv
-rm time_complexity.csv
