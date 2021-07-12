@@ -105,3 +105,7 @@ These plots show for size 4 the nilsson heuristic performs best, solving in unde
 
 [Tristan Penman n-puzzle app](https://tristanpenman.com/demos/n-puzzle/)
 
+
+## Team
+
+I wrote this project in a team with the awesome [@dfinnis](https://github.com/dfinnis).
