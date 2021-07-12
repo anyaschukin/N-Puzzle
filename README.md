@@ -85,12 +85,14 @@ These plots show for size 3 the manhattan heuristic performs best, it solves fas
 
 the nilsson heuristic is almost as quick as manhattan, but usually takes more moves. Heuristics outRowCol, hamming, & euclidean take progressively more time to solve compared to manhattan for no improvement in number of moves.
 
-For size 4:
+For size 4 only manhattan & nilsson heuristics return a solution in under a minute, the other heuristics are omitted:
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4solve_time.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4moves.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4size_complexity.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/4time_complexity.png" width="420">
+
+These plots show for size 4 the nilsson heuristic performs best, solving in under a second. This is reflected by a smaller size & time complexity than manhattan, the trade off being a greater number of moves.
 
 
 ## Links
