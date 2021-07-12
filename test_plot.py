@@ -33,14 +33,14 @@ def main():
 		solve_time = read_csv('solve_time.csv')
 		visualize(solve_time, 'Solve time by heuristic', 'Solve Time (Seconds)')
 
-		moves = read_csv('moves.csv')
-		visualize(moves, 'Moves by heuristic', 'Moves')
-
 		size_complexity = read_csv('size_complexity.csv')
 		visualize(size_complexity, 'Size complexity by heuristic', 'Size complexity')
 
 		time_complexity = read_csv('time_complexity.csv')
 		visualize(time_complexity, 'Time complexity by heuristic', 'Time complexity')
+
+		moves = read_csv('moves.csv')
+		visualize(moves, 'Moves by heuristic', 'Moves')
 
 	except Exception:
 		print("Error: Failed to visualize data. Is data valid?")
