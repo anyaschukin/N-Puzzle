@@ -26,7 +26,11 @@ Alternatively, build & run the binary. <br>
 
 *N-Puzzle* first generates a random puzzle.
 If the puzzle is solvable *N-Puzzle* prints the solution from inital state to solved.
-*N-Puzzle* then prints the number of moves required, size & time complexity, and solve time.
+*N-Puzzle* then prints: 
+* Number of moves required
+* Size complexity () ##############################
+* Time complexity () ##############################
+* Solve time
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3a.png" width="520">
 
@@ -37,7 +41,7 @@ If the puzzle is solvable *N-Puzzle* prints the solution from inital state to so
 
 ## Puzzle
 
-Find a valid sequence of moves to reach the solved state, a.k.a the "snail solution".
+Find a valid sequence of moves to reach the solved state, a.k.a the "snail solution". The empty tile is always at the end of the snail.
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/puzzle.png" width="320">
 
@@ -74,14 +78,14 @@ The *boards/* folder contains 169 unit tests, solvable and unsolvable, depth 3 t
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/test.png" width="420">
 
-For each size *test.sh* then plots solve time, size & time complexity, & moves by heuristic. For size 3:
+For each size, *test.sh* then plots solve time, size & time complexity, & moves by heuristic. For size 3:
 
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3solve_time.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3size_complexity.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3time_complexity.png" width="420">
 <img src="https://github.com/anyaschukin/N-Puzzle/blob/master/img/3moves.png" width="420">
 
-These plots show for size 3 the manhattan heuristic performs best, it solves fastest while still providing a low number of moves.
+These plots show for size 3 the manhattan heuristic performs best, solving fastest while still providing a low number of moves.
 
 The nilsson heuristic is almost as quick as manhattan, but usually takes more moves. Heuristics outRowCol, hamming, & euclidean take progressively more time to solve compared to manhattan for no improvement in number of moves.
 
